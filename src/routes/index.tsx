@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 // Carga perezosa (lazy) de componentes
 const Login = lazy(() => import('../components/screens/AuthScreen'))
-
+const TestCrud = lazy(() => import('../components/templates/TestCrud'))
 
 export const AppRoutes = () => {
     return (
@@ -18,6 +18,9 @@ export const AppRoutes = () => {
                     <Route path="/login" element={<Login />} />
 
                     {/* Rutas con Layout */}
+
+                    {/* Ruta de prueba */}
+                    <Route path="/prueba" element={<TestCrud />} />
                     
                 </Routes>
             </Suspense>
