@@ -127,5 +127,3 @@ git grep "texto_a_buscar"
 
 # Borrar un archivo del área de staging
 git rm --cached <archivo>
-
-Este es un resumen de los comandos básicos de Git. Para más información, puedes consultar la documentación oficial en git-scm.com.
