@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { userApi } from '../../lib/api';
-import { User } from '../../types/userType';
-import { QUERY_KEYS } from '../../lib/api/constants';
+import { userApi, QUERY_KEYS } from '../../lib/api';
+import { User } from '../../types';
 
 const fetchUsers = async (): Promise<User[]> => {
   const { data } = await userApi.get<User[]>('/user');
