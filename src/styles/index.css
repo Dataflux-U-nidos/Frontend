@@ -43,6 +43,12 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --color-orange-primary: #ff8811;
+  --color-orange-light: #ffbd7b;
+  --color-orange-dark: #c66a0d;
+  --color-blue-primary: #229799;
+  --color-blue-dark: #176566;
+  --color-blue-light: #9dd1d2;
 }
 
 :root {
@@ -121,6 +127,33 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+}
+@layer utilities {
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap, 1rem)));
+    }
+  }
+
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap, 1rem)));
+    }
+  }
+
+  .animate-marquee {
+    animation: marquee var(--duration, 20s) linear infinite;
+  }
+
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration, 20s) linear infinite;
+  }
 }
 
 @layer base {
