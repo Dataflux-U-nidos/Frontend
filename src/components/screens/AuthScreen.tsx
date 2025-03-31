@@ -3,6 +3,7 @@ import { FormField } from "@/components/molecules/Dynamic-form"
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthContext } from "@/context/AuthContext";
+import { User } from "@/types";
 
 //LOGIN
 const loginFields: FormField[] = [
@@ -14,8 +15,7 @@ const loginFields: FormField[] = [
 const registryFields: FormField[] = [
     { type: "user", key: "username", placeholder: "Enter your username" },
     { type: "email", key: "email", placeholder: "Enter your email" },
-    { type: "password", key: "password", placeholder: "Choose a strong password" },
-]
+    { type: "password", key: "password", placeholder: "Choose a strong password" },]
 
 
   // Inicia sesión y deja que el useEffect haga la navegación
@@ -26,10 +26,13 @@ export default function AuthScreen() {
   
     useEffect(() => {
       // Si ya estás en la ruta correspondiente, no navegues de nuevo (para evitar bucles)
-      if (userType === "EVALUADOR" && location.pathname !== "/estadisticas") {
-        navigate("/estadisticas");
-      } else if (userType === "INVESTIGADOR" && location.pathname !== "/evaluacion") {
-        navigate("/evaluacion");
+      //Toca cambiar la ruta de direccionamiento
+      if (userType === "STUDENT" && location.pathname !== "/dashboard") {
+        navigate("/dashboard");
+      } else if (userType === "VIEWER" && location.pathname !== "/dashboard") {
+        navigate("/dashboard");
+      } else if (userType === "ADMIN" && location.pathname !== "/dashboard") {
+        navigate("/dashboard");
       }
     }, [userType, location.pathname, navigate]);
   
@@ -38,14 +41,18 @@ export default function AuthScreen() {
       await login(credentials.email, credentials.password);
     };
   
-    const handleRegister = async (data: {
-      name: string;
-      last_name: string;
-      email: string;
-      password: string;
-    }) => {
-      await createAccount(data);
-      await login(data.email, data.password);
+    const handleRegister = async (data: User) => {
+      const userData = {
+        name: data.name, // Convertir 'username' en 'name'
+        email: data.email,
+        password: data.password,
+        last_name: "DefaultLastName", // Apellido estático
+        age: 25, // Edad estática
+      };
+    
+      console.log("Enviando:", userData);
+      await createAccount(userData);
+      await login(userData.email, userData.password);
     };
   
     return (
