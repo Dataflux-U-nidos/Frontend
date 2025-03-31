@@ -5,7 +5,6 @@ export interface User {
     email: string;
     password: string;
     age: number;
-    type: 'ADMIN' | 'STUDENT' | 'VIEWER';
     locality?: string;
     school?: string;
     preferences?: Record<string, unknown>;

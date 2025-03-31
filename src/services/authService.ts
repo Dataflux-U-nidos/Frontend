@@ -1,6 +1,5 @@
-import { LoginInput, LoginResponse } from '../types';
 import { authApi } from '../lib/api/authApi';
-
+import { LoginInput, LoginResponse } from '../types';
 
 
 export const login = async (credentials: LoginInput): Promise<{ userType: string }> => {

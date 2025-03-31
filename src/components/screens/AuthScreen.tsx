@@ -15,7 +15,8 @@ const loginFields: FormField[] = [
 const registryFields: FormField[] = [
     { type: "user", key: "username", placeholder: "Enter your username" },
     { type: "email", key: "email", placeholder: "Enter your email" },
-    { type: "password", key: "password", placeholder: "Choose a strong password" },]
+    { type: "password", key: "password", placeholder: "Choose a strong password" },
+    { type: "user", key: "last_name", placeholder: "Enter your last name" }]
 
 
   // Inicia sesión y deja que el useEffect haga la navegación
@@ -46,7 +47,7 @@ export default function AuthScreen() {
         name: data.name, // Convertir 'username' en 'name'
         email: data.email,
         password: data.password,
-        last_name: "DefaultLastName", // Apellido estático
+        last_name: data.last_name, // Apellido estático
         age: 25, // Edad estática
       };
     
