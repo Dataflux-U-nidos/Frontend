@@ -10,17 +10,17 @@ import {
 
 const slides = [
     {
-        imageUrl: "src/assets/javeriana.jpg",
+        imageUrl: "https://cea.javeriana.edu.co/documents/1578131/9621979/lineas-plan-estrategico.jpg/9dce9b93-1aaa-2293-6814-490446a139c1?t=1689284414781",
         title: "Bienvenido",
         description: "A U-nidos",
     },
     {
-        imageUrl: "src/assets/andes.jpg",
+        imageUrl: "https://facartes.uniandes.edu.co/wp-content/uploads/2020/04/campus-2.jpg",
         title: "Conectándote con la universidad de tus sueños",
         description: "Información relevante para el usuario",
     },
     {
-        imageUrl: "src/assets/nacional.jpg",
+        imageUrl: "https://universidadesyprofesiones.com/images/universidades/campus/universidad-nacional-de-colombia-banner.jpg",
         title: "U-nidos por tu futuro",
         description: "Y para tu futuro",
     },

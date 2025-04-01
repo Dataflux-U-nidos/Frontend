@@ -29,12 +29,12 @@ export const Hero = ({ onCreateAccount }: HeroProps) => {
       {/* Diagonal images */}
       <div className="relative w-fit h-fit">
         <CircleImage
-          src="src/assets/javeriana.jpg"
+          src="https://cea.javeriana.edu.co/documents/1578131/9621979/lineas-plan-estrategico.jpg/9dce9b93-1aaa-2293-6814-490446a139c1?t=1689284414781"
           alt="Usuario"
           className="absolute left-25"
         />
         <CircleImage
-          src="src/assets/college-student.jpg"
+          src="https://freedesignfile.com/upload/2017/10/Smile-college-student-Stock-Photo.jpg"
           alt="Usuario"
           className="absolute right-35"
         />
