@@ -16,29 +16,19 @@ export const AppRoutes = () => {
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
         <Routes>
-          {/* Redirige la raíz a /login */}
           <Route path="/" element={<Navigate to="/auth" />} />
-
-          {/* Ruta login */}
           <Route path="/auth" element={<Auth />} />
-
-          {/* Rutas con Layout */}
           <Route path="/" element={<Layout />}>
-            {/* Rutas para estudiantes */}
             <Route element={<StudentRoutes />}>
               <Route path="dashboard" element={<Dashboard />} />
             </Route>
-            {/* Rutas para visualizadores */}
             <Route element={<ViewerRoutes />}>
               <Route path="dashboard" element={<Dashboard />} />
             </Route>
-            {/* Rutas para admin */}
             <Route element={<AdminRoutes />}>
               <Route path="dashboard" element={<Dashboard />} />
             </Route>
           </Route>
-
-          {/* Ruta de prueba */}
           <Route path="/prueba" element={<TestCrud />} />
         </Routes>
       </Suspense>

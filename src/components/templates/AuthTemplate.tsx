@@ -18,7 +18,7 @@ export default function AuthTemplate({
 }: AuthTemplateProps) {
   return (
     <main className="grid h-screen w-screen p-8 gap-8 overflow-x-hidden grid-cols-1 xl:grid-cols-2">
-      {/* Oculto en moviles/tablets, visible en xl en adelante */}
+      {/* Hide on mobiles/tablets, visible on xl and above */} 
       <section className="hidden xl:flex items-center justify-center h-full overflow-hidden rounded-xl">
         <CarouselPlugin />
       </section>

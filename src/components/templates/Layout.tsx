@@ -40,8 +40,6 @@ export default function Layout() {
             </Breadcrumb>
           </div>
         </header>
-
-        {/* Aquí se renderizan las rutas hijas */}
         <Outlet />
       </SidebarInset>
     </SidebarProvider>

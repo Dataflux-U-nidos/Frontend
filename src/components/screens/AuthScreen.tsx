@@ -19,15 +19,12 @@ const registryFields: FormField[] = [
     { type: "user", key: "last_name", placeholder: "Enter your last name" }]
 
 
-  // Inicia sesión y deja que el useEffect haga la navegación
 export default function AuthScreen() {
     const { userType, login, createAccount } = useAuthContext();
     const navigate = useNavigate();
     const location = useLocation();
   
     useEffect(() => {
-      // Si ya estás en la ruta correspondiente, no navegues de nuevo (para evitar bucles)
-      //Toca cambiar la ruta de direccionamiento
       if (userType === "STUDENT" && location.pathname !== "/dashboard") {
         navigate("/dashboard");
       } else if (userType === "VIEWER" && location.pathname !== "/dashboard") {
@@ -37,18 +34,17 @@ export default function AuthScreen() {
       }
     }, [userType, location.pathname, navigate]);
   
-    // Inicia sesión y deja que el useEffect haga la navegación
     const handleLogin = async (credentials: { email: string; password: string }) => {
       await login(credentials.email, credentials.password);
     };
   
     const handleRegister = async (data: User) => {
       const userData = {
-        name: data.name, // Convertir 'username' en 'name'
+        name: data.name, 
         email: data.email,
         password: data.password,
-        last_name: data.last_name, // Apellido estático
-        age: 25, // Edad estática
+        last_name: data.last_name, 
+        age: 25, 
       };
     
       console.log("Enviando:", userData);
