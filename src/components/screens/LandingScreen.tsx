@@ -73,8 +73,9 @@ export default function LandingScreen() {
   const navigate = useNavigate();
 
   const handleCreateAccount = () => {
-    navigate("/login");
+    navigate("/auth");
   };
+  
   return(
     <LandingTemplate 
     features={features} 
