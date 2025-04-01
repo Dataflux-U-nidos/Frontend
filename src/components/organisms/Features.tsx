@@ -1,8 +1,5 @@
 import { Badge } from "../atoms/ui/badge";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, } from "../atoms/ui/card";
-import featureProfileImage from "../../assets/feature-profile.svg";
-import featureReviewImage from "../../assets/feature-reviews.svg";
-import featureWageImage from "../../assets/feature-wage.svg";
 
 export interface FeatureProps {
   title: string;
