@@ -10,19 +10,19 @@ import {
 
 const slides = [
     {
-        imageUrl: "src/assets/anime-4k-pictures-s6fzu24pgsaxtsfb.jpg",
+        imageUrl: "src/assets/javeriana.jpg",
         title: "Bienvenido",
-        description: "Al sistema de asistencia a la evaluación ética del HUSI",
+        description: "A U-nidos",
     },
     {
-        imageUrl: "src/assets/anime-4k-pictures-s6fzu24pgsaxtsfb.jpg",
-        title: "Otra sección",
+        imageUrl: "src/assets/andes.jpg",
+        title: "Conectándote con la universidad de tus sueños",
         description: "Información relevante para el usuario",
     },
     {
-        imageUrl: "src/assets/anime-4k-pictures-s6fzu24pgsaxtsfb.jpg",
-        title: "Último Slide",
-        description: "Pequeña descripción final",
+        imageUrl: "src/assets/nacional.jpg",
+        title: "U-nidos por tu futuro",
+        description: "Y para tu futuro",
     },
 ];
 
@@ -51,7 +51,7 @@ export function CarouselPlugin() {
                                                 alt="Imagen del slide"
                                                 className=" h-full w-full object-cover dark:brightness-[0.2] dark:grayscale rounded-xl"
                                             />
-                                            <div className="absolute bottom-0 left-8   bg-opacity-50 p-2 rounded-xl">
+                                            <div className="absolute bottom-10 left-8   bg-opacity-50 p-2 rounded-xl">
                                                 <h3 className="text-white text-3xl font-bold">
                                                     {slide.title}
                                                 </h3>

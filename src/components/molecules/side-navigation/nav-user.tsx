@@ -11,6 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "../../atoms/ui/dropdown-menu"
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from "../../atoms/ui/sidebar"
+import { useAuthContext } from "@/context/AuthContext"
 
 export function NavUser({
     user,
@@ -22,7 +23,16 @@ export function NavUser({
     }
 }) {
     const { isMobile } = useSidebar()
+    const { logout } = useAuthContext()
 
+    const handleLogout = async () => {
+        try{
+            await logout()
+        }
+        catch (error) {
+            console.error("Error during logout:", error)
+        }
+    }
     return (
         <SidebarMenu>
             <SidebarMenuItem>
@@ -84,7 +94,7 @@ export function NavUser({
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
                             <LogOut />
                             Log out
                         </DropdownMenuItem>
