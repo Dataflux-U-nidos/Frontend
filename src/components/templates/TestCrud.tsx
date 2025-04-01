@@ -24,7 +24,6 @@ export default function TestCrud() {
       email: "test@example.com",
       password: "123456",
       age: 25,
-      type: "STUDENT",
     }, {
       onSuccess: (data) => console.log("Usuario creado:", data),
     });

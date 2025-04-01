@@ -1,5 +1,5 @@
 // /src/routes/AppRoutes.tsx
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; // Adjust the path as needed
 import AdminRoutes from "./AdminRoutes";
