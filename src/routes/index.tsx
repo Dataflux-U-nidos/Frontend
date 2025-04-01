@@ -6,6 +6,7 @@ import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 
 // Carga perezosa (lazy) de componentes
+const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const TestCrud = lazy(() => import("../components/templates/TestCrud"));
 const Layout = lazy(() => import("../components/templates/Layout"));
@@ -17,6 +18,7 @@ export const AppRoutes = () => {
       <Suspense fallback={<div>Cargando...</div>}>
         <Routes>
           <Route path="/" element={<Navigate to="/auth" />} />
+          <Route path="/landing" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Layout />}>
             <Route element={<StudentRoutes />}>
