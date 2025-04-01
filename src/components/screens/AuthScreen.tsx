@@ -13,10 +13,10 @@ const loginFields: FormField[] = [
 
 // REGISTRY
 const registryFields: FormField[] = [
+  { type: "user", key: "last_name", placeholder: "Enter your last name" },
     { type: "user", key: "username", placeholder: "Enter your username" },
     { type: "email", key: "email", placeholder: "Enter your email" },
-    { type: "password", key: "password", placeholder: "Choose a strong password" },
-    { type: "user", key: "last_name", placeholder: "Enter your last name" }]
+    { type: "password", key: "password", placeholder: "Choose a strong password" }]
 
 
 export default function AuthScreen() {
