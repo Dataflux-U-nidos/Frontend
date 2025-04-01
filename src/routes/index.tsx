@@ -8,7 +8,6 @@ import ViewerRoutes from "./ViewerRoutes";
 // Carga perezosa (lazy) de componentes
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
-const TestCrud = lazy(() => import("../components/templates/TestCrud"));
 const Layout = lazy(() => import("../components/templates/Layout"));
 const Dashboard = lazy(() => import("../components/templates/Dashboard"));
 
@@ -22,16 +21,15 @@ export const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Layout />}>
             <Route element={<StudentRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="student-dashboard" element={<Dashboard />} />
             </Route>
             <Route element={<ViewerRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="viewer-dashboard" element={<Dashboard />} />
             </Route>
             <Route element={<AdminRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="admin-dashboard" element={<Dashboard />} />
             </Route>
           </Route>
-          <Route path="/prueba" element={<TestCrud />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

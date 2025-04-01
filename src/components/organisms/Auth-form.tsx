@@ -50,11 +50,6 @@ export default function AuthForm({
 
     return (
         <div className={cn("flex flex-col h-full min-h-0", className)}>
-            <img
-                src="src/assets/LogoHUSI.png"
-                alt="Imagen del slide"
-                className="h-auto w-auto max-h-[300px] max-w-[300px] flex self-center dark:brightness-[0.2] dark:grayscale rounded-xl"
-            />
 
             <Tabs defaultValue="login" className="flex flex-col flex-1 min-h-0">
                 <TabsList className="flex items-center justify-center gap-2 rounded-full self-center px-3 py-7">

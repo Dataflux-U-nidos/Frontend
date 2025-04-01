@@ -8,8 +8,8 @@ import {
 } from "lucide-react"
 
 
-import { NavMain } from "../molecules/side-navigation/nav-main"
-import { NavUser } from "../molecules/side-navigation/nav-user"
+import { NavMain } from "../molecules/side-navigation/Nav-main"
+import { NavUser } from "../molecules/side-navigation/Nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -17,6 +17,7 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "../atoms/ui/sidebar"
+import { LogoIcon } from "../atoms/ui/icons"
 
 // This is sample data.
 const data = {
@@ -27,28 +28,28 @@ const data = {
     },
     navMain: [
         {
-            title: "Inicio",
-            url: "/inicio",
+            title: "Programas",
+            url: "/programs",
             icon: LayoutGrid,
         },
         {
-            title: "Subir archivos",
-            url: "/subir-archivos",
+            title: "Universidades",
+            url: "/universities",
             icon: Upload,
         },
         {
-            title: "Historial de archivos",
-            url: "/historial-archivos",
+            title: "Test vocacional",
+            url: "/vocational-tes",
             icon: FileStack,
         },
         {
-            title: "Historial de casos",
-            url: "#",
+            title: "Test psicométrico",
+            url: "/psychometric-test",
             icon: History,
         },
         {
-            title: "Estadísticas",
-            url: "estadisticas",
+            title: "Proyección en el mercado",
+            url: "/market-projection",
             icon: ChartLine,
         },
     ],
@@ -58,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <img src="src/assets/Logo_HUSI_Blanco.png" alt="Logo hospital Universitario San Ignacio" />
+                <LogoIcon />
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
