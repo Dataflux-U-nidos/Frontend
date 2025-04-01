@@ -1,24 +1,36 @@
 import AuthForm from "@/components/organisms/Auth-form"
 import { FormField } from "@/components/molecules/Dynamic-form"
 import { CarouselPlugin } from "../molecules/Carousel"
+import { LoginInput,User } from "../../types"
 
 interface AuthTemplateProps {
   loginFields: FormField[]
   registryFields: FormField[]
+  onLogin: (values: LoginInput) => void
+  onRegister: (values: User) => void
 }
 
-export default function AuthTemplate({ loginFields, registryFields }: AuthTemplateProps) {
+export default function AuthTemplate({
+  loginFields,
+  registryFields,
+  onLogin,
+  onRegister,
+}: AuthTemplateProps) {
   return (
-    <div className="grid min-h-svh lg:grid-cols-2 h-screen w-screen  p-8 gap-8">
-      <div className="flex items-center justify-center h-full overflow-hidden rounded-xl">
+    <main className="grid h-screen w-screen p-8 gap-8 overflow-x-hidden grid-cols-1 xl:grid-cols-2">
+      {/* Hide on mobiles/tablets, visible on xl and above */} 
+      <section className="hidden xl:flex items-center justify-center h-full overflow-hidden rounded-xl">
         <CarouselPlugin />
-      </div>
-      <div className="flex flex-col gap-4 p-6 md:p-10">
+      </section>
+
+      <section className="flex flex-col h-full min-h-0">
         <AuthForm
           loginFields={loginFields}
           registryFields={registryFields}
+          onLogin={onLogin}
+          onRegister={onRegister}
         />
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }
