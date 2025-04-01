@@ -17,6 +17,7 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "../atoms/ui/sidebar"
+import { LogoIcon } from "../atoms/ui/icons"
 
 // This is sample data.
 const data = {
@@ -58,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
-                <img src="src/assets/Logo_HUSI_Blanco.png" alt="Logo hospital Universitario San Ignacio" />
+                <LogoIcon />
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
