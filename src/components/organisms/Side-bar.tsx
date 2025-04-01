@@ -28,28 +28,28 @@ const data = {
     },
     navMain: [
         {
-            title: "Inicio",
-            url: "/inicio",
+            title: "Programas",
+            url: "/programs",
             icon: LayoutGrid,
         },
         {
-            title: "Subir archivos",
-            url: "/subir-archivos",
+            title: "Universidades",
+            url: "/universities",
             icon: Upload,
         },
         {
-            title: "Historial de archivos",
-            url: "/historial-archivos",
+            title: "Test vocacional",
+            url: "/vocational-tes",
             icon: FileStack,
         },
         {
-            title: "Historial de casos",
-            url: "#",
+            title: "Test psicométrico",
+            url: "/psychometric-test",
             icon: History,
         },
         {
-            title: "Estadísticas",
-            url: "estadisticas",
+            title: "Proyección en el mercado",
+            url: "/market-projection",
             icon: ChartLine,
         },
     ],
