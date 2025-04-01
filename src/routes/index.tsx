@@ -21,13 +21,13 @@ export const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Layout />}>
             <Route element={<StudentRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="student-dashboard" element={<Dashboard />} />
             </Route>
             <Route element={<ViewerRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="viewer-dashboard" element={<Dashboard />} />
             </Route>
             <Route element={<AdminRoutes />}>
-              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="admin-dashboard" element={<Dashboard />} />
             </Route>
           </Route>
         </Routes>

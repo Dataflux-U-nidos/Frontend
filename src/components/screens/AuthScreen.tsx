@@ -25,12 +25,12 @@ export default function AuthScreen() {
   const location = useLocation();
 
   useEffect(() => {
-    if (userType === "STUDENT" && location.pathname !== "/dashboard") {
-      navigate("/dashboard");
-    } else if (userType === "VIEWER" && location.pathname !== "/dashboard") {
-      navigate("/dashboard");
-    } else if (userType === "ADMIN" && location.pathname !== "/dashboard") {
-      navigate("/dashboard");
+    if (userType === "STUDENT" && location.pathname !== "/student-dashboard") {
+      navigate("/student-dashboard");
+    } else if (userType === "VIEWER" && location.pathname !== "/viewer-dashboard") {
+      navigate("/viewer-dashboard");
+    } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {
+      navigate("/admin-dashboard");
     }
   }, [userType, location.pathname, navigate]);
 
