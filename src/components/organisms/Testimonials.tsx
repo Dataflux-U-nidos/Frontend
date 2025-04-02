@@ -41,11 +41,12 @@ export function Testimonials({ reviews }: TestimonialsProps) {
   return (
     <section id="testimonials" className="py-21 space-y-8">
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
-        Descubre por qué {" "}
+        Descubre por qué{" "}
         <span className="bg-gradient-to-r from-orange-light to-orange-primary text-transparent bg-clip-text">
           la gente nos elige
         </span>
       </h2>
+
       <div className="relative flex w-full flex-col items-center justify-center overflow-hidden">
         <Marquee pauseOnHover className="[--duration:20s]">
           {firstRow.map((review) => (
@@ -57,9 +58,10 @@ export function Testimonials({ reviews }: TestimonialsProps) {
             <ReviewCard key={review.username} {...review} />
           ))}
         </Marquee>
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background"></div>
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background"></div>
+
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-background" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/4 bg-gradient-to-l from-background" />
       </div>
     </section>
-  );
-};
+  )
+}

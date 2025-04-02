@@ -17,7 +17,7 @@ export const Features = ({ features, featureList }: FeaturesProps) => {
   return (
     <section
       id="features"
-      className="mx-auto container py-21  space-y-8"
+      className="mx-auto container py-21  space-y-8 "
     >
       <h2 className="text-3xl lg:text-4xl font-bold md:text-center">
         Lo que tenemos{" "}

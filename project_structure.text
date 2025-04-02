@@ -1,0 +1,119 @@
+- .env
+- .gitignore
+- bun.lock
+- components.json
+- eslint.config.js
+- index.html
+- package.json
+- README.md
+- src
+  - App.tsx
+  - assets
+    - andes.jpg
+    - anime-4k-pictures-s6fzu24pgsaxtsfb.jpg
+    - college-student.jpg
+    - feature-profile.svg
+    - feature-reviews.svg
+    - feature-wage.svg
+    - javeriana.jpg
+    - logo.png
+    - nacional.jpg
+    - react.svg
+  - components
+    - atoms
+      - magicui
+        - aurora-text.tsx
+        - marquee.tsx
+      - README.md
+      - ui
+        - avatar.tsx
+        - badge.tsx
+        - breadcrumb.tsx
+        - button.tsx
+        - calendar.tsx
+        - card.tsx
+        - carousel.tsx
+        - checkbox.tsx
+        - circle.tsx
+        - collapsible.tsx
+        - command.tsx
+        - dialog.tsx
+        - dropdown-menu.tsx
+        - icons.tsx
+        - input.tsx
+        - label.tsx
+        - popover.tsx
+        - progress.tsx
+        - select.tsx
+        - separator.tsx
+        - sheet.tsx
+        - sidebar.tsx
+        - skeleton.tsx
+        - sonner.tsx
+        - table.tsx
+        - tabs.tsx
+        - tooltip.tsx
+    - molecules
+      - Carousel.tsx
+      - Dynamic-form.tsx
+      - README.md
+      - side-navigation
+        - Nav-main.tsx
+        - Nav-user.tsx
+    - organisms
+      - Auth-form.tsx
+      - Features.tsx
+      - Hero.tsx
+      - Navbar.tsx
+      - README.md
+      - Side-bar.tsx
+      - Testimonials.tsx
+    - screens
+      - AuthScreen.tsx
+      - LandingScreen.tsx
+      - README.md
+    - templates
+      - AuthTemplate.tsx
+      - Dashboard.tsx
+      - LandingTemplate.tsx
+      - Layout.tsx
+  - context
+    - AuthContext.tsx
+  - hooks
+    - index.ts
+    - use-mobile.ts
+    - user
+      - useCreateUserHook.ts
+      - useDeleteUserHook.ts
+      - useGetAllUsersHook.ts
+      - useGetUserByIdHook.ts
+      - useUpdateUserHook.ts
+  - lib
+    - api
+      - authApi.tsx
+      - constants.ts
+      - index.ts
+      - userApi.ts
+    - utils
+      - index.ts
+    - utils.ts
+  - main.tsx
+  - routes
+    - AdminRoutes.tsx
+    - index.tsx
+    - StudentRoutes.tsx
+    - ViewerRoutes.tsx
+  - services
+    - authService.ts
+    - userService.ts
+  - styles
+    - index.css
+  - types
+    - authType.ts
+    - index.ts
+    - userType.ts
+  - vite-env.d.ts
+- tsconfig.app.json
+- tsconfig.json
+- tsconfig.node.json
+- vite.config.ts

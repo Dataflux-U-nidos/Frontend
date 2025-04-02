@@ -1,23 +1,43 @@
 import AuthTemplate from "@/components/templates/AuthTemplate"
-import { FormField } from "@/components/molecules/Dynamic-form"
+import { FormField } from "@/types/formTypes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import { User } from "@/types";
+import { Slide } from "../molecules/Carousel";
+
 
 //LOGIN
 const loginFields: FormField[] = [
-  { type: "email", key: "email", placeholder: "Enter your email" },
-  { type: "password", key: "password", placeholder: "Enter your password" },
+  { type: "email", key: "email", placeholder: "Ingresa tu correo", required: true },
+  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ]
 
 // REGISTRY
 const registryFields: FormField[] = [
-  { type: "user", key: "name", placeholder: "Enter your name" },
-  { type: "user", key: "last_name", placeholder: "Enter your last name" },
-  { type: "email", key: "email", placeholder: "Enter your email" },
-  { type: "password", key: "password", placeholder: "Choose a strong password" }]
+  { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
+  { type: "user", key: "last_name", placeholder: "Ingresa tu apeliido", required: true },
+  { type: "email", key: "email", placeholder: "Ingresa tu correo institucional", required: true },
+  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+];
 
+const slides: Slide[] = [
+  {
+    imageUrl: "https://cea.javeriana.edu.co/documents/1578131/9621979/lineas-plan-estrategico.jpg/9dce9b93-1aaa-2293-6814-490446a139c1?t=1689284414781",
+    title: "Bienvenido",
+    description: "A U-nidos",
+  },
+  {
+    imageUrl: "https://facartes.uniandes.edu.co/wp-content/uploads/2020/04/campus-2.jpg",
+    title: "Conectándote con la universidad de tus sueños",
+    description: "Información relevante para el usuario",
+  },
+  {
+    imageUrl: "https://universidadesyprofesiones.com/images/universidades/campus/universidad-nacional-de-colombia-banner.jpg",
+    title: "U-nidos por tu futuro",
+    description: "Y para tu futuro",
+  },
+]
 
 export default function AuthScreen() {
   const { userType, login, createAccount } = useAuthContext();
@@ -58,6 +78,7 @@ export default function AuthScreen() {
       registryFields={registryFields}
       onLogin={handleLogin}
       onRegister={handleRegister}
+      slides={slides}
     />
   );
 }

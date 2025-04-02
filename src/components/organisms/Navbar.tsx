@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LogoIcon } from "../atoms/ui/icons";
+import { LogoIcon } from "../atoms/icons";
 import { Button, buttonVariants } from "../atoms/ui/button";
 
 const routeList = [

@@ -17,7 +17,7 @@ import {
     SidebarHeader,
     SidebarRail,
 } from "../atoms/ui/sidebar"
-import { LogoIcon } from "../atoms/ui/icons"
+import { LogoIcon } from "../atoms/icons"
 
 // This is sample data.
 const data = {

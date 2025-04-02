@@ -8,7 +8,7 @@ interface HeroProps {
 export const Hero = ({ onCreateAccount }: HeroProps) => {
 
   return (
-    <section className="grid lg:grid-cols-2 place-items-center py-20 md:py-20 gap-10">
+    <section className="grid lg:grid-cols-2 place-items-center py-20 md:py-20 mx-30">
 
       {/* Main text content */}
       <div className="text-center space-y-10 ">
@@ -29,12 +29,12 @@ export const Hero = ({ onCreateAccount }: HeroProps) => {
       {/* Diagonal images */}
       <div className="relative w-fit h-fit">
         <CircleImage
-          src="src/assets/javeriana.jpg"
+          src="https://freedesignfile.com/upload/2017/10/Smile-college-student-Stock-Photo.jpg"
           alt="Usuario"
           className="absolute left-25"
         />
         <CircleImage
-          src="src/assets/college-student.jpg"
+          src="https://freedesignfile.com/upload/2017/10/Smile-college-student-Stock-Photo.jpg"
           alt="Usuario"
           className="absolute right-35"
         />

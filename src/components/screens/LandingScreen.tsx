@@ -27,6 +27,13 @@ const features: FeatureProps[] = [
 ];
 
 const reviews = [
+  //comentar el primero en caso de fallas
+  {
+    name: "Jack",
+    username: "@jack",
+    body: "Me encanta esta página. Es increíble lo fácil que es de usar.",
+    img: "https://avatar.vercel.sh/jack",
+  },
   {
     name: "Jack",
     username: "@jack",

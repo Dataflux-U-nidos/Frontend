@@ -1,38 +1,28 @@
-import * as React from "react";
-import Autoplay from "embla-carousel-autoplay";
+import * as React from "react"
+import Autoplay from "embla-carousel-autoplay"
 
-import { Card, CardContent } from "@/components/atoms/ui/card";
+import { Card, CardContent } from "@/components/atoms/ui/card"
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
-} from "@/components/atoms/ui/carousel";
+} from "@/components/atoms/ui/carousel"
 
-const slides = [
-    {
-        imageUrl: "src/assets/javeriana.jpg",
-        title: "Bienvenido",
-        description: "A U-nidos",
-    },
-    {
-        imageUrl: "src/assets/andes.jpg",
-        title: "Conectándote con la universidad de tus sueños",
-        description: "Información relevante para el usuario",
-    },
-    {
-        imageUrl: "src/assets/nacional.jpg",
-        title: "U-nidos por tu futuro",
-        description: "Y para tu futuro",
-    },
-];
+export interface Slide {
+    imageUrl: string
+    title: string
+    description: string
+}
 
-export function CarouselPlugin() {
-    const plugin = React.useRef(
-        Autoplay({ delay: 2000, stopOnInteraction: true })
-    );
+interface CarouselPluginProps {
+    slides: Slide[]
+}
+
+export function CarouselPlugin({ slides }: CarouselPluginProps) {
+    const plugin = React.useRef(Autoplay({ delay: 2000, stopOnInteraction: true }))
 
     return (
-        <div className="flex flex-col   justify-center items-center">
+        <div className="flex flex-col w-full justify-center items-center">
             <Carousel
                 opts={{ loop: true }}
                 plugins={[plugin.current]}
@@ -42,22 +32,18 @@ export function CarouselPlugin() {
                 <CarouselContent>
                     {slides.map((slide, index) => (
                         <CarouselItem key={index}>
-                            <div className="p-1 relative ">
+                            <div className="p-0 relative">
                                 <Card>
                                     <CardContent className="p-0 relative">
                                         <div className="aspect-square relative">
                                             <img
                                                 src={slide.imageUrl}
                                                 alt="Imagen del slide"
-                                                className=" h-full w-full object-cover dark:brightness-[0.2] dark:grayscale rounded-xl"
+                                                className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale rounded-xl"
                                             />
-                                            <div className="absolute bottom-10 left-8   bg-opacity-50 p-2 rounded-xl">
-                                                <h3 className="text-white text-3xl font-bold">
-                                                    {slide.title}
-                                                </h3>
-                                                <p className="text-white text-xl w-8/12">
-                                                    {slide.description}
-                                                </p>
+                                            <div className="absolute bottom-10 left-8 bg-opacity-50 p-2 rounded-xl">
+                                                <h3 className="text-white text-3xl font-bold">{slide.title}</h3>
+                                                <p className="text-white text-xl w-8/12">{slide.description}</p>
                                             </div>
                                         </div>
                                     </CardContent>
@@ -68,5 +54,5 @@ export function CarouselPlugin() {
                 </CarouselContent>
             </Carousel>
         </div>
-    );
+    )
 }
