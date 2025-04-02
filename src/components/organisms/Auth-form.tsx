@@ -10,6 +10,7 @@ import {
 } from "@/components/atoms/ui/tabs"
 import type { FormField } from "@/types/formTypes"
 import { LoginInput, User } from "../../types"
+import { LogoIcon } from "../atoms/icons"
 
 interface AuthFormProps {
     loginFields: FormField[]
@@ -26,19 +27,10 @@ export default function AuthForm({
     onRegister,
     className,
 }: AuthFormProps) {
-    const [loginData, setLoginData] = useState<{ [key: string]: any }>({})
-    const [registryData, setRegistryData] = useState<{ [key: string]: any }>({})
 
     const loginFormRef = useRef<DynamicFormHandles>(null)
     const registryFormRef = useRef<DynamicFormHandles>(null)
 
-    const handleLoginChange = (updatedData: { [key: string]: any }) => {
-        setLoginData(updatedData)
-    }
-
-    const handleRegistryChange = (updatedData: { [key: string]: any }) => {
-        setRegistryData(updatedData)
-    }
 
     const handleLoginSubmit = (e: React.FormEvent) => {
         e.preventDefault()
@@ -60,11 +52,9 @@ export default function AuthForm({
 
     return (
         <div className={cn("flex flex-col h-full min-h-0", className)}>
-            <img
-                src="src/assets/LogoHUSI.png"
-                alt="Imagen del slide"
-                className="h-auto w-auto max-h-[300px] max-w-[300px] self-center rounded-xl"
-            />
+            <div className="h-auto w-auto max-h-[250px] max-w-[250px] self-center rounded-xl mb-5">
+                <LogoIcon />
+            </div>
 
             <Tabs defaultValue="login" className="flex flex-col flex-1 min-h-0">
                 <TabsList className="flex items-center justify-center gap-2 rounded-full self-center px-3 py-7">
@@ -83,7 +73,6 @@ export default function AuthForm({
                             <DynamicForm
                                 ref={loginFormRef}
                                 formDataConfig={loginFields}
-                                onChange={handleLoginChange}
                             />
                             <Button type="submit" className="w-full mb-4">
                                 Iniciar Sesión
@@ -99,7 +88,6 @@ export default function AuthForm({
                             <DynamicForm
                                 ref={registryFormRef}
                                 formDataConfig={registryFields}
-                                onChange={handleRegistryChange}
                             />
                         </div>
                         <Button type="submit" className="w-full mb-4">

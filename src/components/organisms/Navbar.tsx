@@ -15,7 +15,7 @@ export const Navbar = ({ onCreateAccount }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false);  return (
     <header className="sticky top-0 z-40 w-full border-b border-orange-200 bg-white">
       <nav className="flex items-center justify-between h-14 px-4 w-full max-w-[1400px] mx-auto">
-        <a href="/" className="flex items-center text-xl font-bold">
+        <a href="/" className="flex items-center text-xl font-bold w-26 h-9.5">
           <LogoIcon />
         </a>
 

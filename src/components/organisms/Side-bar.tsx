@@ -58,9 +58,12 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
-                <LogoIcon />
+            <SidebarHeader className="flex justify-center items-center">
+                <div className="max-w-26 max-h-9.5 w-full h-auto">
+                    <LogoIcon />
+                </div>
             </SidebarHeader>
+
             <SidebarContent>
                 <NavMain items={data.navMain} />
             </SidebarContent>
