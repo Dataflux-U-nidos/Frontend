@@ -1,6 +1,8 @@
 import { RetrievePasswordTemplate } from "@/components/templates/RetrievePasswordTemplate";
 import { RetrievePassword } from "@/components/organisms/RetrievePassword";
 import { BaseFormField } from "@/types/formTypes";
+import { sendPasswordRecoveryEmail } from "@/services/emailService";
+
 
 const forgotPasswordFields: BaseFormField[] = [
   {
@@ -12,9 +14,16 @@ const forgotPasswordFields: BaseFormField[] = [
 ];
 
 export default function ForgotPasswordScreen(){
-  const handleForgotPassword = (data: any) => {
-    console.log("sending email:", data);
-    // lógica para enviar el email
+  const handleForgotPassword = async (data: any) => {
+    console.log("Iniciando recuperación para:", data);
+
+    try {
+      await sendPasswordRecoveryEmail(data.email);
+      alert("Si el correo existe, recibirás un email de recuperación");
+    } catch (error) {
+      console.error("Error en recuperación de contraseña", error);
+      alert("Ocurrió un error, intenta nuevamente");
+    }
   };
 
   return (
