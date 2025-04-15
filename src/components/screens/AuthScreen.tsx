@@ -18,7 +18,7 @@ const registryFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
   { type: "user", key: "last_name", placeholder: "Ingresa tu apeliido", required: true },
   { type: "email", key: "email", placeholder: "Ingresa tu correo institucional", required: true },
-  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
 
 const slides: Slide[] = [
@@ -72,12 +72,17 @@ export default function AuthScreen() {
     await login(userData.email, userData.password);
   };
 
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
+  };
+
   return (
     <AuthTemplate
       loginFields={loginFields}
       registryFields={registryFields}
       onLogin={handleLogin}
       onRegister={handleRegister}
+      onForgotPassword={handleForgotPassword}
       slides={slides}
     />
   );

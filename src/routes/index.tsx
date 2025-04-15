@@ -10,6 +10,8 @@ const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const Layout = lazy(() => import("../components/templates/Layout"));
 const Dashboard = lazy(() => import("../components/templates/Dashboard"));
+const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
+const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
 
 export const AppRoutes = () => {
   return (
@@ -19,6 +21,8 @@ export const AppRoutes = () => {
           <Route path="/" element={<Navigate to="/auth" />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/" element={<Layout />}>
             <Route element={<StudentRoutes />}>
               <Route path="student-dashboard" element={<Dashboard />} />

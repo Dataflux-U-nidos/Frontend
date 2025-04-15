@@ -36,6 +36,15 @@ function baseValidationForType(type: FieldType): z.ZodString {
         case "password":
             schema = schema.min(6, "Mínimo 6 caracteres").max(50, "Máximo 50 caracteres")
             break
+        case "create-password":
+            schema = schema
+                .min(8, "Mínimo 8 caracteres")
+                .max(50, "Máximo 50 caracteres")
+                .regex(
+                    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                    "Debe contener al menos una letra y un número"
+                );
+            break;
         case "phone":
             schema = schema.regex(/^\d+$/, "Solo dígitos").max(10, "Máximo 10 dígitos")
             break
