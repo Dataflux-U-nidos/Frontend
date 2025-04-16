@@ -26,3 +26,8 @@ export const updateUser = async ({ id, ...updates }: { id: string } & UpdateUser
     const { data } = await userApi.patch<User>(`/user/${id}`, updates);
     return data;
 };
+
+export const updateUserByEmail = async ({ email, ...updates}: { email: string } & UpdateUserInput): Promise<User> => {
+    const { data } = await userApi.patch<User>(`/user/${email}`, updates);
+    return data;
+  };
