@@ -6,7 +6,7 @@ import { RetrievePassword } from "@/components/organisms/RetrievePassword";
 import { BaseFormField } from "@/types/formTypes";
 import { useUpdateUserByEmail } from "@/hooks/user/useUpdateUserByEmailHook";
 
-// ResetPassword Form Fields
+
 const resetPasswordFields: BaseFormField[] = [
   {
     type: "create-password",
@@ -22,15 +22,14 @@ const resetPasswordFields: BaseFormField[] = [
   },
 ];
 
-//Payload from JWT
+
 // JWT payload type definition
 type JwtPayload = {
   sub?: string;
 };
 
-// Get email from token function
-// Function to decode JWT and extract email
-// This function decodes the JWT token and extracts the email from the 'sub' field
+
+// decoding the JWT token and extracting the email from the 'sub' field
 const getEmailFromToken = (token: string): string | null => {
   try {
     const decoded = jwtDecode<JwtPayload>(token);
@@ -41,7 +40,6 @@ const getEmailFromToken = (token: string): string | null => {
   }
 };
 
-// ResetPasswordScreen component
 export default function ResetPasswordScreen() {
 
   // allows us to get the search parameters from the URL
@@ -63,12 +61,8 @@ export default function ResetPasswordScreen() {
     }
   }, [location.search]);
 
-  // Function to update user password
   const { mutate: updateUser } = useUpdateUserByEmail();
 
-//Handle reset password
-  // Function to handle password reset
-  // This function is called when the user submits the form to reset their password
   const handleResetPassword = (data: Record<string, string>) => {
     const { newPassword, confirmPassword } = data;
 
