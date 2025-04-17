@@ -10,6 +10,7 @@ const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const Layout = lazy(() => import("../components/templates/Layout"));
 const Dashboard = lazy(() => import("../components/templates/Dashboard"));
+const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
 
 export const AppRoutes = () => {
   return (
@@ -20,15 +21,17 @@ export const AppRoutes = () => {
           <Route path="/landing" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/" element={<Layout />}>
-            <Route element={<StudentRoutes />}>
+          {/* ITS MISSING THE SCREENS USAGE */}
+            {/* <Route element={<StudentRoutes />}>
               <Route path="student-dashboard" element={<Dashboard />} />
-            </Route>
+            </Route> */}
             <Route element={<ViewerRoutes />}>
-              <Route path="viewer-dashboard" element={<Dashboard />} />
+              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
-            <Route element={<AdminRoutes />}>
+            {/* ITS MISSING THE SCREENS USAGE */}
+            {/* <Route element={<AdminRoutes />}>
               <Route path="admin-dashboard" element={<Dashboard />} />
-            </Route>
+            </Route> */}
           </Route>
         </Routes>
       </Suspense>
