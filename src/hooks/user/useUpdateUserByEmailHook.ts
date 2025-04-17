@@ -3,7 +3,7 @@ import { updateUserByEmail } from "@/services/userService";
 import { User } from "@/types";
 import { QUERY_KEYS } from "@/lib/api";
 
-type Input = { email: string; password: string; token: string };
+type Input = { email: string; password: string;};
 
 export function useUpdateUserByEmail() {
   const queryClient = useQueryClient();

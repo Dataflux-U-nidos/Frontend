@@ -84,7 +84,6 @@ export default function ResetPasswordScreen() {
     updateUser({
       email,
       password: data.newPassword,
-      token,
     });
 
     console.log("Email:", email);

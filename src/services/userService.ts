@@ -28,6 +28,6 @@ export const updateUser = async ({ id, ...updates }: { id: string } & UpdateUser
 };
 
 export const updateUserByEmail = async ({ email, ...updates}: { email: string } & UpdateUserInput): Promise<User> => {
-    const { data } = await userApi.patch<User>(`/user/${email}`, updates);
+    const { data } = await userApi.patch<User>(`/user/by-email/${email}`, updates);
     return data;
   };
