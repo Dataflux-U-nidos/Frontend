@@ -19,6 +19,11 @@ const registryFields: FormField[] = [
   { type: "user", key: "last_name", placeholder: "Ingresa tu apeliido", required: true },
   { type: "email", key: "email", placeholder: "Ingresa tu correo institucional", required: true },
   { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  { type: "select", key: "userType", placeholder: "Tipo de usuario", required: true, options: [
+    { value: "STUDENT", label: "Estudiante" },
+    { value: "TUTOR", label: "Tutor" },
+    { value: "UNIVERSITY", label: "Universidad" },
+  ] },
 ];
 
 const slides: Slide[] = [
@@ -40,7 +45,7 @@ const slides: Slide[] = [
 ]
 
 export default function AuthScreen() {
-  const { userType, login, createAccount } = useAuthContext();
+  const { userType, login, registryAccount } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -64,11 +69,12 @@ export default function AuthScreen() {
       email: data.email,
       password: data.password,
       last_name: data.last_name,
+      userType: data.userType,
       age: 25,
     };
 
     console.log("Enviando:", userData);
-    await createAccount(userData);
+    await registryAccount(userData);
     await login(userData.email, userData.password);
   };
 
