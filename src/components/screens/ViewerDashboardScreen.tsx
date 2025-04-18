@@ -1,4 +1,4 @@
-import DashboardTemplate from "../templates/Dashboard";
+import DashboardTemplate from "../templates/DashboardTemplate";
 
 const dataUniversidades = [
   { name: "Pontificia Universidad Javeriana", total: 1815 },
