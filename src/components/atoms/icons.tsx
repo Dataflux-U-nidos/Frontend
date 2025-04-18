@@ -1,4 +1,3 @@
-// src/components/atoms/icons.tsx
 import logo from '@/assets/logo.png';
 
 interface LogoIconProps {
