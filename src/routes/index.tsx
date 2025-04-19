@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
+import TutorRoutes from "./TutorRoutes";
 import { Presentation, House, University, BriefcaseBusiness } from "lucide-react";
 
 // Carga perezosa (lazy) de componentes
@@ -13,6 +14,7 @@ const Layout = lazy(() => import("../components/templates/Layout"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
 const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
 const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
+const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
 
 export const viewerMenu = [
   {
@@ -38,6 +40,14 @@ export const studentMenu = [
     url: "/student-vocationalTest",
     icon: BriefcaseBusiness,
   },
+]
+
+export const tutorMenu = [
+  {
+    title: "Estudiantes",
+    url: "/tutor-students",
+    icon: University,
+  }
 ]
 
 const currentUser = {
@@ -69,6 +79,14 @@ export const AppRoutes = () => {
               <Route path="viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
+
+          <Route element={<TutorRoutes />}>
+            <Route path="/" element={<Layout navMain={tutorMenu} user={currentUser} />}>
+              <Route path="tutor-students" element={<TutorStudentsScreen />} />
+            </Route>
+          </Route>
+
+          
 
           
         </Routes>

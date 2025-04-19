@@ -51,6 +51,8 @@ export default function AuthScreen() {
       navigate("/viewer-dashboard");
     } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {
       navigate("/admin-dashboard");
+    } else if (userType === "TUTOR" && location.pathname !== "/tutor-students") {
+      navigate("/tutor-students");
     }
   }, [userType, location.pathname, navigate]);
 
