@@ -46,7 +46,7 @@ export default function AuthScreen() {
 
   useEffect(() => {
     if (userType === "STUDENT" && location.pathname !== "/student-dashboard") {
-      navigate("/student-dashboard");
+      navigate("/student-profile");
     } else if (userType === "VIEWER" && location.pathname !== "/viewer-dashboard") {
       navigate("/viewer-dashboard");
     } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {

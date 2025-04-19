@@ -13,6 +13,8 @@ const Layout = lazy(() => import("../components/templates/Layout"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
 const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
 const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
+const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
+const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
 
 export const viewerMenu = [
   {
@@ -36,6 +38,16 @@ export const studentMenu = [
   {
     title: "Test vocacional",
     url: "/student-vocationalTest",
+    icon: BriefcaseBusiness,
+  },
+  {
+    title: "Test psicométrico",
+    url: "/student-psychometricTest",
+    icon: BriefcaseBusiness,
+  },
+  {
+    title: "Proyección en el mercado laboral",
+    url: "/student-carrerProspects",
     icon: BriefcaseBusiness,
   },
 ]
@@ -66,7 +78,8 @@ export const AppRoutes = () => {
 
           <Route element={<StudentRoutes />}>
             <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
-              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
+              <Route path="account" element={<AccountScreen />} />
+              <Route path="student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
 
