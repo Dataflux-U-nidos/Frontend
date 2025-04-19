@@ -17,7 +17,6 @@ type InputType =
   | "email"
   | "document"
   | "password"
-  | "create-password"
   | "phone"
   | "user"
   | "address"
@@ -112,7 +111,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       getConfigForType(inputType)
 
     let nativeType: React.HTMLInputTypeAttribute = "text"
-    if (inputType === "password" || inputType === "create-password") {
+    if (inputType === "password") {
       nativeType = showPassword ? "text" : "password"
     } else if (inputType === "email") {
       nativeType = "email"
@@ -145,7 +144,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(inputStyle, finalIcon ? "pl-8" : "pl-2")}
           {...props}
         />
-        {(inputType === "password" || inputType === "create-password") && (
+        {inputType === "password" && (
           <Button
             type="button"
             variant="ghost"

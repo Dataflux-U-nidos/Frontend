@@ -9,7 +9,6 @@ interface AuthTemplateProps {
   slides: Slide[]
   onLogin: (values: LoginInput) => void
   onRegister: (values: User) => void
-  onForgotPassword: () => void
 }
 
 export default function AuthTemplate({
@@ -18,7 +17,6 @@ export default function AuthTemplate({
   slides,
   onLogin,
   onRegister,
-  onForgotPassword,
 }: AuthTemplateProps) {
   return (
     <main className="grid h-screen w-screen p-8 gap-8 overflow-x-hidden grid-cols-1 xl:grid-cols-2">
@@ -33,7 +31,6 @@ export default function AuthTemplate({
           registryFields={registryFields}
           onLogin={onLogin}
           onRegister={onRegister}
-          onForgotPassword={onForgotPassword}
         />
       </section>
     </main>

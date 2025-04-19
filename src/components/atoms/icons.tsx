@@ -1,11 +1,5 @@
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo2.png';
 
-interface LogoIconProps {
-  className?: string; // Add this line
-}
-
-export const LogoIcon = ({ className }: LogoIconProps) => {
-  return (
-    <img src={logo} alt="Logo" className={className} />
-  );
+export const LogoIcon = () => {
+  return <img src={logo} alt="Logo" />;
 };

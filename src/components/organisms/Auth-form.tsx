@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, {useRef } from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/atoms/ui/button"
 import { DynamicForm, DynamicFormHandles } from "@/components/molecules/Dynamic-form"
@@ -17,7 +17,6 @@ interface AuthFormProps {
     registryFields: FormField[]
     onLogin: (values: LoginInput) => void
     onRegister: (values: User) => void
-    onForgotPassword: () => void
     className?: string
 }
 
@@ -26,7 +25,6 @@ export default function AuthForm({
     registryFields,
     onLogin,
     onRegister,
-    onForgotPassword,
     className,
 }: AuthFormProps) {
 
@@ -76,16 +74,11 @@ export default function AuthForm({
                                 ref={loginFormRef}
                                 formDataConfig={loginFields}
                             />
-                            <Button type="button" variant="minimal" size="sm" onClick={onForgotPassword}>
-                                ¿Olvidaste tu contraseña?
-                            </Button>
-
                             <Button type="submit" className="w-full mb-4">
                                 Iniciar Sesión
                             </Button>
                         </div>
                     </form>
-
                 </TabsContent>
 
                 <TabsContent value="registry" className="flex flex-col flex-1 min-h-0 space-y-4">
