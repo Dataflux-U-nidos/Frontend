@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TutorStudentsTemplate } from "../templates/TutorStudentsTemplate";
+import { TutorStudentsTemplate } from "../templates/ListPageTemplate";
 
 // Definimos la interfaz Student con todos los campos
 interface Student {

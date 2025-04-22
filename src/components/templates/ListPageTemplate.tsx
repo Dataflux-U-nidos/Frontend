@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { SearchBar } from "../molecules/SearchBar";
-import { AdaptiveTable } from "../organisms/AdaptiveTable";
-import { AddStudentForm } from "../molecules/AddStudentForm"; 
+import { SearchBar } from "../molecules/SearchFilterBar";
+import { AdaptiveTable } from "../organisms/DataTable";
+import { AddStudentForm } from "../molecules/EntityFrorm"; 
 import {
   Dialog,
   DialogContent,
