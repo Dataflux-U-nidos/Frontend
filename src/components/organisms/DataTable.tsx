@@ -6,31 +6,35 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "../atoms/ui/table"; // ajusta la ruta si es necesario
-import { Button } from "../atoms/ui/button"; // ajusta la ruta si es necesario
+} from "@/components/atoms/ui/table";
+import { Button } from "@/components/atoms/ui/button";
 
-// Definimos la interfaz Student para usarla en toda la aplicación
-export interface Student {
-  email: string;
-  name: string;
-  age: number;
-  school: string;
-  location: string;
+// Interfaz genérica para cualquier entidad
+interface Entity {
+  [key: string]: any;
 }
 
-interface AdaptiveTableProps {
-  data: Student[];
+interface DataTableProps<T extends Entity> {
+  data: T[];
   caption?: string;
   rowsPerPage?: number;
-  onViewDetails?: (student: Student) => void;
+  onViewDetails?: (entity: T) => void;
+  displayColumns?: string[]; // Columnas a mostrar
+  columnHeaders?: Record<string, string>; // Traducciones de encabezados
+  actionButtonText?: string;
+  className?: string;
 }
 
-export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({ 
+export function DataTable<T extends Entity>({ 
   data, 
   caption, 
   rowsPerPage = 10,
-  onViewDetails
-}) => {
+  onViewDetails,
+  displayColumns,
+  columnHeaders = {},
+  actionButtonText = "Ver detalles",
+  className = ""
+}: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,23 +43,14 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
     return <p>No hay datos disponibles.</p>;
   }
 
-  // Filtramos el campo de localidad si existe para no mostrarlo como columna
-  const headers = Object.keys(data[0]).filter(key => key !== 'location' && 
-    key !== 'phone' && key !== 'parentName' && key !== 'grade' && 
-    key !== 'address' && key !== 'parentPhone');
+  // Determinar las columnas a mostrar
+  const headers = displayColumns || Object.keys(data[0]);
   
-  // Traducir encabezados para mostrar en español
-  const headerTranslations: Record<string, string> = {
-    email: "Correo",
-    name: "Nombre",
-    age: "Edad",
-    school: "Colegio"
-  };
-
   const sortedData = [...data].sort((a, b) => {
     if (!sortKey) return 0;
-    const aValue = a[sortKey as keyof Student];
-    const bValue = b[sortKey as keyof Student];
+    
+    const aValue = a[sortKey];
+    const bValue = b[sortKey];
     
     if (typeof aValue === "number" && typeof bValue === "number") {
       return sortOrder === "asc" ? aValue - bValue : bValue - aValue;
@@ -85,24 +80,24 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
   };
 
   // Función para manejar clic en el botón de detalles
-  const handleViewDetails = (student: Student) => {
+  const handleViewDetails = (entity: T) => {
     if (onViewDetails) {
-      onViewDetails(student);
+      onViewDetails(entity);
     } else {
-      console.log("Ver detalles de:", student);
+      console.log("Ver detalles de:", entity);
     }
   };
 
   // Función para renderizar vista móvil de cada fila
-  const renderMobileRow = (row: Student, index: number) => (
+  const renderMobileRow = (row: T, index: number) => (
     <div key={index} className="bg-peach-50 p-4 rounded-lg shadow mb-3 border border-gray-200">
       {headers.map(header => (
         <div key={header} className="py-1">
           <span className="font-medium text-gray-500 mr-2">
-            {headerTranslations[header] || header}:
+            {columnHeaders[header] || header}:
           </span>
           <span>
-            {header === "age" ? `${row[header as keyof Student]} Años` : row[header as keyof Student]}
+            {row[header]}
           </span>
         </div>
       ))}
@@ -111,14 +106,14 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
           onClick={() => handleViewDetails(row)} 
           className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
         >
-          Ver detalles
+          {actionButtonText}
         </Button>
       </div>
     </div>
   );
 
   return (
-    <div className="rounded-lg overflow-hidden shadow">
+    <div className={`rounded-lg overflow-hidden shadow ${className}`}>
       {caption && <div className="p-3 text-center text-sm text-gray-500">{caption}</div>}
       
       {/* Vista para tablet y desktop */}
@@ -132,7 +127,7 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
                   onClick={() => handleSort(header)}
                   className="cursor-pointer p-4 text-left text-sm font-medium text-gray-500"
                 >
-                  {headerTranslations[header] || header} 
+                  {columnHeaders[header] || header}
                   {sortKey === header ? (sortOrder === "asc" ? " ↑" : " ↓") : ""}
                 </TableHead>
               ))}
@@ -150,7 +145,7 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
               >
                 {headers.map(header => (
                   <TableCell key={header} className="p-4 text-sm">
-                    {header === "age" ? `${row[header as keyof Student]} Años` : row[header as keyof Student]}
+                    {row[header]}
                   </TableCell>
                 ))}
                 {/* Celda para el botón de detalles */}
@@ -159,7 +154,7 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
                     onClick={() => handleViewDetails(row)} 
                     className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
                   >
-                    Ver detalles
+                    {actionButtonText}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -256,4 +251,4 @@ export const AdaptiveTable: React.FC<AdaptiveTableProps> = ({
       )}
     </div>
   );
-};
+}

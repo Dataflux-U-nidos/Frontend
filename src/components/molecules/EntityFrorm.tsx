@@ -6,52 +6,160 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "../atoms/ui/dialog";
+} from "@/components/atoms/ui/dialog";
 
-type AddStudentFormProps = {
+export interface FormField {
+  name: string;
+  label: string;
+  type: string;
+  required?: boolean;
+  options?: { value: string; label: string }[]; // Para select
+  placeholder?: string;
+  defaultValue?: any;
+}
+
+interface EntityFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    tutorEmail: string;
-    birthDate: string;
-    password: string;
-  }) => void;
-};
+  onSubmit: (formData: any) => void;
+  fields: FormField[];
+  title: string;
+  description?: string;
+  submitButtonText?: string;
+  cancelButtonText?: string;
+}
 
-export const AddStudentForm: React.FC<AddStudentFormProps> = ({
+export const EntityForm: React.FC<EntityFormProps> = ({
   isOpen,
   onClose,
   onSubmit,
+  fields,
+  title,
+  description = "",
+  submitButtonText = "Guardar",
+  cancelButtonText = "Cancelar",
 }) => {
-  const [formData, setFormData] = React.useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    tutorEmail: "",
-    birthDate: "",
-    password: "",
-  });
+  // Estado para gestionar todos los campos de forma dinámica
+  const [formData, setFormData] = React.useState<Record<string, any>>({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  // Inicializar el formulario con valores por defecto
+  React.useEffect(() => {
+    if (isOpen) {
+      const initialData: Record<string, any> = {};
+      fields.forEach(field => {
+        initialData[field.name] = field.defaultValue || "";
+      });
+      setFormData(initialData);
+    }
+  }, [isOpen, fields]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = e.target as HTMLInputElement;
+    
+    // Manejar checkboxes
+    if (type === 'checkbox') {
+      const checkbox = e.target as HTMLInputElement;
+      setFormData(prev => ({
+        ...prev,
+        [name]: checkbox.checked
+      }));
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
-    // Limpiar formulario después de enviar
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      tutorEmail: "",
-      birthDate: "",
-      password: "",
-    });
+  };
+
+  const renderField = (field: FormField) => {
+    const { name, label, type, required, options, placeholder } = field;
+
+    switch (type) {
+      case 'select':
+        return (
+          <div className="space-y-2" key={name}>
+            <label htmlFor={name} className="text-sm font-medium text-gray-700">
+              {label}
+            </label>
+            <select
+              id={name}
+              name={name}
+              required={required}
+              value={formData[name] || ""}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              <option value="">Seleccione...</option>
+              {options?.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        );
+        
+      case 'textarea':
+        return (
+          <div className="space-y-2" key={name}>
+            <label htmlFor={name} className="text-sm font-medium text-gray-700">
+              {label}
+            </label>
+            <textarea
+              id={name}
+              name={name}
+              required={required}
+              placeholder={placeholder}
+              value={formData[name] || ""}
+              onChange={handleChange}
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+        );
+
+      case 'checkbox':
+        return (
+          <div className="flex items-center space-x-2" key={name}>
+            <input
+              id={name}
+              name={name}
+              type="checkbox"
+              checked={formData[name] || false}
+              onChange={handleChange}
+              className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+            />
+            <label htmlFor={name} className="text-sm font-medium text-gray-700">
+              {label}
+            </label>
+          </div>
+        );
+        
+      default:
+        return (
+          <div className="space-y-2" key={name}>
+            <label htmlFor={name} className="text-sm font-medium text-gray-700">
+              {label}
+            </label>
+            <input
+              id={name}
+              name={name}
+              type={type}
+              required={required}
+              placeholder={placeholder}
+              value={formData[name] || ""}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+        );
+    }
   };
 
   return (
@@ -59,110 +167,19 @@ export const AddStudentForm: React.FC<AddStudentFormProps> = ({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-gray-800">
-            Agregar Nuevo Estudiante
+            {title}
           </DialogTitle>
-          <DialogDescription className="text-sm text-gray-500">
-            Completa el formulario para agregar un nuevo estudiante.
-          </DialogDescription>
+          {description && (
+            <DialogDescription className="text-sm text-gray-500">
+              {description}
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            {/* Nombre */}
-            <div className="space-y-2">
-              <label htmlFor="firstName" className="text-sm font-medium text-gray-700">
-                Nombre
-              </label>
-              <input
-                id="firstName"
-                name="firstName"
-                type="text"
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-
-            {/* Apellido */}
-            <div className="space-y-2">
-              <label htmlFor="lastName" className="text-sm font-medium text-gray-700">
-                Apellido
-              </label>
-              <input
-                id="lastName"
-                name="lastName"
-                type="text"
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-            </div>
-          </div>
-
-          {/* Correo Electrónico */}
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium text-gray-700">
-              Correo Electrónico
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Correo Electrónico del Tutor */}
-          <div className="space-y-2">
-            <label htmlFor="tutorEmail" className="text-sm font-medium text-gray-700">
-              Correo Electrónico del Tutor
-            </label>
-            <input
-              id="tutorEmail"
-              name="tutorEmail"
-              type="email"
-              required
-              value={formData.tutorEmail}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Fecha de Nacimiento */}
-          <div className="space-y-2">
-            <label htmlFor="birthDate" className="text-sm font-medium text-gray-700">
-              Fecha de Nacimiento
-            </label>
-            <input
-              id="birthDate"
-              name="birthDate"
-              type="date"
-              required
-              value={formData.birthDate}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
-          </div>
-
-          {/* Contraseña */}
-          <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium text-gray-700">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
+          {/* Renderizar campos en una o dos columnas dependiendo del número */}
+          <div className={`grid ${fields.length > 5 ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
+            {fields.map(field => renderField(field))}
           </div>
 
           <DialogFooter className="flex justify-end gap-2 pt-4">
@@ -171,13 +188,13 @@ export const AddStudentForm: React.FC<AddStudentFormProps> = ({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
-              Cancelar
+              {cancelButtonText}
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
-              Agregar Estudiante
+              {submitButtonText}
             </button>
           </DialogFooter>
         </form>
