@@ -4,7 +4,6 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityFrorm";
 
-// Definimos la interfaz Student con todos los campos
 interface Student {
   email: string;
   name: string;
@@ -13,7 +12,7 @@ interface Student {
   location: string;
 }
 
-// Datos de ejemplo para los estudiantes del tutor
+// Example data for students
 const initialStudentsData: Student[] = [
   { email: "juana_perez@gmail.com", name: "Juanita Perez", age: 20, school: "Colegio Naval Santa Fé", location: "Chapinero"},
   { email: "juana_perez@gmail.com", name: "Juanita Perez", age: 20, school: "Colegio Naval Santa Fé", location: "Chapinero"},
@@ -29,7 +28,7 @@ const initialStudentsData: Student[] = [
   { email: "santiago_hernandez@gmail.com", name: "Santiago Hernández", age: 16, school: "Colegio Nueva Granada", location: "Chapinero"}
 ];
 
-// Campos del formulario para agregar un estudiante
+// Form fields for adding a new student
 const studentFormFields: FormField[] = [
   {
     name: "firstName",
@@ -70,46 +69,46 @@ const studentFormFields: FormField[] = [
 ];
 
 export default function TutorStudentsScreen() {
-  // Estado para los estudiantes
+  // State to manage students data
   const [studentsData, setStudentsData] = useState<Student[]>(initialStudentsData);
   
-  // Estado para búsqueda
+  // State to manage filtered data
   const [filteredData, setFilteredData] = useState<Student[]>(initialStudentsData);
   
-  // Estado para rastrear si el modal de detalles está abierto
+  // State to manage the modal for viewing student details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   
-  // Estado para el formulario de agregar estudiante
+  // State to manage the modal for adding a new student
   const [showAddModal, setShowAddModal] = useState(false);
   
-  // Estado para almacenar el estudiante seleccionado
+  // State to manage the selected student for details
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
 
-  // Manejador para mostrar detalles del estudiante
+  // Manager for viewing student details
   const handleViewDetails = (student: Student) => {
     setSelectedStudent(student);
     setShowDetailsModal(true);
   };
 
-  // Manejador para cerrar el modal de detalles
+  // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
     setSelectedStudent(null);
   };
   
-  // Manejador para abrir el modal de agregar estudiante
+  // Manager for opening the add student modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
   
-  // Manejador para cerrar el modal de agregar estudiante
+  // Manager for closing the add student modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
-  // Manejador para agregar un nuevo estudiante
+  // Manager for adding a new student
   const handleAddStudent = (formData: any) => {
-    // Calcular la edad basada en la fecha de nacimiento
+    // Calculate age from birth date
     const birthDate = new Date(formData.birthDate);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -118,7 +117,7 @@ export default function TutorStudentsScreen() {
       age--;
     }
     
-    // Crear nuevo estudiante
+    // Create a new student object
     const newStudent: Student = {
       name: `${formData.firstName} ${formData.lastName}`,
       email: formData.email,
@@ -127,19 +126,16 @@ export default function TutorStudentsScreen() {
       location: "Por asignar"
     };
     
-    // Actualizar la lista de estudiantes
     const updatedStudents = [...studentsData, newStudent];
     setStudentsData(updatedStudents);
     setFilteredData(updatedStudents);
     
-    // Cerrar el modal
     handleCloseAddModal();
     
-    // Aquí podrías agregar código para enviar los datos a tu API
     console.log("Nuevo estudiante agregado:", newStudent);
   };
   
-  // Manejador de búsqueda
+  // Manager for searching students
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
       setFilteredData(studentsData);
@@ -157,37 +153,27 @@ export default function TutorStudentsScreen() {
     setFilteredData(filtered);
   };
   
-  // Renderizar los detalles del estudiante para el modal
-  const renderStudentDetails = useCallback((student: Student) => (
-    <div className="bg-orange-50 rounded-lg p-4 border border-orange-100">
-      <div className="flex items-center mb-4">
-        <div className="bg-orange-500 text-white rounded-full h-12 w-12 flex items-center justify-center text-xl font-bold">
-          {student.name.split(' ')[0].charAt(0)}
-        </div>
-        <div className="ml-4">
-          <h3 className="font-bold text-lg">{student.name}</h3>
-          <p className="text-gray-600">{student.email}</p>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-gray-500">Edad:</p>
-          <p className="font-medium">{student.age} años</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Colegio:</p>
-          <p className="font-medium">{student.school}</p>
-        </div>
-        <div>
-          <p className="text-gray-500">Localidad:</p>
-          <p className="font-medium">{student.location}</p>
-        </div>
-      </div>
-    </div>
-  ), []);
+  // Configuration for studdnt details display
+  const entityDisplayConfig = {
+    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    labels: {
+      name: "Nombre",
+      email: "Correo",
+      age: "Edad",
+      school: "Colegio",
+      location: "Localidad"
+    },
+    formatters: {
+      age: (value: number) => `${value} años`
+    },
+    avatar: {
+      field: "name" as keyof Student,
+      fallback: (student: Student) => student.name.split(' ')[0].charAt(0),
+      bgColor: "bg-orange-500",
+      textColor: "text-white"
+    }
+  };
   
-  // Configuración de la tabla
   const tableConfig = {
     caption: "Estudiantes asignados",
     rowsPerPage: 6,
@@ -202,7 +188,6 @@ export default function TutorStudentsScreen() {
     actionButtonText: "Ver detalles"
   };
   
-  // Configuración de la barra de búsqueda
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
@@ -211,7 +196,6 @@ export default function TutorStudentsScreen() {
     showFilterButton: true
   };
   
-  // Configuración del formulario
   const formConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
@@ -225,33 +209,32 @@ export default function TutorStudentsScreen() {
   
   return (
     <ListPageTemplate
-      // Datos y tipo de entidad
+      // Data and entity type
       data={filteredData}
       entityType="Estudiantes"
       
-      // Componentes
+      // Components
       SearchBarComponent={SearchFilterBar}
       TableComponent={DataTable}
       FormComponent={EntityForm}
       
-      // Props para los componentes
+      // Props for componentes
       searchBarProps={searchBarConfig}
       tableProps={tableConfig}
       formProps={formConfig}
       
-      // Estado y manejadores para el modal de detalles
+      // State and handlers for modals
       selectedEntity={selectedStudent}
       showDetailsModal={showDetailsModal}
       onCloseDetailsModal={handleCloseDetailsModal}
       
-      // Textos personalizables
       pageTitle="Tus Estudiantes"
       pageDescription="Gestiona la información de los estudiantes a tu cargo"
       detailsModalTitle="Detalles del Estudiante"
       detailsModalDescription="Información detallada del estudiante seleccionado"
       
-      // Render personalizado
-      renderEntityDetails={renderStudentDetails}
+      // Configuration for the details modal
+      entityDisplayConfig={entityDisplayConfig}
     />
   );
 }
