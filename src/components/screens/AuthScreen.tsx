@@ -24,7 +24,6 @@ const registryFields: FormField[] = [
     { value: "TUTOR", label: "Tutor" },
     { value: "UNIVERSITY", label: "Universidad" },
   ] },
-];
 
 const slides: Slide[] = [
   {
@@ -78,12 +77,17 @@ export default function AuthScreen() {
     await login(userData.email, userData.password);
   };
 
+  const handleForgotPassword = () => {
+    navigate("/forgot-password");
+  };
+
   return (
     <AuthTemplate
       loginFields={loginFields}
       registryFields={registryFields}
       onLogin={handleLogin}
       onRegister={handleRegister}
+      onForgotPassword={handleForgotPassword}
       slides={slides}
     />
   );

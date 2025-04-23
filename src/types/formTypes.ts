@@ -10,6 +10,7 @@ export type FieldType =
     | "select"
     | "custom"
     | "password"
+    | "create-password"
     | "extension-phone"
     | "phone"
     | "document"
