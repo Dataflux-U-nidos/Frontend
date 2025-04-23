@@ -24,6 +24,7 @@ const registryFields: FormField[] = [
     { value: "TUTOR", label: "Tutor" },
     { value: "UNIVERSITY", label: "Universidad" },
   ] },
+]
 
 const slides: Slide[] = [
   {
