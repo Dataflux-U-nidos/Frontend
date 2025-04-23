@@ -72,18 +72,16 @@ export const AppRoutes = () => {
 
           <Route element={<ViewerRoutes />}>
             <Route path="/" element={<Layout navMain={viewerMenu} user={currentUser} />}>
-              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
+              <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
 
           <Route element={<StudentRoutes />}>
             <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
-              <Route path="account" element={<AccountScreen />} />
-              <Route path="student-profile" element={<StudentProfileScreen />} />
+              <Route path="/account" element={<AccountScreen />} />
+              <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
-
-          
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -1,9 +1,5 @@
 
-//import { mockStudentData } from "../data/mockStudentData"
-import { ProfileCard } from "../organisms/ProfileCard"
-import { PersonalityCard } from "../organisms/PersonalityCard"
-import { PreferencesCard } from "../organisms/PreferencesCard"
-import { TopCareersCard } from "../organisms/TopCareersCard"
+import { StudentProfileTemplate } from "../templates/ProfileTemplate";
 import collegeStudentImg from "../../assets/college-student.jpg";
 
 export const mockStudentData = {
@@ -33,33 +29,5 @@ export const mockStudentData = {
   
 
 export default function StudentProfileScreen() {
-  const {
-    name,
-    email,
-    age,
-    school,
-    location,
-    avatar,
-    personality,
-    preferences,
-    topCareers,
-  } = mockStudentData
-
-  return (
-    <div className="max-w-5xl mx-auto p-6 space-y-8">
-      <ProfileCard
-        name={name}
-        email={email}
-        age={age}
-        school={school}
-        location={location}
-        avatar={avatar}
-      />
-      <div className="grid md:grid-cols-2 gap-6">
-        <PersonalityCard personality={personality} />
-        <PreferencesCard preferences={preferences} />
-      </div>
-      <TopCareersCard careers={topCareers} />
-    </div>
-  )
+  return <StudentProfileTemplate {...mockStudentData} />
 }
