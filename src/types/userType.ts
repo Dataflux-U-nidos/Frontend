@@ -5,6 +5,7 @@ export interface User {
     email: string;
     password: string;
     age: number;
+    userType: string; // "STUDENT" | "VIEWER" | "ADMIN"
     locality?: string;
     school?: string;
     preferences?: Record<string, unknown>;
