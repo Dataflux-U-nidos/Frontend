@@ -76,7 +76,7 @@ export const AppRoutes = () => {
 
           <Route element={<StudentRoutes />}>
             <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
-              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
+              <Route path="student-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
 

@@ -23,6 +23,7 @@ type InputType =
   | "address"
   | "extension-phone"
   | "search"
+  | "number"
   | undefined
 
 function getConfigForType(type: InputType) {
@@ -75,12 +76,20 @@ function getConfigForType(type: InputType) {
         maxLength: 100,
         icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
       }
+    case "number":
+      return {
+        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos"),
+        maxLength: 3,
+        icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
+        
+      }
     default:
       return {
         schema: z.string().max(100),
         maxLength: 100,
         icon: undefined,
       }
+     
   }
 }
 
