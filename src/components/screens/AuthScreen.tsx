@@ -56,7 +56,7 @@ const slides: Slide[] = [
 ];
 
 export default function AuthScreen() {
-  const { userType, login, createAccount } = useAuthContext();
+  const { userType, login, registryAccount } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -98,8 +98,8 @@ export default function AuthScreen() {
     };
     
     console.log("Enviando:", userData);
-    await createAccount(userData);
-    if (password) await login(email, password);
+    await registryAccount(userData);
+    await login(userData.email, userData.password);
   };
 
   const handleForgotPassword = () => {
