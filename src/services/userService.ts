@@ -13,6 +13,11 @@ export const getAllUsers = async (): Promise<User[]> => {
     return data;
 };
 
+export const getStudentsByTutor = async (tutorId: string): Promise<User[]> => {
+    const { data } = await userApi.get<User[]>(`/user/${tutorId}/students`);
+    return data;
+};
+
 export const deleteUser = async (id: string): Promise<void> => {
     await userApi.delete(`/user/${id}`);
 };
