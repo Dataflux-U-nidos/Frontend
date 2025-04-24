@@ -29,7 +29,6 @@ const studentFields: FormField[] = [
 const universityFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa nombre de la institución", required: true },
   { type: "address", key: "address", placeholder: "Ingresa la dirección", required: true },
-  { type: "number", key: "age", placeholder: "Ingresa edad del contacto", required: true },
   { type: "email", key: "email", placeholder: "Ingresa correo institucional", required: true },
   { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
@@ -65,7 +64,6 @@ export default function AuthScreen() {
   const { userType, login, registryAccount } = useAuthContext();
   const navigate = useNavigate();
   const location = useLocation();
-
   const [selectedType, setSelectedType] = useState<string>("STUDENT");
 
   useEffect(() => {
@@ -117,31 +115,37 @@ export default function AuthScreen() {
   const registryFields = registryFieldsMap[selectedType] || [];
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="mb-4">
-        <label htmlFor="user-type" className="mr-2 font-medium">
-          Selecciona tipo de usuario:
-        </label>
-        <select
-          id="user-type"
-          value={selectedType}
-          onChange={(e) => setSelectedType(e.target.value)}
-          className="border rounded p-2"
-        >
-          <option value="STUDENT">Estudiante</option>
-          <option value="TUTOR">Tutor</option>
-          <option value="UNIVERSITY">Universidad</option>
-        </select>
-      </div>
-
-      <AuthTemplate
-        loginFields={loginFields}
-        registryFields={registryFields}
-        onLogin={handleLogin}
-        onRegister={handleRegister}
-        onForgotPassword={handleForgotPassword}
-        slides={slides}
-      />
-    </div>
+    <AuthTemplate
+      loginFields={loginFields}
+      registryFields={registryFields}
+      onLogin={handleLogin}
+      onRegister={handleRegister}
+      onForgotPassword={handleForgotPassword}
+      slides={slides}
+      userTypeOptions={{
+        selectedType,
+        onSelectType: setSelectedType,
+        options: [
+          {
+            value: "STUDENT",
+            label: "Estudiante",
+            icon: "UserCircle",
+            description: "Para estudiantes que buscan oportunidades académicas"
+          },
+          {
+            value: "TUTOR",
+            label: "Tutor",
+            icon: "School",
+            description: "Para docentes y orientadores académicos"
+          },
+          {
+            value: "UNIVERSITY",
+            label: "Universidad",
+            icon: "Building2",
+            description: "Para instituciones educativas"
+          }
+        ]
+      }}
+    />
   );
 }

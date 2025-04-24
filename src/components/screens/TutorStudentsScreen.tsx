@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
-import { EntityForm, FormField } from "@/components/molecules/EntityFrorm";
+import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 
 interface Student {
   email: string;
