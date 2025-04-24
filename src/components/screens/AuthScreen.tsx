@@ -11,27 +11,33 @@ const loginFields: FormField[] = [
   { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
 
-const studentAndTutorFields: FormField[] = [
+const tutorFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
   { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
   { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
   { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
-
-const ageField: FormField [] = [
-  {type: "number", key: "age", placeholder: "Ingresa tu edad", required: true }
+const studentFields: FormField[] = [
+  { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
+  { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
+  {type: "number", key: "age", placeholder: "Ingresa tu edad", required: true },
+  { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
+  { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  
 ];
 
 const universityFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa nombre de la institución", required: true },
+  { type: "address", key: "address", placeholder: "Ingresa la dirección", required: true },
+  { type: "number", key: "age", placeholder: "Ingresa edad del contacto", required: true },
   { type: "email", key: "email", placeholder: "Ingresa correo institucional", required: true },
   { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
 
 // Registry fields definitions for each userType
 const registryFieldsMap: Record<string, FormField[]> = {
-  STUDENT: studentAndTutorFields, ageField,
-  TUTOR: studentAndTutorFields,
+  STUDENT: studentFields,
+  TUTOR: tutorFields,
   UNIVERSITY: universityFields,
 };
 
@@ -95,6 +101,7 @@ export default function AuthScreen() {
       password: data.password,
       last_name: data.last_name,
       age: data.age,
+      address: data.address,
     };
     
     console.log("Enviando:", userData);
