@@ -3,6 +3,8 @@ import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
+import { useCreateUser, useGetStudentsByTutor, useUpdateUser, useDeleteUser } from "@/hooks";
+import { useAuthContext } from "@/context/AuthContext";
 
 interface Student {
   email: string;
@@ -49,15 +51,9 @@ const studentFormFields: FormField[] = [
     required: true
   },
   {
-    name: "tutorEmail",
-    label: "Correo Electrónico del Tutor",
-    type: "email",
-    required: true
-  },
-  {
-    name: "birthDate",
-    label: "Fecha de Nacimiento",
-    type: "date",
+    name: "age",
+    label: "Edad",
+    type: "number",
     required: true
   },
   {
@@ -68,7 +64,12 @@ const studentFormFields: FormField[] = [
   }
 ];
 
+
+
 export default function TutorStudentsScreen() {
+  // Get the current user from the context
+  const { registryAccount } = useAuthContext();
+
   // State to manage students data
   const [studentsData, setStudentsData] = useState<Student[]>(initialStudentsData);
   
@@ -107,32 +108,20 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for adding a new student
-  const handleAddStudent = (formData: any) => {
-    // Calculate age from birth date
-    const birthDate = new Date(formData.birthDate);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    
-    // Create a new student object
-    const newStudent: Student = {
-      name: `${formData.firstName} ${formData.lastName}`,
+  const handleAddStudent = async (formData: any) => {
+
+
+    const userData = {
+      name: formData.firstName,
+      last_name: formData.lastName,
       email: formData.email,
-      age: age,
-      school: "Por asignar", // Valores por defecto
-      location: "Por asignar"
+      age: formData.age,
+      password: formData.password,
+      userType: 'STUDENT'
     };
-    
-    const updatedStudents = [...studentsData, newStudent];
-    setStudentsData(updatedStudents);
-    setFilteredData(updatedStudents);
-    
-    handleCloseAddModal();
-    
-    console.log("Nuevo estudiante agregado:", newStudent);
+
+    console.log("Enviando:", userData);
+    await registryAccount(userData);
   };
   
   // Manager for searching students

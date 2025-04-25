@@ -27,6 +27,8 @@ interface EntityFormProps {
   description?: string;
   submitButtonText?: string;
   cancelButtonText?: string;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
 export const EntityForm: React.FC<EntityFormProps> = ({
@@ -38,6 +40,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
   description = "",
   submitButtonText = "Guardar",
   cancelButtonText = "Cancelar",
+  isLoading = false,
+  error = null
 }) => {
   // Estado para gestionar todos los campos de forma dinámica
   const [formData, setFormData] = React.useState<Record<string, any>>({});
@@ -85,7 +89,7 @@ export const EntityForm: React.FC<EntityFormProps> = ({
         return (
           <div className="space-y-2" key={name}>
             <label htmlFor={name} className="text-sm font-medium text-gray-700">
-              {label}
+              {label} {required && <span className="text-red-500">*</span>}
             </label>
             <select
               id={name}
@@ -93,7 +97,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               required={required}
               value={formData[name] || ""}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              disabled={isLoading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               <option value="">Seleccione...</option>
               {options?.map(option => (
@@ -109,7 +114,7 @@ export const EntityForm: React.FC<EntityFormProps> = ({
         return (
           <div className="space-y-2" key={name}>
             <label htmlFor={name} className="text-sm font-medium text-gray-700">
-              {label}
+              {label} {required && <span className="text-red-500">*</span>}
             </label>
             <textarea
               id={name}
@@ -118,8 +123,9 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               placeholder={placeholder}
               value={formData[name] || ""}
               onChange={handleChange}
+              disabled={isLoading}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
         );
@@ -133,7 +139,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               type="checkbox"
               checked={formData[name] || false}
               onChange={handleChange}
-              className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded"
+              disabled={isLoading}
+              className="h-4 w-4 text-orange-500 focus:ring-orange-500 border-gray-300 rounded disabled:opacity-50"
             />
             <label htmlFor={name} className="text-sm font-medium text-gray-700">
               {label}
@@ -145,7 +152,7 @@ export const EntityForm: React.FC<EntityFormProps> = ({
         return (
           <div className="space-y-2" key={name}>
             <label htmlFor={name} className="text-sm font-medium text-gray-700">
-              {label}
+              {label} {required && <span className="text-red-500">*</span>}
             </label>
             <input
               id={name}
@@ -155,7 +162,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               placeholder={placeholder}
               value={formData[name] || ""}
               onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              disabled={isLoading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
             />
           </div>
         );
@@ -177,6 +185,13 @@ export const EntityForm: React.FC<EntityFormProps> = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          {/* Mostrar mensaje de error si existe */}
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-sm">
+              {error}
+            </div>
+          )}
+          
           {/* Renderizar campos en una o dos columnas dependiendo del número */}
           <div className={`grid ${fields.length > 5 ? "grid-cols-2" : "grid-cols-1"} gap-4`}>
             {fields.map(field => renderField(field))}
@@ -186,14 +201,22 @@ export const EntityForm: React.FC<EntityFormProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              disabled={isLoading}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {cancelButtonText}
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              disabled={isLoading}
+              className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
+              {isLoading && (
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              )}
               {submitButtonText}
             </button>
           </DialogFooter>
