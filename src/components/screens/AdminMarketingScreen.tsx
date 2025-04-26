@@ -26,7 +26,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new marketingUser
+// Form fields for adding a new marketingUser with password validation
 const marketingUserFormFields: FormField[] = [
   {
     name: "firstName",
@@ -51,6 +51,14 @@ const marketingUserFormFields: FormField[] = [
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -82,7 +90,6 @@ export default function UniversityMarketingUsersScreen() {
   const { mutateAsync: getMarketingUsers } = useGetMarketingByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
-
     // state variables
   const [marketingUsersData, setMarketingUsersData] = useState<MarketingUser[]>([]);
   const [filteredData, setFilteredData] = useState<MarketingUser[]>([]);
@@ -96,7 +103,6 @@ export default function UniversityMarketingUsersScreen() {
   const [marketingUserToDelete, setMarketingUserToDelete] = useState<MarketingUser | null>(null);
   const [marketingUserToEdit, setMarketingUserToEdit] = useState<MarketingUser | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
-
   // loads marketingUsers when component mounts
   useEffect(() => {
     const fetchMarketingUsers = async () => {
@@ -123,41 +129,39 @@ export default function UniversityMarketingUsersScreen() {
         console.error("Error fetching marketingUsers:", error);
       }
     };
-
     fetchMarketingUsers();
   }, [getMarketingUsers]);
-
+  
   const handleCloseNotification = () => {
     setNotification(null);
   };
-
+  
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
         setNotification(null);
       }, 5000);
-
       return () => clearTimeout(timer);
     }
   }, [notification]);
-
+  
   // Manager for viewing marketingUser details
   const handleViewDetails = (marketingUser: MarketingUser) => {
     setSelectedMarketingUser(marketingUser);
     setShowDetailsModal(true);
   };
-
+  
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
     setSelectedMarketingUser(null);
   };
-
+  
   // Manager for opening the add marketingUser modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
-
+  
   // Manager for closing the add marketingUser modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
@@ -278,7 +282,6 @@ export default function UniversityMarketingUsersScreen() {
       setIsDeleting(false);
     }
   };
-
   // Manager for adding a new marketingUser
   const handleAddMarketingUser = async (formData: any) => {
     const userData = {
@@ -288,7 +291,6 @@ export default function UniversityMarketingUsersScreen() {
       password: formData.password,
       userType: "MARKETING",
     };
-
     console.log("Enviando:", userData);
     
     try {
@@ -331,24 +333,20 @@ export default function UniversityMarketingUsersScreen() {
       });
     }
   };
-
   // Manager for searching marketingUsers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
       setFilteredData(marketingUsersData);
       return;
     }
-
     const lowerCaseSearch = searchTerm.toLowerCase();
     const filtered = marketingUsersData.filter(
       (marketingUser) =>
         marketingUser.name.toLowerCase().includes(lowerCaseSearch) ||
         marketingUser.email.toLowerCase().includes(lowerCaseSearch)
     );
-
     setFilteredData(filtered);
   };
-
   // Configuration for marketingUser details display
   const entityDisplayConfig = {
     fields: ["name", "email"] as (keyof MarketingUser)[],
@@ -363,7 +361,6 @@ export default function UniversityMarketingUsersScreen() {
       textColor: "text-white",
     },
   };
-
   const tableActions = [
     {
       label: "Editar",
@@ -386,7 +383,6 @@ export default function UniversityMarketingUsersScreen() {
       )
     }
   ];
-
   const tableConfig = {
     caption: "Usuarios de marketing asignados",
     rowsPerPage: 6,
@@ -399,7 +395,6 @@ export default function UniversityMarketingUsersScreen() {
     actionButtonText: "Ver detalles",
     actions: tableActions
   };
-
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
@@ -407,7 +402,6 @@ export default function UniversityMarketingUsersScreen() {
     addButtonLabel: "Agregar usuario de marketing",
     showFilterButton: false 
   };
-
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
@@ -419,6 +413,7 @@ export default function UniversityMarketingUsersScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // FIX: Usar operador ternario para evitar el error de tipado con defaultValues
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -429,14 +424,13 @@ export default function UniversityMarketingUsersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: marketingUserToEdit && {
+    defaultValues: marketingUserToEdit ? {
       firstName: marketingUserToEdit.firstName ?? marketingUserToEdit.name.split(' ')[0] ?? '',
       lastName: marketingUserToEdit.lastName ?? marketingUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: marketingUserToEdit.email,
-    }
+    } : undefined
   };
-
-
+  
   return (
     <>
       <ConfirmationDialog
