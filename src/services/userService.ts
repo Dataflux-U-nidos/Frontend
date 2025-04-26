@@ -15,10 +15,8 @@ export const getAllUsers = async (): Promise<User[]> => {
   return data;
 };
 
-export const getStudentsByTutor = async (
-  tutorToken: string
-): Promise<User[]> => {
-  const { data } = await userApi.get<User[]>(`/user/${tutorToken}/students`);
+export const getStudentsByTutor = async (id: string): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/${id}/students`);
   return data;
 };
 
