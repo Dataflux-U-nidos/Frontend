@@ -1,19 +1,24 @@
 // hooks/useUserHooks.ts
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getStudentsByTutor } from "@/services/userService";
 import { User } from "@/types";
 import { QUERY_KEYS } from "@/lib/api";
+import { getUserId } from "@/lib/api/authApi";
 
-export function useGetStudentsByTutor(tutorToker?: string) {
-  return useQuery<User[], Error>({
-    queryKey: [QUERY_KEYS.STUDENTS_BY_TUTOR, tutorToker],
-    queryFn: () => {
-      if (!tutorToker) throw new Error("Tutor Token no proporcionado");
-      return getStudentsByTutor(tutorToker);
+export function useGetStudentsByTutor() {
+  const queryClient = useQueryClient();
+  return useMutation<User[], Error>({
+    mutationFn: async () => {
+      const userId = getUserId();
+      if (!userId) {
+        throw new Error("User ID is null");
+      }
+      return await getStudentsByTutor(userId);
     },
-    //only fetch if tutorToker is provided
-    enabled: Boolean(tutorToker),    
-    // Refetch data every 5 minutes      
-    staleTime: 1000 * 60 * 5,           
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.STUDENTS_BY_TUTOR],
+      });
+    },
   });
 }

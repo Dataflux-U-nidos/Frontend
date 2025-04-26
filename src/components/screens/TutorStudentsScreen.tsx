@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
@@ -10,6 +10,7 @@ import {
   useDeleteUser,
 } from "@/hooks";
 import { useAuthContext } from "@/context/AuthContext";
+import { get } from "http";
 
 interface Student {
   email: string;
@@ -18,94 +19,6 @@ interface Student {
   school: string;
   location: string;
 }
-
-// Example data for students
-const initialStudentsData: Student[] = [
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "juana_perez@gmail.com",
-    name: "Juanita Perez",
-    age: 20,
-    school: "Colegio Naval Santa Fé",
-    location: "Chapinero",
-  },
-  {
-    email: "maria_gomez@gmail.com",
-    name: "María Gómez",
-    age: 17,
-    school: "Colegio Los Andes",
-    location: "Usaquén",
-  },
-  {
-    email: "pedro_lopez@gmail.com",
-    name: "Pedro López",
-    age: 17,
-    school: "Colegio Nueva Esperanza",
-    location: "Suba",
-  },
-  {
-    email: "ana_martinez@gmail.com",
-    name: "Ana Martínez",
-    age: 16,
-    school: "Colegio Mayor de San Bartolomé",
-    location: "La Candelaria",
-  },
-  {
-    email: "carlos_rodriguez@gmail.com",
-    name: "Carlos Rodríguez",
-    age: 18,
-    school: "Colegio San Carlos",
-    location: "Usaquén",
-  },
-  {
-    email: "valentina_gonzalez@gmail.com",
-    name: "Valentina González",
-    age: 15,
-    school: "Gimnasio Campestre",
-    location: "Suba",
-  },
-  {
-    email: "santiago_hernandez@gmail.com",
-    name: "Santiago Hernández",
-    age: 16,
-    school: "Colegio Nueva Granada",
-    location: "Chapinero",
-  },
-];
 
 // Form fields for adding a new student
 const studentFormFields: FormField[] = [
@@ -142,18 +55,17 @@ const studentFormFields: FormField[] = [
 ];
 
 export default function TutorStudentsScreen() {
-  
-
   // Get the current user from the context
   const { mutateAsync: createUser } = useCreateUser();
+  const { mutateAsync: getStudents } = useGetStudentsByTutor();
 
   // State to manage students data
-  const [studentsData, setStudentsData] =
-    useState<Student[]>(initialStudentsData);
+  const [studentsData, setStudentsData] = useState<Student[]>([]);
+
+  console.log("Students data:", studentsData);
 
   // State to manage filtered data
-  const [filteredData, setFilteredData] =
-    useState<Student[]>(initialStudentsData);
+  const [filteredData, setFilteredData] = useState<Student[]>([]);
 
   // State to manage the modal for viewing student details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -163,6 +75,24 @@ export default function TutorStudentsScreen() {
 
   // State to manage the selected student for details
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+
+  useEffect(() => {
+    const fetchStudents = async () => {
+      try {
+        const students = await getStudents();
+        const mappedStudents = students.map((user) => ({
+          ...user,
+          location: "Unknown",
+        })) as Student[];
+        setStudentsData(mappedStudents);
+        setFilteredData(mappedStudents);
+      } catch (error) {
+        console.error("Error fetching students:", error);
+      }
+    };
+
+    fetchStudents();
+  }, [getStudents]);
 
   // Manager for viewing student details
   const handleViewDetails = (student: Student) => {

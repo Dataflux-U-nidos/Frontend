@@ -4,7 +4,7 @@ const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
 interface JwtPayload {
-  id: string;  
+  id: string;
 }
 export function setTokens({
   accessToken,
@@ -33,10 +33,9 @@ export function getRefreshToken() {
 }
 export function getUserId() {
   const token = getAccessToken();
-  let tutorId: string | undefined;
   if (!token) return null;
   const decoded = jwtDecode<JwtPayload>(token);
-  tutorId = decoded.id;
+  const tutorId: string | undefined = decoded.id;
   return tutorId;
 }
 export const authApi = axios.create({
@@ -102,10 +101,16 @@ authApi.interceptors.response.use(
         return authApi(originalRequest);
       } catch (refreshError) {
         clearTokens();
-        return Promise.reject(refreshError instanceof Error ? refreshError : new Error(String(refreshError)));
+        return Promise.reject(
+          refreshError instanceof Error
+            ? refreshError
+            : new Error(String(refreshError))
+        );
       }
     }
 
-    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+    return Promise.reject(
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 );

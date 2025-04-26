@@ -3,12 +3,8 @@ import { userApi, QUERY_KEYS } from "../../lib/api";
 import { CreateUserInput, User } from "../../types";
 
 const createUser = async (newUser: CreateUserInput): Promise<User> => {
-  const response = await userApi.post<User>("/user", newUser);
-
-  // Print headers for debugging
-  console.log("Response Headers:", response.headers);
-
-  return response.data;
+  const { data } = await userApi.post<User>("/user", newUser);
+  return data;
 };
 
 export function useCreateUser() {
