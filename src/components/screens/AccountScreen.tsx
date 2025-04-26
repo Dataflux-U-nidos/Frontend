@@ -3,6 +3,7 @@ import { FormField } from "@/types/formTypes";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
+import { getUserById } from "@/services/userService";
 // import { useAuthContext } from "@/context/AuthContext";
 // import { User } from "@/types";
 
@@ -30,8 +31,11 @@ const mockUser = {
   email: "juana_perez@gmail.com",
 };
 
+
+
 export default function AccountScreen() {
   // const { userType, user, updateUserProfile, deleteUserAccount } = useAuthContext();
+
   const navigate = useNavigate();
   const { userType } = useAuthContext();
   const [loading, setLoading] = useState(false);

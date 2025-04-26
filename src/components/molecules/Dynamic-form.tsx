@@ -60,6 +60,9 @@ function baseValidationForType(type: FieldType): z.ZodString {
         case "address":
             schema = schema.max(100, "Máximo 100 caracteres")
             break
+        case "number":
+            schema = schema.regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos")
+            break
         default:
             break
     }

@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
+import TutorRoutes from "./TutorRoutes";
 import { Presentation, House, University, BriefcaseBusiness, BookOpenCheck, ChartSpline } from "lucide-react";
 
 // Carga perezosa (lazy) de componentes
@@ -15,6 +16,7 @@ const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScre
 const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
 const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
 const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
+const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
 
 export const viewerMenu = [
   {
@@ -52,6 +54,14 @@ export const studentMenu = [
   },
 ]
 
+export const tutorMenu = [
+  {
+    title: "Estudiantes",
+    url: "/tutor-students",
+    icon: University,
+  }
+]
+
 const currentUser = {
   name: "Laura Rojas",
   email: "laura@example.com",
@@ -78,10 +88,18 @@ export const AppRoutes = () => {
 
           <Route element={<StudentRoutes />}>
             <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
-              <Route path="/account" element={<AccountScreen />} />
-              <Route path="/student-profile" element={<StudentProfileScreen />} />
+            <Route path="/account" element={<AccountScreen />} />
+            <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
+
+          <Route element={<TutorRoutes />}>
+            <Route path="/" element={<Layout navMain={tutorMenu} user={currentUser} />}>
+              <Route path="tutor-students" element={<TutorStudentsScreen />} />
+            </Route>
+          </Route>
+
+          
         </Routes>
       </Suspense>
     </BrowserRouter>
