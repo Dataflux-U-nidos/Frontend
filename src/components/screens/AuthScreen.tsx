@@ -72,7 +72,7 @@ export default function AuthScreen() {
     } else if (userType === "VIEWER" && location.pathname !== "/viewer-dashboard") {
       navigate("/viewer-dashboard");
     } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {
-      navigate("/admin-dashboard");
+      navigate("/admin-finances");
     } else if (userType === "TUTOR" && location.pathname !== "/tutor-students") {
       navigate("/tutor-students");
     }

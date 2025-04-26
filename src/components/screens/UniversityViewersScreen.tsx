@@ -19,7 +19,7 @@ interface Viewer {
   lastName?: string;
 }
 
-// Interfaz para la notificación
+
 interface Notification {
   type: 'success' | 'error';
   title: string;
@@ -77,44 +77,24 @@ const viewerEditFormFields: FormField[] = [
 ];
 
 export default function UniversityViewersScreen() {
-  // Hooks para operaciones CRUD
+  // Hooks for CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getViewers } = useGetViewersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
 
-  // State to manage viewers data
+  // state variables
   const [viewersData, setViewersData] = useState<Viewer[]>([]);
-
-  // State to manage filtered data
   const [filteredData, setFilteredData] = useState<Viewer[]>([]);
-
-  // State to manage the modal for viewing viewer details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-
-  // State to manage the modal for adding a new viewer
   const [showAddModal, setShowAddModal] = useState(false);
-  
-  // State to manage the modal for editing a viewer
   const [showEditModal, setShowEditModal] = useState(false);
-  
-  // State to manage confirmation dialog for deleting a viewer
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  
-  // State to manage loading states
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  // State to manage the selected viewer for details
   const [selectedViewer, setSelectedViewer] = useState<Viewer | null>(null);
-  
-  // State to manage the viewer to delete
   const [viewerToDelete, setViewerToDelete] = useState<Viewer | null>(null);
-  
-  // State to manage the viewer to edit
   const [viewerToEdit, setViewerToEdit] = useState<Viewer | null>(null);
-
-  // Estado para manejar notificaciones
   const [notification, setNotification] = useState<Notification | null>(null);
 
   // loads viewers when component mounts
@@ -147,12 +127,10 @@ export default function UniversityViewersScreen() {
     fetchViewers();
   }, [getViewers]);
 
-  // Manejador para cerrar la notificación
   const handleCloseNotification = () => {
     setNotification(null);
   };
 
-  // Efecto para auto-cerrar la notificación después de 5 segundos
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -396,7 +374,6 @@ export default function UniversityViewersScreen() {
     },
   };
 
-  // Definir acciones para la tabla
   const tableActions = [
     {
       label: "Editar",
@@ -472,7 +449,6 @@ export default function UniversityViewersScreen() {
 
   return (
     <>
-      {/* Modal de confirmación para eliminar visualizador */}
       <ConfirmationDialog
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
@@ -485,10 +461,7 @@ export default function UniversityViewersScreen() {
         isLoading={isDeleting}
       />
       
-      {/* Formulario para agregar visualizadores */}
       <EntityForm {...addFormConfig} />
-      
-      {/* Formulario para editar visualizadores */}
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate

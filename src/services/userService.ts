@@ -30,6 +30,21 @@ export const getManagersByUniversity = async (): Promise<User[]> => {
   return data;
 };
 
+export const getSupportUsersByAdmin = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/support`);
+  return data;
+};
+
+export const getFinanceUsersByAdmin = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/finances`);
+  return data;
+};
+
+export const getMarketingUsersByAdmin = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/marketing`);
+  return data;
+};
+
 export const deleteUser = async (id: string): Promise<void> => {
   await userApi.delete(`/user/${id}`);
 };

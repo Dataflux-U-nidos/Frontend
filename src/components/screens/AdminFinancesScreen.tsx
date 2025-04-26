@@ -6,30 +6,28 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
-  useGetStudentsByTutor,
+  useGetFinanceByAdmin,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks";
 
-interface Student {
+interface FinanceUser {
   id?: string;
   email: string;
   name: string;
-  age: number;
-  school: string;
-  location: string;
   firstName?: string;
   lastName?: string;
 }
 
+// Interfaz para la notificación
 interface Notification {
   type: 'success' | 'error';
   title: string;
   message: string;
 }
 
-// Form fields for adding a new student
-const studentFormFields: FormField[] = [
+// Form fields for adding a new financeUser
+const financeUserFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -46,12 +44,6 @@ const studentFormFields: FormField[] = [
     name: "email",
     label: "Correo Electrónico",
     type: "email",
-    required: true,
-  },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
     required: true,
   },
   {
@@ -62,8 +54,8 @@ const studentFormFields: FormField[] = [
   },
 ];
 
-// Form fields for editing a student (sin contraseña)
-const studentEditFormFields: FormField[] = [
+// Form fields for editing a financeUser (sin contraseña)
+const financeUserEditFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -82,51 +74,35 @@ const studentEditFormFields: FormField[] = [
     type: "email",
     required: true,
   },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
-    required: true,
-  },
-  {
-    name: "school",
-    label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
-    type: "text",
-    required: false,
-  },
 ];
 
-export default function TutorStudentsScreen() {
-  // Hooks for CRUD
+export default function UniversityFinanceUsersScreen() {
+  // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: getFinanceUsers } = useGetFinanceByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
-  const [filteredData, setFilteredData] = useState<Student[]>([]);
+
+  // state variables
+  const [financeUsersData, setFinanceUsersData] = useState<FinanceUser[]>([]);
+  const [filteredData, setFilteredData] = useState<FinanceUser[]>([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  const [selectedFinanceUser, setSelectedFinanceUser] = useState<FinanceUser | null>(null); 
+  const [financeUserToDelete, setFinanceUserToDelete] = useState<FinanceUser | null>(null);
+  const [financeUserToEdit, setFinanceUserToEdit] = useState<FinanceUser | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
 
-  // loads students when component mounts
+  // loads financeUsers when component mounts
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchFinanceUsers = async () => {
       try {
-        const students = await getStudents();
-        const mappedStudents = students.map((user) => {
+        const financeUsers = await getFinanceUsers();
+        const mappedFinanceUsers = financeUsers.map((user) => {
           // Extraer el nombre y apellido
           const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
           const nameParts = fullName.split(' ');
@@ -139,20 +115,17 @@ export default function TutorStudentsScreen() {
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            age: user.age || 0,
-            school: user.school ?? 'No disponible',
-            location: user.locality ?? 'No disponible'
           };
-        }) as Student[];
-        setStudentsData(mappedStudents);
-        setFilteredData(mappedStudents);
+        }) as FinanceUser[];
+        setFinanceUsersData(mappedFinanceUsers);
+        setFilteredData(mappedFinanceUsers);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching financeUsers:", error);
       }
     };
 
-    fetchStudents();
-  }, [getStudents]);
+    fetchFinanceUsers();
+  }, [getFinanceUsers]);
 
   const handleCloseNotification = () => {
     setNotification(null);
@@ -168,98 +141,88 @@ export default function TutorStudentsScreen() {
     }
   }, [notification]);
 
-  // Manager for viewing student details
-  const handleViewDetails = (student: Student) => {
-    setSelectedStudent(student);
+  // Manager for viewing financeUser details
+  const handleViewDetails = (financeUser: FinanceUser) => {
+    setSelectedFinanceUser(financeUser);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedStudent(null);
+    setSelectedFinanceUser(null);
   };
 
-  // Manager for opening the add student modal
+  // Manager for opening the add financeUser modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
 
-  // Manager for closing the add student modal
+  // Manager for closing the add financeUser modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
   // Manager for initiating edit process
-  const handleInitiateEdit = (student: Student) => {
-    setStudentToEdit(student);
+  const handleInitiateEdit = (financeUser: FinanceUser) => {
+    setFinanceUserToEdit(financeUser);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setStudentToEdit(null);
+    setFinanceUserToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditStudent = async (formData: any) => {
-    if (!studentToEdit || !studentToEdit.id) return;
+  const handleEditFinanceUser = async (formData: any) => {
+    if (!financeUserToEdit || !financeUserToEdit.id) return;
     
     setIsEditing(true);
     
     try {
       const userData = {
-        id: studentToEdit.id,
+        id: financeUserToEdit.id,
         name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        locality: formData.location,
       };
       
       await updateUser(userData);
       
-      // Cerrar el modal de edición
       setShowEditModal(false);
-      setStudentToEdit(null);
+      setFinanceUserToEdit(null);
       
-      // Actualizar la lista de estudiantes
-      const updatedStudent = {
-        ...studentToEdit,
+      const updatedFinanceUser = {
+        ...financeUserToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        location: formData.location
       };
       
-      const updatedStudents = studentsData.map(student => 
-        student.id === updatedStudent.id ? updatedStudent : student
+      const updatedFinanceUsers = financeUsersData.map(financeUser => 
+        financeUser.id === updatedFinanceUser.id ? updatedFinanceUser : financeUser
       );
       
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setFinanceUsersData(updatedFinanceUsers);
+      setFilteredData(updatedFinanceUsers);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante actualizado',
-        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+        title: 'Usuario de finanzas actualizado',
+        message: `El usuario de finanzas ${updatedFinanceUser.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
-      console.error("Error actualizando estudiante:", error);
+      console.error("Error actualizando usuario de finanzas:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al actualizar estudiante',
+        title: 'Error al actualizar usuario de finanzas',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+          : 'Ha ocurrido un error al intentar actualizar el usuario de finanzas.'
       });
     } finally {
       setIsEditing(false);
@@ -267,68 +230,63 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for initiating delete process
-  const handleInitiateDelete = (student: Student) => {
-    setStudentToDelete(student);
+  const handleInitiateDelete = (financeUser: FinanceUser) => {
+    setFinanceUserToDelete(financeUser);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setStudentToDelete(null);
+    setFinanceUserToDelete(null);
   };
   
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+    if (!financeUserToDelete || !financeUserToDelete.id) return;
     
     setIsDeleting(true);
     
     try {
-      await deleteUser(studentToDelete.id);
+      await deleteUser(financeUserToDelete.id);
       
-      // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setStudentToDelete(null);
+      setFinanceUserToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
+      const updatedFinanceUsers = financeUsersData.filter(
+        financeUser => financeUser.id !== financeUserToDelete.id
       );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setFinanceUsersData(updatedFinanceUsers);
+      setFilteredData(updatedFinanceUsers);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+        title: 'Usuario de finanzas eliminado',
+        message: `El usuario de finanzas ${financeUserToDelete.name} ha sido eliminado exitosamente.`
       });
     } catch (error) {
-      console.error("Error eliminando estudiante:", error);
+      console.error("Error eliminando usuario de finanzas:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al eliminar estudiante',
+        title: 'Error al eliminar usuario de finanzas',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+          : 'Ha ocurrido un error al intentar eliminar el usuario de finanzas.'
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Manager for adding a new student
-  const handleAddStudent = async (formData: any) => {
+  // Manager for adding a new financeUser
+  const handleAddFinanceUser = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      age: formData.age,
       password: formData.password,
-      userType: "STUDENT",
+      userType: "FINANCES",
     };
 
     console.log("Enviando:", userData);
@@ -339,13 +297,12 @@ export default function TutorStudentsScreen() {
       
       setNotification({
         type: 'success',
-        title: '¡Estudiante creado!',
-        message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        title: 'Usuario de finanzas creado!',
+        message: `El usuario de finanzas ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
-      const students = await getStudents();
-      const mappedStudents = students.map((user) => {
+      const financeUsers = await getFinanceUsers();
+      const mappedFinanceUsers = financeUsers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
@@ -357,63 +314,52 @@ export default function TutorStudentsScreen() {
           name: fullName,
           firstName: firstName,
           lastName: lastName,
-          age: user.age || 0,
-          school: user.school ?? 'No disponible',
-          location: user.locality ?? 'No disponible'
         };
-      }) as Student[];
-      setStudentsData(mappedStudents);
-      setFilteredData(mappedStudents);
+      }) as FinanceUser[];
+      setFinanceUsersData(mappedFinanceUsers);
+      setFilteredData(mappedFinanceUsers);
       
     } catch (error) {
-      console.error("Error creando estudiante:", error);
+      console.error("Error creando usuario de finanzas:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al crear estudiante',
+        title: 'Error al crear usuario de finanzas',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar crear el estudiante.'
+          : 'Ha ocurrido un error al intentar crear el usuario de finanzas.'
       });
     }
   };
 
-  // Manager for searching students
+  // Manager for searching financeUsers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
-      setFilteredData(studentsData);
+      setFilteredData(financeUsersData);
       return;
     }
 
     const lowerCaseSearch = searchTerm.toLowerCase();
-    const filtered = studentsData.filter(
-      (student) =>
-        student.name.toLowerCase().includes(lowerCaseSearch) ||
-        student.email.toLowerCase().includes(lowerCaseSearch) ||
-        student.school?.toLowerCase().includes(lowerCaseSearch) ||
-        student.location?.toLowerCase().includes(lowerCaseSearch)
+    const filtered = financeUsersData.filter(
+      (financeUser) =>
+        financeUser.name.toLowerCase().includes(lowerCaseSearch) ||
+        financeUser.email.toLowerCase().includes(lowerCaseSearch)
     );
 
     setFilteredData(filtered);
   };
 
-  // Configuration for student details display
+  // Configuration for financeUser details display
   const entityDisplayConfig = {
-    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    fields: ["name", "email"] as (keyof FinanceUser)[],
     labels: {
       name: "Nombre",
       email: "Correo",
-      age: "Edad",
-      school: "Colegio",
-      location: "Localidad",
-    },
-    formatters: {
-      age: (value: number) => `${value} años`,
     },
     avatar: {
-      field: "name" as keyof Student,
-      fallback: (student: Student) => student.name.split(" ")[0].charAt(0),
+      field: "name" as keyof FinanceUser,
+      fallback: (financeUser: FinanceUser) => financeUser.name.split(" ")[0].charAt(0),
       bgColor: "bg-orange-500",
       textColor: "text-white",
     },
@@ -443,15 +389,13 @@ export default function TutorStudentsScreen() {
   ];
 
   const tableConfig = {
-    caption: "Estudiantes asignados",
+    caption: "Usuarios de finanzas asignados",
     rowsPerPage: 6,
     onViewDetails: handleViewDetails,
-    displayColumns: ["email", "name", "age", "school"],
+    displayColumns: ["email", "name"],
     columnHeaders: {
       email: "Correo",
       name: "Nombre",
-      age: "Edad",
-      school: "Colegio",
     },
     actionButtonText: "Ver detalles",
     actions: tableActions
@@ -460,39 +404,36 @@ export default function TutorStudentsScreen() {
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
-    searchPlaceholder: "Buscar estudiante",
-    addButtonLabel: "Agregar estudiante",
+    searchPlaceholder: "Buscar usuario de finanzas",
+    addButtonLabel: "Agregar usuario de finanzas",
     showFilterButton: false 
   };
 
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddStudent,
-    fields: studentFormFields,
-    title: "Agregar Nuevo Estudiante",
-    description: "Completa el formulario para agregar un nuevo estudiante.",
-    submitButtonText: "Agregar Estudiante",
+    onSubmit: handleAddFinanceUser,
+    fields: financeUserFormFields,
+    title: "Agregar Nuevo Usuario de finanzas",
+    description: "Completa el formulario para agregar un nuevo usuario de finanzas.",
+    submitButtonText: "Agregar Usuario de finanzas",
     cancelButtonText: "Cancelar",
   };
   
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditStudent,
-    fields: studentEditFormFields,
-    title: "Editar Estudiante",
-    description: "Modifica la información del estudiante.",
+    onSubmit: handleEditFinanceUser,
+    fields: financeUserEditFormFields,
+    title: "Editar Usuario de finanzas",
+    description: "Modifica la información del usuario de finanzas.",
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
-      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
-      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    defaultValues: financeUserToEdit && {
+      firstName: financeUserToEdit.firstName ?? financeUserToEdit.name.split(' ')[0] ?? '',
+      lastName: financeUserToEdit.lastName ?? financeUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: financeUserToEdit.email,
     }
   };
 
@@ -503,21 +444,21 @@ export default function TutorStudentsScreen() {
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        title="Eliminar estudiante"
-        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        title="Eliminar usuario de finanzas"
+        description={`¿Estás seguro de que deseas eliminar a ${financeUserToDelete?.name}? Esta acción no se puede deshacer.`}
         confirmButtonText="Eliminar"
         cancelButtonText="Cancelar"
         variant="danger"
         isLoading={isDeleting}
       />
       
-      <EntityForm {...addFormConfig} />     
+      <EntityForm {...addFormConfig} />
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
-        entityType="Estudiantes"
+        entityType="Usuarios de finanzas"
         // Components
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
@@ -527,13 +468,13 @@ export default function TutorStudentsScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedStudent}
+        selectedEntity={selectedFinanceUser}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
-        pageTitle="Tus Estudiantes"
-        pageDescription="Gestiona la información de los estudiantes a tu cargo"
-        detailsModalTitle="Detalles del Estudiante"
-        detailsModalDescription="Información detallada del estudiante seleccionado"
+        pageTitle="Tus Usuarios de finanzas"
+        pageDescription="Gestiona la información de los usuario de finanzas a tu cargo"
+        detailsModalTitle="Detalles del Usuario de finanzas"
+        detailsModalDescription="Información detallada del usuario de finanzas seleccionado"
         // Configuration for the details modal
         entityDisplayConfig={entityDisplayConfig}
         notification={notification}

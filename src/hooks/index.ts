@@ -8,3 +8,6 @@ export * from './user/useUpdateUserByEmailHook';
 export * from './user/useGetStudentsByTutorHook';
 export * from './user/useGetViewersByUniversityHook';
 export * from './user/useGetManagersByUniversityHook';
+export * from './user/useGetSupportByAdminHook';
+export * from './user/useGetFinanceByAdminHook';
+export * from './user/useGetMarketingByAdminHook';

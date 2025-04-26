@@ -57,7 +57,6 @@ export default function AccountScreen() {
       await updateUser(data);
       setSuccess("Perfil actualizado correctamente");
       // console to show the updated data
-      console.log("Perfil actualizado:", data);
     } catch (err) {
       setError("Error al actualizar el perfil. Intenta nuevamente.");
       console.error("Error actualizando perfil:", err);

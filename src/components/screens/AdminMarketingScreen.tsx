@@ -6,30 +6,28 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
-  useGetStudentsByTutor,
+  useGetMarketingByAdmin,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks";
 
-interface Student {
+interface MarketingUser {
   id?: string;
   email: string;
   name: string;
-  age: number;
-  school: string;
-  location: string;
   firstName?: string;
   lastName?: string;
 }
 
+// Interfaz para la notificación
 interface Notification {
   type: 'success' | 'error';
   title: string;
   message: string;
 }
 
-// Form fields for adding a new student
-const studentFormFields: FormField[] = [
+// Form fields for adding a new marketingUser
+const marketingUserFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -46,12 +44,6 @@ const studentFormFields: FormField[] = [
     name: "email",
     label: "Correo Electrónico",
     type: "email",
-    required: true,
-  },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
     required: true,
   },
   {
@@ -62,8 +54,8 @@ const studentFormFields: FormField[] = [
   },
 ];
 
-// Form fields for editing a student (sin contraseña)
-const studentEditFormFields: FormField[] = [
+// Form fields for editing a marketingUser (sin contraseña)
+const marketingUserEditFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -82,51 +74,35 @@ const studentEditFormFields: FormField[] = [
     type: "email",
     required: true,
   },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
-    required: true,
-  },
-  {
-    name: "school",
-    label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
-    type: "text",
-    required: false,
-  },
 ];
 
-export default function TutorStudentsScreen() {
-  // Hooks for CRUD
+export default function UniversityMarketingUsersScreen() {
+  // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: getMarketingUsers } = useGetMarketingByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
-  const [filteredData, setFilteredData] = useState<Student[]>([]);
+
+    // state variables
+  const [marketingUsersData, setMarketingUsersData] = useState<MarketingUser[]>([]);
+  const [filteredData, setFilteredData] = useState<MarketingUser[]>([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  const [selectedMarketingUser, setSelectedMarketingUser] = useState<MarketingUser | null>(null);
+  const [marketingUserToDelete, setMarketingUserToDelete] = useState<MarketingUser | null>(null);
+  const [marketingUserToEdit, setMarketingUserToEdit] = useState<MarketingUser | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
 
-  // loads students when component mounts
+  // loads marketingUsers when component mounts
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchMarketingUsers = async () => {
       try {
-        const students = await getStudents();
-        const mappedStudents = students.map((user) => {
+        const marketingUsers = await getMarketingUsers();
+        const mappedMarketingUsers = marketingUsers.map((user) => {
           // Extraer el nombre y apellido
           const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
           const nameParts = fullName.split(' ');
@@ -139,20 +115,17 @@ export default function TutorStudentsScreen() {
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            age: user.age || 0,
-            school: user.school ?? 'No disponible',
-            location: user.locality ?? 'No disponible'
           };
-        }) as Student[];
-        setStudentsData(mappedStudents);
-        setFilteredData(mappedStudents);
+        }) as MarketingUser[];
+        setMarketingUsersData(mappedMarketingUsers);
+        setFilteredData(mappedMarketingUsers);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching marketingUsers:", error);
       }
     };
 
-    fetchStudents();
-  }, [getStudents]);
+    fetchMarketingUsers();
+  }, [getMarketingUsers]);
 
   const handleCloseNotification = () => {
     setNotification(null);
@@ -168,98 +141,88 @@ export default function TutorStudentsScreen() {
     }
   }, [notification]);
 
-  // Manager for viewing student details
-  const handleViewDetails = (student: Student) => {
-    setSelectedStudent(student);
+  // Manager for viewing marketingUser details
+  const handleViewDetails = (marketingUser: MarketingUser) => {
+    setSelectedMarketingUser(marketingUser);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedStudent(null);
+    setSelectedMarketingUser(null);
   };
 
-  // Manager for opening the add student modal
+  // Manager for opening the add marketingUser modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
 
-  // Manager for closing the add student modal
+  // Manager for closing the add marketingUser modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
   // Manager for initiating edit process
-  const handleInitiateEdit = (student: Student) => {
-    setStudentToEdit(student);
+  const handleInitiateEdit = (marketingUser: MarketingUser) => {
+    setMarketingUserToEdit(marketingUser);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setStudentToEdit(null);
+    setMarketingUserToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditStudent = async (formData: any) => {
-    if (!studentToEdit || !studentToEdit.id) return;
+  const handleEditMarketingUser = async (formData: any) => {
+    if (!marketingUserToEdit || !marketingUserToEdit.id) return;
     
     setIsEditing(true);
     
     try {
       const userData = {
-        id: studentToEdit.id,
+        id: marketingUserToEdit.id,
         name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        locality: formData.location,
       };
       
       await updateUser(userData);
       
-      // Cerrar el modal de edición
       setShowEditModal(false);
-      setStudentToEdit(null);
+      setMarketingUserToEdit(null);
       
-      // Actualizar la lista de estudiantes
-      const updatedStudent = {
-        ...studentToEdit,
+      const updatedMarketingUser = {
+        ...marketingUserToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        location: formData.location
       };
       
-      const updatedStudents = studentsData.map(student => 
-        student.id === updatedStudent.id ? updatedStudent : student
+      const updatedMarketingUsers = marketingUsersData.map(marketingUser => 
+        marketingUser.id === updatedMarketingUser.id ? updatedMarketingUser : marketingUser
       );
       
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setMarketingUsersData(updatedMarketingUsers);
+      setFilteredData(updatedMarketingUsers);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante actualizado',
-        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+        title: 'Usuario de marketing actualizado',
+        message: `El usuario de marketing ${updatedMarketingUser.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
-      console.error("Error actualizando estudiante:", error);
+      console.error("Error actualizando usuario de marketing:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al actualizar estudiante',
+        title: 'Error al actualizar usuario de marketing',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+          : 'Ha ocurrido un error al intentar actualizar el usuario de marketing.'
       });
     } finally {
       setIsEditing(false);
@@ -267,68 +230,63 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for initiating delete process
-  const handleInitiateDelete = (student: Student) => {
-    setStudentToDelete(student);
+  const handleInitiateDelete = (marketingUser: MarketingUser) => {
+    setMarketingUserToDelete(marketingUser);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setStudentToDelete(null);
+    setMarketingUserToDelete(null);
   };
   
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+    if (!marketingUserToDelete || !marketingUserToDelete.id) return;
     
     setIsDeleting(true);
     
     try {
-      await deleteUser(studentToDelete.id);
+      await deleteUser(marketingUserToDelete.id);
       
-      // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setStudentToDelete(null);
+      setMarketingUserToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
+      const updatedMarketingUsers = marketingUsersData.filter(
+        marketingUser => marketingUser.id !== marketingUserToDelete.id
       );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setMarketingUsersData(updatedMarketingUsers);
+      setFilteredData(updatedMarketingUsers);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+        title: 'Usuario de marketing eliminado',
+        message: `El usuario de marketing ${marketingUserToDelete.name} ha sido eliminado exitosamente.`
       });
     } catch (error) {
-      console.error("Error eliminando estudiante:", error);
+      console.error("Error eliminando usuario de marketing:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al eliminar estudiante',
+        title: 'Error al eliminar usuario de marketing',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+          : 'Ha ocurrido un error al intentar eliminar el usuario de marketing.'
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Manager for adding a new student
-  const handleAddStudent = async (formData: any) => {
+  // Manager for adding a new marketingUser
+  const handleAddMarketingUser = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      age: formData.age,
       password: formData.password,
-      userType: "STUDENT",
+      userType: "MARKETING",
     };
 
     console.log("Enviando:", userData);
@@ -339,13 +297,12 @@ export default function TutorStudentsScreen() {
       
       setNotification({
         type: 'success',
-        title: '¡Estudiante creado!',
-        message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        title: 'Usuario de marketing creado!',
+        message: `El usuario de marketing ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
-      const students = await getStudents();
-      const mappedStudents = students.map((user) => {
+      const marketingUsers = await getMarketingUsers();
+      const mappedMarketingUsers = marketingUsers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
@@ -357,63 +314,51 @@ export default function TutorStudentsScreen() {
           name: fullName,
           firstName: firstName,
           lastName: lastName,
-          age: user.age || 0,
-          school: user.school ?? 'No disponible',
-          location: user.locality ?? 'No disponible'
         };
-      }) as Student[];
-      setStudentsData(mappedStudents);
-      setFilteredData(mappedStudents);
+      }) as MarketingUser[];
+      setMarketingUsersData(mappedMarketingUsers);
+      setFilteredData(mappedMarketingUsers);
       
     } catch (error) {
-      console.error("Error creando estudiante:", error);
+      console.error("Error creando usuario de marketing:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al crear estudiante',
+        title: 'Error al crear usuario de marketing',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar crear el estudiante.'
+          : 'Ha ocurrido un error al intentar crear el usuario de marketing.'
       });
     }
   };
 
-  // Manager for searching students
+  // Manager for searching marketingUsers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
-      setFilteredData(studentsData);
+      setFilteredData(marketingUsersData);
       return;
     }
 
     const lowerCaseSearch = searchTerm.toLowerCase();
-    const filtered = studentsData.filter(
-      (student) =>
-        student.name.toLowerCase().includes(lowerCaseSearch) ||
-        student.email.toLowerCase().includes(lowerCaseSearch) ||
-        student.school?.toLowerCase().includes(lowerCaseSearch) ||
-        student.location?.toLowerCase().includes(lowerCaseSearch)
+    const filtered = marketingUsersData.filter(
+      (marketingUser) =>
+        marketingUser.name.toLowerCase().includes(lowerCaseSearch) ||
+        marketingUser.email.toLowerCase().includes(lowerCaseSearch)
     );
 
     setFilteredData(filtered);
   };
 
-  // Configuration for student details display
+  // Configuration for marketingUser details display
   const entityDisplayConfig = {
-    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    fields: ["name", "email"] as (keyof MarketingUser)[],
     labels: {
       name: "Nombre",
       email: "Correo",
-      age: "Edad",
-      school: "Colegio",
-      location: "Localidad",
-    },
-    formatters: {
-      age: (value: number) => `${value} años`,
     },
     avatar: {
-      field: "name" as keyof Student,
-      fallback: (student: Student) => student.name.split(" ")[0].charAt(0),
+      field: "name" as keyof MarketingUser,
+      fallback: (marketingUser: MarketingUser) => marketingUser.name.split(" ")[0].charAt(0),
       bgColor: "bg-orange-500",
       textColor: "text-white",
     },
@@ -443,15 +388,13 @@ export default function TutorStudentsScreen() {
   ];
 
   const tableConfig = {
-    caption: "Estudiantes asignados",
+    caption: "Usuarios de marketing asignados",
     rowsPerPage: 6,
     onViewDetails: handleViewDetails,
-    displayColumns: ["email", "name", "age", "school"],
+    displayColumns: ["email", "name"],
     columnHeaders: {
       email: "Correo",
       name: "Nombre",
-      age: "Edad",
-      school: "Colegio",
     },
     actionButtonText: "Ver detalles",
     actions: tableActions
@@ -460,39 +403,36 @@ export default function TutorStudentsScreen() {
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
-    searchPlaceholder: "Buscar estudiante",
-    addButtonLabel: "Agregar estudiante",
+    searchPlaceholder: "Buscar usuario de marketing",
+    addButtonLabel: "Agregar usuario de marketing",
     showFilterButton: false 
   };
 
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddStudent,
-    fields: studentFormFields,
-    title: "Agregar Nuevo Estudiante",
-    description: "Completa el formulario para agregar un nuevo estudiante.",
-    submitButtonText: "Agregar Estudiante",
+    onSubmit: handleAddMarketingUser,
+    fields: marketingUserFormFields,
+    title: "Agregar Nuevo Usuario de marketing",
+    description: "Completa el formulario para agregar un nuevo usuario de marketing.",
+    submitButtonText: "Agregar Usuario de marketing",
     cancelButtonText: "Cancelar",
   };
   
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditStudent,
-    fields: studentEditFormFields,
-    title: "Editar Estudiante",
-    description: "Modifica la información del estudiante.",
+    onSubmit: handleEditMarketingUser,
+    fields: marketingUserEditFormFields,
+    title: "Editar Usuario de marketing",
+    description: "Modifica la información del usuario de marketing.",
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
-      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
-      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    defaultValues: marketingUserToEdit && {
+      firstName: marketingUserToEdit.firstName ?? marketingUserToEdit.name.split(' ')[0] ?? '',
+      lastName: marketingUserToEdit.lastName ?? marketingUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: marketingUserToEdit.email,
     }
   };
 
@@ -503,21 +443,21 @@ export default function TutorStudentsScreen() {
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        title="Eliminar estudiante"
-        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        title="Eliminar usuario de marketing"
+        description={`¿Estás seguro de que deseas eliminar a ${marketingUserToDelete?.name}? Esta acción no se puede deshacer.`}
         confirmButtonText="Eliminar"
         cancelButtonText="Cancelar"
         variant="danger"
         isLoading={isDeleting}
       />
       
-      <EntityForm {...addFormConfig} />     
+      <EntityForm {...addFormConfig} />
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
-        entityType="Estudiantes"
+        entityType="Usuarios de marketing"
         // Components
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
@@ -527,13 +467,13 @@ export default function TutorStudentsScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedStudent}
+        selectedEntity={selectedMarketingUser}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
-        pageTitle="Tus Estudiantes"
-        pageDescription="Gestiona la información de los estudiantes a tu cargo"
-        detailsModalTitle="Detalles del Estudiante"
-        detailsModalDescription="Información detallada del estudiante seleccionado"
+        pageTitle="Tus Usuarios de marketing"
+        pageDescription="Gestiona la información de los usuario de marketing a tu cargo"
+        detailsModalTitle="Detalles del Usuario de marketing"
+        detailsModalDescription="Información detallada del usuario de marketing seleccionado"
         // Configuration for the details modal
         entityDisplayConfig={entityDisplayConfig}
         notification={notification}

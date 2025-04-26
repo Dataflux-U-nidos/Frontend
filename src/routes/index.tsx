@@ -7,7 +7,7 @@ import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 
-import { Presentation, House, University, BriefcaseBusiness, BookOpenCheck, ChartSpline } from "lucide-react";
+import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
@@ -19,8 +19,12 @@ const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboard
 const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
 const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
 const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
-import UniversityViewersScreen from "@/components/screens/UniversityViewersScreen";
-import UniversityManagersScreen from "@/components/screens/UniversityManagersScreen";
+const UniversityViewersScreen = lazy (() => import("@/components/screens/UniversityViewersScreen"));
+const UniversityManagersScreen = lazy (() => import("@/components/screens/UniversityManagersScreen"));
+const AdminSupportScreen = lazy (() => import("@/components/screens/AdminSupportScreen"));
+const AdminFinancesScreen = lazy (() => import("@/components/screens/AdminFinancesScreen"));
+const AdminMarketingScreen = lazy (() => import("@/components/screens/AdminMarketingScreen"));
+
 
 
 
@@ -81,12 +85,23 @@ export const universityMenu = [
   },
 ]
 
-const currentUser = {
-  name: "Laura Rojas",
-  email: "laura@example.com",
-  avatar: "/avatars/shadcn.jpg",
-}
-
+export const adminMenu = [
+  {
+    title: "Soporte",
+    url: "/admin-support",
+    icon: University,
+  },
+  {
+    title: "Finanzas",
+    url: "/admin-finances",
+    icon: BookOpenCheck,
+  },
+  {
+    title: "Marketing",
+    url: "/admin-marketing",
+    icon: ChartSpline,
+  },
+]
 export const AppRoutes = () => {
   const [userData, setUserData] = useState<any | null>(null);
     const { mutateAsync: fetchUser } = useGetMyUser();
@@ -137,14 +152,25 @@ export const AppRoutes = () => {
           </Route>
 
           <Route element={<UniversityRoutes />}>
-            <Route path="/" element={<Layout navMain={universityMenu} user={currentUser} />}>
+            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
               <Route path="university-viewers" element={<UniversityViewersScreen />} />
             </Route>
-            <Route path="/" element={<Layout navMain={universityMenu} user={currentUser} />}>
+            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
               <Route path="university-managers" element={<UniversityManagersScreen />} />
             </Route>
           </Route>
 
+          <Route element={<AdminRoutes />}>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-support" element={<AdminSupportScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-finances" element={<AdminFinancesScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-marketing" element={<AdminMarketingScreen />} />
+            </Route>
+          </Route>
           
         </Routes>
       </Suspense>

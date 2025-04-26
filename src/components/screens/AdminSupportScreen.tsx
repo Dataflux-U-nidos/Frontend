@@ -6,18 +6,15 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
-  useGetStudentsByTutor,
+  useGetSupportByAdmin,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks";
 
-interface Student {
+interface SupportUser {
   id?: string;
   email: string;
   name: string;
-  age: number;
-  school: string;
-  location: string;
   firstName?: string;
   lastName?: string;
 }
@@ -28,8 +25,8 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new student
-const studentFormFields: FormField[] = [
+// Form fields for adding a new SupportUser
+const SupportUserFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -46,12 +43,6 @@ const studentFormFields: FormField[] = [
     name: "email",
     label: "Correo Electrónico",
     type: "email",
-    required: true,
-  },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
     required: true,
   },
   {
@@ -62,8 +53,8 @@ const studentFormFields: FormField[] = [
   },
 ];
 
-// Form fields for editing a student (sin contraseña)
-const studentEditFormFields: FormField[] = [
+// Form fields for editing a SupportUser (sin contraseña)
+const SupportUserEditFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -82,53 +73,37 @@ const studentEditFormFields: FormField[] = [
     type: "email",
     required: true,
   },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
-    required: true,
-  },
-  {
-    name: "school",
-    label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
-    type: "text",
-    required: false,
-  },
 ];
 
-export default function TutorStudentsScreen() {
+export default function UniversitySupportUsersScreen() {
   // Hooks for CRUD
   const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: getSupportUsers } = useGetSupportByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
-  const [filteredData, setFilteredData] = useState<Student[]>([]);
+
+  // state variables
+  const [SupportUsersData, setSupportUsersData] = useState<SupportUser[]>([]);
+  const [filteredData, setFilteredData] = useState<SupportUser[]>([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
-  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  const [selectedSupportUser, setSelectedSupportUser] = useState<SupportUser | null>(null);
+  const [SupportUserToDelete, setSupportUserToDelete] = useState<SupportUser | null>(null);
+  const [SupportUserToEdit, setSupportUserToEdit] = useState<SupportUser | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
 
-  // loads students when component mounts
+  // loads SupportUsers when component mounts
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchSupportUsers = async () => {
       try {
-        const students = await getStudents();
-        const mappedStudents = students.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
+        const SupportUsers = await getSupportUsers();
+        const mappedSupportUsers = SupportUsers.map((user) => {
+
+            const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
           const nameParts = fullName.split(' ');
           const firstName = nameParts[0] || '';
           const lastName = nameParts.slice(1).join(' ') || '';
@@ -139,20 +114,17 @@ export default function TutorStudentsScreen() {
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            age: user.age || 0,
-            school: user.school ?? 'No disponible',
-            location: user.locality ?? 'No disponible'
           };
-        }) as Student[];
-        setStudentsData(mappedStudents);
-        setFilteredData(mappedStudents);
+        }) as SupportUser[];
+        setSupportUsersData(mappedSupportUsers);
+        setFilteredData(mappedSupportUsers);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching SupportUsers:", error);
       }
     };
 
-    fetchStudents();
-  }, [getStudents]);
+    fetchSupportUsers();
+  }, [getSupportUsers]);
 
   const handleCloseNotification = () => {
     setNotification(null);
@@ -168,98 +140,91 @@ export default function TutorStudentsScreen() {
     }
   }, [notification]);
 
-  // Manager for viewing student details
-  const handleViewDetails = (student: Student) => {
-    setSelectedStudent(student);
+  // Manager for viewing SupportUser details
+  const handleViewDetails = (SupportUser: SupportUser) => {
+    setSelectedSupportUser(SupportUser);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedStudent(null);
+    setSelectedSupportUser(null);
   };
 
-  // Manager for opening the add student modal
+  // Manager for opening the add SupportUser modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
 
-  // Manager for closing the add student modal
+  // Manager for closing the add SupportUser modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
   // Manager for initiating edit process
-  const handleInitiateEdit = (student: Student) => {
-    setStudentToEdit(student);
+  const handleInitiateEdit = (SupportUser: SupportUser) => {
+    setSupportUserToEdit(SupportUser);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setStudentToEdit(null);
+    setSupportUserToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditStudent = async (formData: any) => {
-    if (!studentToEdit || !studentToEdit.id) return;
+  const handleEditSupportUser = async (formData: any) => {
+    if (!SupportUserToEdit || !SupportUserToEdit.id) return;
     
     setIsEditing(true);
     
     try {
       const userData = {
-        id: studentToEdit.id,
+        id: SupportUserToEdit.id,
         name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        locality: formData.location,
       };
       
       await updateUser(userData);
       
       // Cerrar el modal de edición
       setShowEditModal(false);
-      setStudentToEdit(null);
+      setSupportUserToEdit(null);
       
-      // Actualizar la lista de estudiantes
-      const updatedStudent = {
-        ...studentToEdit,
+      const updatedSupportUser = {
+        ...SupportUserToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        location: formData.location
       };
       
-      const updatedStudents = studentsData.map(student => 
-        student.id === updatedStudent.id ? updatedStudent : student
+      const updatedSupportUsers = SupportUsersData.map(SupportUser => 
+        SupportUser.id === updatedSupportUser.id ? updatedSupportUser : SupportUser
       );
       
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setSupportUsersData(updatedSupportUsers);
+      setFilteredData(updatedSupportUsers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante actualizado',
-        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+        title: 'Usuario de soporte actualizado',
+        message: `El usuario de soporte ${updatedSupportUser.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
-      console.error("Error actualizando estudiante:", error);
+      console.error("Error actualizando usuario de soporte:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al actualizar estudiante',
+        title: 'Error al actualizar usuario de soporte',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+          : 'Ha ocurrido un error al intentar actualizar el usuario de soporte.'
       });
     } finally {
       setIsEditing(false);
@@ -267,68 +232,66 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for initiating delete process
-  const handleInitiateDelete = (student: Student) => {
-    setStudentToDelete(student);
+  const handleInitiateDelete = (SupportUser: SupportUser) => {
+    setSupportUserToDelete(SupportUser);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setStudentToDelete(null);
+    setSupportUserToDelete(null);
   };
   
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+    if (!SupportUserToDelete || !SupportUserToDelete.id) return;
     
     setIsDeleting(true);
     
     try {
-      await deleteUser(studentToDelete.id);
+      await deleteUser(SupportUserToDelete.id);
       
       // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setStudentToDelete(null);
+      setSupportUserToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
+      const updatedSupportUsers = SupportUsersData.filter(
+        SupportUser => SupportUser.id !== SupportUserToDelete.id
       );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setSupportUsersData(updatedSupportUsers);
+      setFilteredData(updatedSupportUsers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+        title: 'Usuario de soporte eliminado',
+        message: `El usuario de soporte ${SupportUserToDelete.name} ha sido eliminado exitosamente.`
       });
     } catch (error) {
-      console.error("Error eliminando estudiante:", error);
+      console.error("Error eliminando usuario de soporte:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al eliminar estudiante',
+        title: 'Error al eliminar usuario de soporte',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+          : 'Ha ocurrido un error al intentar eliminar el usuario de soporte.'
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Manager for adding a new student
-  const handleAddStudent = async (formData: any) => {
+  // Manager for adding a new SupportUser
+  const handleAddSupportUser = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      age: formData.age,
       password: formData.password,
-      userType: "STUDENT",
+      userType: "SUPPORT",
     };
 
     console.log("Enviando:", userData);
@@ -339,13 +302,12 @@ export default function TutorStudentsScreen() {
       
       setNotification({
         type: 'success',
-        title: '¡Estudiante creado!',
-        message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        title: 'Usuario de soporte creado!',
+        message: `El usuario de soporte ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
-      const students = await getStudents();
-      const mappedStudents = students.map((user) => {
+      const SupportUsers = await getSupportUsers();
+      const mappedSupportUsers = SupportUsers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
@@ -357,63 +319,51 @@ export default function TutorStudentsScreen() {
           name: fullName,
           firstName: firstName,
           lastName: lastName,
-          age: user.age || 0,
-          school: user.school ?? 'No disponible',
-          location: user.locality ?? 'No disponible'
         };
-      }) as Student[];
-      setStudentsData(mappedStudents);
-      setFilteredData(mappedStudents);
+      }) as SupportUser[];
+      setSupportUsersData(mappedSupportUsers);
+      setFilteredData(mappedSupportUsers);
       
     } catch (error) {
-      console.error("Error creando estudiante:", error);
+      console.error("Error creando usuario de soporte:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al crear estudiante',
+        title: 'Error al crear usuario de soporte',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar crear el estudiante.'
+          : 'Ha ocurrido un error al intentar crear el usuario de soporte.'
       });
     }
   };
 
-  // Manager for searching students
+  // Manager for searching SupportUsers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
-      setFilteredData(studentsData);
+      setFilteredData(SupportUsersData);
       return;
     }
 
     const lowerCaseSearch = searchTerm.toLowerCase();
-    const filtered = studentsData.filter(
-      (student) =>
-        student.name.toLowerCase().includes(lowerCaseSearch) ||
-        student.email.toLowerCase().includes(lowerCaseSearch) ||
-        student.school?.toLowerCase().includes(lowerCaseSearch) ||
-        student.location?.toLowerCase().includes(lowerCaseSearch)
+    const filtered = SupportUsersData.filter(
+      (SupportUser) =>
+        SupportUser.name.toLowerCase().includes(lowerCaseSearch) ||
+        SupportUser.email.toLowerCase().includes(lowerCaseSearch)
     );
 
     setFilteredData(filtered);
   };
 
-  // Configuration for student details display
+  // Configuration for SupportUser details display
   const entityDisplayConfig = {
-    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    fields: ["name", "email"] as (keyof SupportUser)[],
     labels: {
       name: "Nombre",
       email: "Correo",
-      age: "Edad",
-      school: "Colegio",
-      location: "Localidad",
-    },
-    formatters: {
-      age: (value: number) => `${value} años`,
     },
     avatar: {
-      field: "name" as keyof Student,
-      fallback: (student: Student) => student.name.split(" ")[0].charAt(0),
+      field: "name" as keyof SupportUser,
+      fallback: (SupportUser: SupportUser) => SupportUser.name.split(" ")[0].charAt(0),
       bgColor: "bg-orange-500",
       textColor: "text-white",
     },
@@ -443,15 +393,13 @@ export default function TutorStudentsScreen() {
   ];
 
   const tableConfig = {
-    caption: "Estudiantes asignados",
+    caption: "Usuarios de soporte asignados",
     rowsPerPage: 6,
     onViewDetails: handleViewDetails,
-    displayColumns: ["email", "name", "age", "school"],
+    displayColumns: ["email", "name"],
     columnHeaders: {
       email: "Correo",
       name: "Nombre",
-      age: "Edad",
-      school: "Colegio",
     },
     actionButtonText: "Ver detalles",
     actions: tableActions
@@ -460,39 +408,36 @@ export default function TutorStudentsScreen() {
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
-    searchPlaceholder: "Buscar estudiante",
-    addButtonLabel: "Agregar estudiante",
+    searchPlaceholder: "Buscar usuario de soporte",
+    addButtonLabel: "Agregar usuario de soporte",
     showFilterButton: false 
   };
 
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddStudent,
-    fields: studentFormFields,
-    title: "Agregar Nuevo Estudiante",
-    description: "Completa el formulario para agregar un nuevo estudiante.",
-    submitButtonText: "Agregar Estudiante",
+    onSubmit: handleAddSupportUser,
+    fields: SupportUserFormFields,
+    title: "Agregar Nuevo Usuario de soporte",
+    description: "Completa el formulario para agregar un nuevo usuario de soporte.",
+    submitButtonText: "Agregar Usuario de soporte",
     cancelButtonText: "Cancelar",
   };
   
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditStudent,
-    fields: studentEditFormFields,
-    title: "Editar Estudiante",
-    description: "Modifica la información del estudiante.",
+    onSubmit: handleEditSupportUser,
+    fields: SupportUserEditFormFields,
+    title: "Editar Usuario de soporte",
+    description: "Modifica la información del usuario de soporte.",
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
-      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
-      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    defaultValues: SupportUserToEdit && {
+      firstName: SupportUserToEdit.firstName ?? SupportUserToEdit.name.split(' ')[0] ?? '',
+      lastName: SupportUserToEdit.lastName ?? SupportUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: SupportUserToEdit.email,
     }
   };
 
@@ -503,21 +448,21 @@ export default function TutorStudentsScreen() {
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        title="Eliminar estudiante"
-        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        title="Eliminar usuario de soporte"
+        description={`¿Estás seguro de que deseas eliminar a ${SupportUserToDelete?.name}? Esta acción no se puede deshacer.`}
         confirmButtonText="Eliminar"
         cancelButtonText="Cancelar"
         variant="danger"
         isLoading={isDeleting}
       />
       
-      <EntityForm {...addFormConfig} />     
+      <EntityForm {...addFormConfig} />
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
-        entityType="Estudiantes"
+        entityType="Usuarios de soporte"
         // Components
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
@@ -527,13 +472,13 @@ export default function TutorStudentsScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedStudent}
+        selectedEntity={selectedSupportUser}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
-        pageTitle="Tus Estudiantes"
-        pageDescription="Gestiona la información de los estudiantes a tu cargo"
-        detailsModalTitle="Detalles del Estudiante"
-        detailsModalDescription="Información detallada del estudiante seleccionado"
+        pageTitle="Tus Usuarios de soporte"
+        pageDescription="Gestiona la información de los usuario de soporte a tu cargo"
+        detailsModalTitle="Detalles del Usuario de soporte"
+        detailsModalDescription="Información detallada del usuario de soporte seleccionado"
         // Configuration for the details modal
         entityDisplayConfig={entityDisplayConfig}
         notification={notification}

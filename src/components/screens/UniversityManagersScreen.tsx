@@ -19,7 +19,6 @@ interface Manager {
   lastName?: string;
 }
 
-// Interfaz para la notificación
 interface Notification {
   type: 'success' | 'error';
   title: string;
@@ -77,44 +76,24 @@ const managerEditFormFields: FormField[] = [
 ];
 
 export default function UniversityManagersScreen() {
-  // Hooks para operaciones CRUD
+  // Hooks for CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getManagers } = useGetManagersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
 
-  // State to manage managers data
+// state variables
   const [managersData, setManagersData] = useState<Manager[]>([]);
-
-  // State to manage filtered data
   const [filteredData, setFilteredData] = useState<Manager[]>([]);
-
-  // State to manage the modal for viewing manager details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
-
-  // State to manage the modal for adding a new manager
   const [showAddModal, setShowAddModal] = useState(false);
-  
-  // State to manage the modal for editing a manager
   const [showEditModal, setShowEditModal] = useState(false);
-  
-  // State to manage confirmation dialog for deleting a manager
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  
-  // State to manage loading states
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  // State to manage the selected manager for details
   const [selectedmanager, setSelectedmanager] = useState<Manager | null>(null);
-  
-  // State to manage the manager to delete
   const [managerToDelete, setmanagerToDelete] = useState<Manager | null>(null);
-  
-  // State to manage the manager to edit
   const [managerToEdit, setmanagerToEdit] = useState<Manager | null>(null);
-
-  // Estado para manejar notificaciones
   const [notification, setNotification] = useState<Notification | null>(null);
 
   // loads managers when component mounts
@@ -147,12 +126,10 @@ export default function UniversityManagersScreen() {
     fetchManagers();
   }, [getManagers]);
 
-  // Manejador para cerrar la notificación
   const handleCloseNotification = () => {
     setNotification(null);
   };
 
-  // Efecto para auto-cerrar la notificación después de 5 segundos
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -396,7 +373,6 @@ export default function UniversityManagersScreen() {
     },
   };
 
-  // Definir acciones para la tabla
   const tableActions = [
     {
       label: "Editar",
@@ -472,7 +448,6 @@ export default function UniversityManagersScreen() {
 
   return (
     <>
-      {/* Modal de confirmación para eliminar gestor de información */}
       <ConfirmationDialog
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
@@ -485,10 +460,8 @@ export default function UniversityManagersScreen() {
         isLoading={isDeleting}
       />
       
-      {/* Formulario para agregar gestores de información */}
       <EntityForm {...addFormConfig} />
       
-      {/* Formulario para editar gestores de información */}
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
