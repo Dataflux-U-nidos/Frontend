@@ -12,6 +12,7 @@ import { Presentation, House, University, BookOpenCheck, ChartSpline } from "luc
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
+import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 
 
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
@@ -167,13 +168,10 @@ export const AppRoutes = () => {
           </Route>
 
           <Route element={<AdminRoutes />}>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
-              <Route path="admin-support" element={<AdminSupportScreen />} />
-            </Route>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
-              <Route path="admin-finances" element={<AdminFinancesScreen />} />
-            </Route>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+            <Route element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="/account-admin" element={<AccountAdminScreen />} />
+              <Route path="/admin-support" element={<AdminSupportScreen />} />
+              <Route path="/admin-finances" element={<AdminFinancesScreen />} />
               <Route path="admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
