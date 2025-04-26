@@ -40,10 +40,9 @@ export const getUserById = async (id: string): Promise<User> => {
 };
 
 export const updateUser = async ({
-  id,
   ...updates
-}: { id: string } & UpdateUserInput): Promise<User> => {
-  const { data } = await userApi.patch<User>(`/user/${id}`, updates);
+}: UpdateUserInput): Promise<User> => {
+  const { data } = await userApi.patch<User>(`/user/`, updates);
   return data;
 };
 

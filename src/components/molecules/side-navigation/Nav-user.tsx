@@ -1,5 +1,5 @@
-import { BadgeCheck, Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-react"
-
+import { useNavigate } from "react-router-dom"
+import { CircleUserRound , Bell, ChevronsUpDown, CreditCard, LogOut, Sparkles } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "../../atoms/ui/avatar"
 import {
     DropdownMenu,
@@ -24,6 +24,16 @@ export function NavUser({
 }) {
     const { isMobile } = useSidebar()
     const { logout } = useAuthContext()
+
+    const navigate = useNavigate();
+
+    const handleAccount = async () => {
+        try {
+            navigate("/account");
+        } catch (error) {
+            console.error("Error during navigation:", error);
+        }
+    }
 
     const handleLogout = async () => {
         try{
@@ -80,9 +90,9 @@ export function NavUser({
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
-                            <DropdownMenuItem>
-                                <BadgeCheck />
-                                Account
+                            <DropdownMenuItem onClick={handleAccount}>
+                                <CircleUserRound />
+                                Mi Cuenta
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 <CreditCard />

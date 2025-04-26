@@ -67,8 +67,8 @@ export default function AuthScreen() {
   const [selectedType, setSelectedType] = useState<string>("STUDENT");
 
   useEffect(() => {
-    if (userType === "STUDENT" && location.pathname !== "/student-dashboard") {
-      navigate("/student-dashboard");
+    if (userType === "STUDENT" && location.pathname !== "/student-profile") {
+      navigate("/student-profile");
     } else if (userType === "VIEWER" && location.pathname !== "/viewer-dashboard") {
       navigate("/viewer-dashboard");
     } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {
