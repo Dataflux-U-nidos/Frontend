@@ -70,7 +70,7 @@ export const StudentProfileTemplate = ({
           </div>
         </div>
         
-        <div className="mt-6">
+        <div className="mt-6 mb-6">
           <TopCareersCard careers={topCareers} />
         </div>
       </div>

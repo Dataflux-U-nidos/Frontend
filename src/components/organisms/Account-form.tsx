@@ -122,7 +122,7 @@ export default function AccountForm({
               w-full
             "
           >
-            {loading ? 'Enviando...' : 'Enviar'}
+            {loading ? 'Enviando...' : 'Guardar cambios'}
           </button>
           
           <button

@@ -44,8 +44,8 @@ export function PersonalityCard({ personality }: PersonalityCardProps) {
   };
 
   return (
-    <Card className="bg-blue-50 shadow-md border-0 rounded-2xl overflow-hidden">
-      <CardHeader className="bg-white pb-4">
+    <Card className="bg-teal-200 shadow-md border-0 rounded-2xl overflow-hidden">
+      <CardHeader className="pb-4">
         <CardTitle className="text-2xl font-bold">Personalidad</CardTitle>
       </CardHeader>
       <CardContent className="grid grid-cols-3 gap-4 p-6">

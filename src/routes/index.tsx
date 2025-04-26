@@ -1,13 +1,14 @@
 // /src/routes/AppRoutes.tsx
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import { Presentation, House, University, BriefcaseBusiness, BookOpenCheck, ChartSpline } from "lucide-react";
+import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 
-// Carga perezosa (lazy) de componentes
+
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const Layout = lazy(() => import("../components/templates/Layout"));
@@ -62,14 +63,27 @@ export const tutorMenu = [
   }
 ]
 
-const currentUser = {
-  name: "Laura Rojas",
-  email: "laura@example.com",
-  avatar: "/avatars/shadcn.jpg",
-}
-
 
 export const AppRoutes = () => {
+  const [userData, setUserData] = useState<any | null>(null);
+    const { mutateAsync: fetchUser } = useGetMyUser();
+  
+  useEffect(() => {
+      const loadUser = async () => {
+        try {
+          const user = await fetchUser();
+          const userData = {
+            name: user.name,
+            last_name: user.last_name,
+            email: user.email}
+          setUserData(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+      loadUser();;
+    }, []);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
@@ -81,20 +95,20 @@ export const AppRoutes = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ViewerRoutes />}>
-            <Route path="/" element={<Layout navMain={viewerMenu} user={currentUser} />}>
+            <Route path="/" element={<Layout navMain={viewerMenu} user={userData} />}>
               <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
 
           <Route element={<StudentRoutes />}>
-            <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
+            <Route path="/" element={<Layout navMain={studentMenu} user={userData} />}>
             <Route path="/account" element={<AccountScreen />} />
             <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
 
           <Route element={<TutorRoutes />}>
-            <Route path="/" element={<Layout navMain={tutorMenu} user={currentUser} />}>
+            <Route path="/" element={<Layout navMain={tutorMenu} user={userData} />}>
               <Route path="tutor-students" element={<TutorStudentsScreen />} />
             </Route>
           </Route>

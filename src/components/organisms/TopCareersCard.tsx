@@ -76,8 +76,8 @@ import {
   export function TopCareersCard({ careers }: TopCareersCardProps) {
   
     return (
-      <Card className="bg-blue-50 shadow-md border-0 rounded-2xl overflow-hidden">
-        <CardHeader className="bg-white pb-4">
+      <Card className="bg-blue-200 shadow-md border-0 rounded-2xl overflow-hidden">
+        <CardHeader className="pb-4">
           <CardTitle className="text-2xl font-bold">TOP carreras</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">

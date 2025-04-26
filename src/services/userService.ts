@@ -33,6 +33,9 @@ export const updateUser = async ({
   id,
   ...updates
 }: { id: string } & UpdateUserInput): Promise<User> => {
+  // Check if the updates object is empty
+  console.log("Updating user with ID:", id);
+  console.log("Updates:", updates);
   const { data } = await userApi.patch<User>(`/user/${id}`, updates);
   return data;
 };
