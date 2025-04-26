@@ -1,18 +1,32 @@
 // /src/routes/AppRoutes.tsx
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
-import { Presentation, House, University, BriefcaseBusiness } from "lucide-react";
+import TutorRoutes from "./TutorRoutes";
+import UniversityRoutes from "./UniversityRoutes";
 
-// Carga perezosa (lazy) de componentes
+import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
+import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
+
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const Layout = lazy(() => import("../components/templates/Layout"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
 const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
 const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
+const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
+const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
+const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
+const UniversityViewersScreen = lazy (() => import("@/components/screens/UniversityViewersScreen"));
+const UniversityManagersScreen = lazy (() => import("@/components/screens/UniversityManagersScreen"));
+const AdminSupportScreen = lazy (() => import("@/components/screens/AdminSupportScreen"));
+const AdminFinancesScreen = lazy (() => import("@/components/screens/AdminFinancesScreen"));
+const AdminMarketingScreen = lazy (() => import("@/components/screens/AdminMarketingScreen"));
+
+
+
 
 export const viewerMenu = [
   {
@@ -36,18 +50,78 @@ export const studentMenu = [
   {
     title: "Test vocacional",
     url: "/student-vocationalTest",
-    icon: BriefcaseBusiness,
+    icon: BookOpenCheck,
+  },
+  {
+    title: "Test psicométrico",
+    url: "/student-psychometricTest",
+    icon: BookOpenCheck,
+  },
+  {
+    title: "Proyección en el mercado laboral",
+    url: "/student-carrerProspects",
+    icon: ChartSpline,
   },
 ]
 
-const currentUser = {
-  name: "Laura Rojas",
-  email: "laura@example.com",
-  avatar: "/avatars/shadcn.jpg",
-}
+export const tutorMenu = [
+  {
+    title: "Estudiantes",
+    url: "/tutor-students",
+    icon: University,
+  }
+]
 
+export const universityMenu = [
+  {
+    title: "Visualizadores",
+    url: "/university-viewers",
+    icon: Presentation,
+  },
+  {
+    title: "Gestores de información",
+    url: "/university-managers",
+    icon: House,
+  },
+]
 
+export const adminMenu = [
+  {
+    title: "Soporte",
+    url: "/admin-support",
+    icon: University,
+  },
+  {
+    title: "Finanzas",
+    url: "/admin-finances",
+    icon: BookOpenCheck,
+  },
+  {
+    title: "Marketing",
+    url: "/admin-marketing",
+    icon: ChartSpline,
+  },
+]
 export const AppRoutes = () => {
+  const [userData, setUserData] = useState<any | null>(null);
+    const { mutateAsync: fetchUser } = useGetMyUser();
+  
+  useEffect(() => {
+      const loadUser = async () => {
+        try {
+          const user = await fetchUser();
+          const userData = {
+            name: user.name,
+            last_name: user.last_name,
+            email: user.email}
+          setUserData(userData);
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+      loadUser();;
+    }, []);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
@@ -59,17 +133,44 @@ export const AppRoutes = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ViewerRoutes />}>
-            <Route path="/" element={<Layout navMain={viewerMenu} user={currentUser} />}>
-              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
+            <Route path="/" element={<Layout navMain={viewerMenu} user={userData} />}>
+              <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
 
           <Route element={<StudentRoutes />}>
-            <Route path="/" element={<Layout navMain={studentMenu} user={currentUser} />}>
-              <Route path="viewer-dashboard" element={<ViewerDashboard />} />
+            <Route path="/" element={<Layout navMain={studentMenu} user={userData} />}>
+            <Route path="/account" element={<AccountScreen />} />
+            <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
 
+          <Route element={<TutorRoutes />}>
+            <Route path="/" element={<Layout navMain={tutorMenu} user={userData} />}>
+              <Route path="tutor-students" element={<TutorStudentsScreen />} />
+            </Route>
+          </Route>
+
+          <Route element={<UniversityRoutes />}>
+            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
+              <Route path="university-viewers" element={<UniversityViewersScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
+              <Route path="university-managers" element={<UniversityManagersScreen />} />
+            </Route>
+          </Route>
+
+          <Route element={<AdminRoutes />}>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-support" element={<AdminSupportScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-finances" element={<AdminFinancesScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="admin-marketing" element={<AdminMarketingScreen />} />
+            </Route>
+          </Route>
           
         </Routes>
       </Suspense>

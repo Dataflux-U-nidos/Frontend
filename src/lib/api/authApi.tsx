@@ -1,8 +1,11 @@
 import axios from "axios";
-
+import { jwtDecode } from "jwt-decode";
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
+interface JwtPayload {
+  id: string;
+}
 export function setTokens({
   accessToken,
   refreshToken,
@@ -28,7 +31,13 @@ export function getAccessToken() {
 export function getRefreshToken() {
   return localStorage.getItem(REFRESH_TOKEN_KEY);
 }
-
+export function getUserId() {
+  const token = getAccessToken();
+  if (!token) return null;
+  const decoded = jwtDecode<JwtPayload>(token);
+  const tutorId: string | undefined = decoded.id;
+  return tutorId;
+}
 export const authApi = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   // Para enviar y recibir cookies httpOnly
@@ -92,10 +101,16 @@ authApi.interceptors.response.use(
         return authApi(originalRequest);
       } catch (refreshError) {
         clearTokens();
-        return Promise.reject(refreshError instanceof Error ? refreshError : new Error(String(refreshError)));
+        return Promise.reject(
+          refreshError instanceof Error
+            ? refreshError
+            : new Error(String(refreshError))
+        );
       }
     }
 
-    return Promise.reject(error instanceof Error ? error : new Error(String(error)));
+    return Promise.reject(
+      error instanceof Error ? error : new Error(String(error))
+    );
   }
 );

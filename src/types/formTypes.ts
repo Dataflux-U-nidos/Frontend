@@ -17,6 +17,7 @@ export type FieldType =
     | "address"
     | "user"
     | "textarea"
+    | "number"
 
 /**
  * Estructura base para cualquier campo.

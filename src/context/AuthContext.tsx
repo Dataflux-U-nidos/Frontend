@@ -62,12 +62,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const createAccount = async (userData: any) => {
-    await createUserMutation.mutateAsync({ ...userData});
+    await createUserMutation.mutateAsync({ ...userData });
   };
 
   const registryAccount = async (userData: any) => {
     // Si tu endpoint registry necesita el campo `type`, lo agregamos aquí:
-    await registerMutation.mutateAsync({ ...userData});
+
+    await registerMutation.mutateAsync({ ...userData });
   };
 
   const value: IAuthContext = {
