@@ -6,3 +6,5 @@ export * from './user/useGetAllUsersHook';
 export * from './user/useRegisterUserHook';
 export * from './user/useUpdateUserByEmailHook';
 export * from './user/useGetStudentsByTutorHook';
+export * from './user/useGetViewersByUniversityHook';
+export * from './user/useGetManagersByUniversityHook';

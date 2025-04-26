@@ -6,18 +6,15 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
-  useGetStudentsByTutor,
+  useGetManagersByUniversity,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks";
 
-interface Student {
+interface Manager {
   id?: string;
   email: string;
   name: string;
-  age: number;
-  school: string;
-  location: string;
   firstName?: string;
   lastName?: string;
 }
@@ -29,8 +26,8 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new student
-const studentFormFields: FormField[] = [
+// Form fields for adding a new manager
+const managerFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -47,12 +44,6 @@ const studentFormFields: FormField[] = [
     name: "email",
     label: "Correo Electrónico",
     type: "email",
-    required: true,
-  },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
     required: true,
   },
   {
@@ -63,8 +54,8 @@ const studentFormFields: FormField[] = [
   },
 ];
 
-// Form fields for editing a student (sin contraseña)
-const studentEditFormFields: FormField[] = [
+// Form fields for editing a manager (sin contraseña)
+const managerEditFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -83,73 +74,55 @@ const studentEditFormFields: FormField[] = [
     type: "email",
     required: true,
   },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
-    required: true,
-  },
-  {
-    name: "school",
-    label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
-    type: "text",
-    required: false,
-  },
 ];
 
-export default function TutorStudentsScreen() {
+export default function UniversityManagersScreen() {
   // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: getManagers } = useGetManagersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
 
-  // State to manage students data
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
+  // State to manage managers data
+  const [managersData, setManagersData] = useState<Manager[]>([]);
 
   // State to manage filtered data
-  const [filteredData, setFilteredData] = useState<Student[]>([]);
+  const [filteredData, setFilteredData] = useState<Manager[]>([]);
 
-  // State to manage the modal for viewing student details
+  // State to manage the modal for viewing manager details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // State to manage the modal for adding a new student
+  // State to manage the modal for adding a new manager
   const [showAddModal, setShowAddModal] = useState(false);
   
-  // State to manage the modal for editing a student
+  // State to manage the modal for editing a manager
   const [showEditModal, setShowEditModal] = useState(false);
   
-  // State to manage confirmation dialog for deleting a student
+  // State to manage confirmation dialog for deleting a manager
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   // State to manage loading states
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // State to manage the selected student for details
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  // State to manage the selected manager for details
+  const [selectedmanager, setSelectedmanager] = useState<Manager | null>(null);
   
-  // State to manage the student to delete
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  // State to manage the manager to delete
+  const [managerToDelete, setmanagerToDelete] = useState<Manager | null>(null);
   
-  // State to manage the student to edit
-  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  // State to manage the manager to edit
+  const [managerToEdit, setmanagerToEdit] = useState<Manager | null>(null);
 
   // Estado para manejar notificaciones
   const [notification, setNotification] = useState<Notification | null>(null);
 
-  // loads students when component mounts
+  // loads managers when component mounts
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchManagers = async () => {
       try {
-        const students = await getStudents();
-        const mappedStudents = students.map((user) => {
+        const managers = await getManagers();
+        const mappedManagers = managers.map((user) => {
           // Extraer el nombre y apellido
           const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
           const nameParts = fullName.split(' ');
@@ -162,20 +135,17 @@ export default function TutorStudentsScreen() {
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            age: user.age || 0,
-            school: user.school ?? 'No disponible',
-            location: user.locality ?? 'No disponible'
           };
-        }) as Student[];
-        setStudentsData(mappedStudents);
-        setFilteredData(mappedStudents);
+        }) as Manager[];
+        setManagersData(mappedManagers);
+        setFilteredData(mappedManagers);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching managers:", error);
       }
     };
 
-    fetchStudents();
-  }, [getStudents]);
+    fetchManagers();
+  }, [getManagers]);
 
   // Manejador para cerrar la notificación
   const handleCloseNotification = () => {
@@ -193,98 +163,92 @@ export default function TutorStudentsScreen() {
     }
   }, [notification]);
 
-  // Manager for viewing student details
-  const handleViewDetails = (student: Student) => {
-    setSelectedStudent(student);
+  // Manager for viewing manager details
+  const handleViewDetails = (manager: Manager) => {
+    setSelectedmanager(manager);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedStudent(null);
+    setSelectedmanager(null);
   };
 
-  // Manager for opening the add student modal
+  // Manager for opening the add manager modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
 
-  // Manager for closing the add student modal
+  // Manager for closing the add manager modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
   // Manager for initiating edit process
-  const handleInitiateEdit = (student: Student) => {
-    setStudentToEdit(student);
+  const handleInitiateEdit = (manager: Manager) => {
+    setmanagerToEdit(manager);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setStudentToEdit(null);
+    setmanagerToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditStudent = async (formData: any) => {
-    if (!studentToEdit || !studentToEdit.id) return;
+  const handleEditmanager = async (formData: any) => {
+    if (!managerToEdit || !managerToEdit.id) return;
     
     setIsEditing(true);
     
     try {
       const userData = {
-        id: studentToEdit.id,
+        id: managerToEdit.id,
         name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        locality: formData.location,
       };
       
       await updateUser(userData);
       
       // Cerrar el modal de edición
       setShowEditModal(false);
-      setStudentToEdit(null);
+      setmanagerToEdit(null);
       
-      // Actualizar la lista de estudiantes
-      const updatedStudent = {
-        ...studentToEdit,
+      // Actualizar la lista de gestores de información
+      const updatedmanager = {
+        ...managerToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        location: formData.location
       };
       
-      const updatedStudents = studentsData.map(student => 
-        student.id === updatedStudent.id ? updatedStudent : student
+      const updatedManagers = managersData.map(manager => 
+        manager.id === updatedmanager.id ? updatedmanager : manager
       );
       
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setManagersData(updatedManagers);
+      setFilteredData(updatedManagers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante actualizado',
-        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+        title: 'Gestor de Información actualizado',
+        message: `El gestor de información ${updatedmanager.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
-      console.error("Error actualizando estudiante:", error);
+      console.error("Error actualizando gestor de información:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al actualizar estudiante',
+        title: 'Error al actualizar gestor de información',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+          : 'Ha ocurrido un error al intentar actualizar el gestor de información.'
       });
     } finally {
       setIsEditing(false);
@@ -292,68 +256,67 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for initiating delete process
-  const handleInitiateDelete = (student: Student) => {
-    setStudentToDelete(student);
+  const handleInitiateDelete = (manager: Manager) => {
+    setmanagerToDelete(manager);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setStudentToDelete(null);
+    setmanagerToDelete(null);
   };
   
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+    if (!managerToDelete || !managerToDelete.id) return;
     
     setIsDeleting(true);
     
     try {
-      await deleteUser(studentToDelete.id);
+      await deleteUser(managerToDelete.id);
       
       // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setStudentToDelete(null);
+      setmanagerToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
+      // Actualizar la lista de gestores de información filtrando el eliminado
+      const updatedManagers = managersData.filter(
+        manager => manager.id !== managerToDelete.id
       );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setManagersData(updatedManagers);
+      setFilteredData(updatedManagers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+        title: 'Gestor de Información eliminado',
+        message: `El gestor de información ${managerToDelete.name} ha sido eliminado exitosamente.`
       });
     } catch (error) {
-      console.error("Error eliminando estudiante:", error);
+      console.error("Error eliminando gestor de información:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al eliminar estudiante',
+        title: 'Error al eliminar gestor de información',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+          : 'Ha ocurrido un error al intentar eliminar el gestor de información.'
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Manager for adding a new student
-  const handleAddStudent = async (formData: any) => {
+  // Manager for adding a new manager
+  const handleAddmanager = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      age: formData.age,
       password: formData.password,
-      userType: "STUDENT",
+      userType: "INFOMANAGER",
     };
 
     console.log("Enviando:", userData);
@@ -364,13 +327,13 @@ export default function TutorStudentsScreen() {
       
       setNotification({
         type: 'success',
-        title: '¡Estudiante creado!',
-        message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        title: 'Gestor de Información creado!',
+        message: `El gestor de información ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
-      const students = await getStudents();
-      const mappedStudents = students.map((user) => {
+      // Actualizar la lista de gestores de información
+      const managers = await getManagers();
+      const mappedManagers = managers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
@@ -382,63 +345,52 @@ export default function TutorStudentsScreen() {
           name: fullName,
           firstName: firstName,
           lastName: lastName,
-          age: user.age || 0,
-          school: user.school ?? 'No disponible',
-          location: user.locality ?? 'No disponible'
         };
-      }) as Student[];
-      setStudentsData(mappedStudents);
-      setFilteredData(mappedStudents);
+      }) as Manager[];
+      setManagersData(mappedManagers);
+      setFilteredData(mappedManagers);
       
     } catch (error) {
-      console.error("Error creando estudiante:", error);
+      console.error("Error creando gestor de información:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al crear estudiante',
+        title: 'Error al crear gestor de información',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar crear el estudiante.'
+          : 'Ha ocurrido un error al intentar crear el gestor de información.'
       });
     }
   };
 
-  // Manager for searching students
+  // Manager for searching managers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
-      setFilteredData(studentsData);
+      setFilteredData(managersData);
       return;
     }
 
     const lowerCaseSearch = searchTerm.toLowerCase();
-    const filtered = studentsData.filter(
-      (student) =>
-        student.name.toLowerCase().includes(lowerCaseSearch) ||
-        student.email.toLowerCase().includes(lowerCaseSearch) ||
-        student.school?.toLowerCase().includes(lowerCaseSearch) ||
-        student.location?.toLowerCase().includes(lowerCaseSearch)
+    const filtered = managersData.filter(
+      (manager) =>
+        manager.name.toLowerCase().includes(lowerCaseSearch) ||
+        manager.email.toLowerCase().includes(lowerCaseSearch)
     );
 
     setFilteredData(filtered);
   };
 
-  // Configuration for student details display
+  // Configuration for manager details display
   const entityDisplayConfig = {
-    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    fields: ["name", "email"] as (keyof Manager)[],
     labels: {
       name: "Nombre",
       email: "Correo",
-      age: "Edad",
-      school: "Colegio",
-      location: "Localidad",
-    },
-    formatters: {
-      age: (value: number) => `${value} años`,
     },
     avatar: {
-      field: "name" as keyof Student,
-      fallback: (student: Student) => student.name.split(" ")[0].charAt(0),
+      field: "name" as keyof Manager,
+      fallback: (manager: Manager) => manager.name.split(" ")[0].charAt(0),
       bgColor: "bg-orange-500",
       textColor: "text-white",
     },
@@ -469,15 +421,13 @@ export default function TutorStudentsScreen() {
   ];
 
   const tableConfig = {
-    caption: "Estudiantes asignados",
+    caption: "Gestores de Información asignados",
     rowsPerPage: 6,
     onViewDetails: handleViewDetails,
-    displayColumns: ["email", "name", "age", "school"],
+    displayColumns: ["email", "name"],
     columnHeaders: {
       email: "Correo",
       name: "Nombre",
-      age: "Edad",
-      school: "Colegio",
     },
     actionButtonText: "Ver detalles",
     actions: tableActions
@@ -486,68 +436,65 @@ export default function TutorStudentsScreen() {
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
-    searchPlaceholder: "Buscar estudiante",
-    addButtonLabel: "Agregar estudiante",
-    showFilterButton: false // Quitamos el botón de filtro
+    searchPlaceholder: "Buscar gestor de información",
+    addButtonLabel: "Agregar gestor de información",
+    showFilterButton: false 
   };
 
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddStudent,
-    fields: studentFormFields,
-    title: "Agregar Nuevo Estudiante",
-    description: "Completa el formulario para agregar un nuevo estudiante.",
-    submitButtonText: "Agregar Estudiante",
+    onSubmit: handleAddmanager,
+    fields: managerFormFields,
+    title: "Agregar Nuevo Gestor de Información",
+    description: "Completa el formulario para agregar un nuevo gestor de información.",
+    submitButtonText: "Agregar Gestor de Información",
     cancelButtonText: "Cancelar",
   };
   
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditStudent,
-    fields: studentEditFormFields,
-    title: "Editar Estudiante",
-    description: "Modifica la información del estudiante.",
+    onSubmit: handleEditmanager,
+    fields: managerEditFormFields,
+    title: "Editar Gestor de Información",
+    description: "Modifica la información del gestor de información.",
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
-      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
-      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    defaultValues: managerToEdit && {
+      firstName: managerToEdit.firstName ?? managerToEdit.name.split(' ')[0] ?? '',
+      lastName: managerToEdit.lastName ?? managerToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: managerToEdit.email,
     }
   };
 
 
   return (
     <>
-      {/* Modal de confirmación para eliminar estudiante */}
+      {/* Modal de confirmación para eliminar gestor de información */}
       <ConfirmationDialog
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        title="Eliminar estudiante"
-        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        title="Eliminar gestor de información"
+        description={`¿Estás seguro de que deseas eliminar a ${managerToDelete?.name}? Esta acción no se puede deshacer.`}
         confirmButtonText="Eliminar"
         cancelButtonText="Cancelar"
         variant="danger"
         isLoading={isDeleting}
       />
       
-      {/* Formulario para agregar estudiantes */}
+      {/* Formulario para agregar gestores de información */}
       <EntityForm {...addFormConfig} />
       
-      {/* Formulario para editar estudiantes */}
+      {/* Formulario para editar gestores de información */}
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
-        entityType="Estudiantes"
+        entityType="Gestores de Información"
         // Components
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
@@ -557,13 +504,13 @@ export default function TutorStudentsScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedStudent}
+        selectedEntity={selectedmanager}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
-        pageTitle="Tus Estudiantes"
-        pageDescription="Gestiona la información de los estudiantes a tu cargo"
-        detailsModalTitle="Detalles del Estudiante"
-        detailsModalDescription="Información detallada del estudiante seleccionado"
+        pageTitle="Tus Gestores de Información"
+        pageDescription="Gestiona la información de los gestores de información a tu cargo"
+        detailsModalTitle="Detalles del Gestor de Información"
+        detailsModalDescription="Información detallada del gestor de información seleccionado"
         // Configuration for the details modal
         entityDisplayConfig={entityDisplayConfig}
         notification={notification}

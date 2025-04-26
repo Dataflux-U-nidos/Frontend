@@ -76,6 +76,9 @@ export default function AuthScreen() {
     } else if (userType === "TUTOR" && location.pathname !== "/tutor-students") {
       navigate("/tutor-students");
     }
+    else if (userType === "UNIVERSITY" && location.pathname !== "/university-viewers") {
+      navigate("/university-viewers");
+    }
   }, [userType, location.pathname, navigate]);
 
   const handleLogin = async (credentials: { email: string; password: string }) => {
@@ -83,7 +86,7 @@ export default function AuthScreen() {
   };
 
   const handleRegister = async (data: any) => {
-    const { age, name, last_name, email, password } = data;
+    const { age } = data;
     // Validation rules
     if (selectedType === "STUDENT" && age < 18) {
       alert(

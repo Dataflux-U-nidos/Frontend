@@ -15,8 +15,18 @@ export const getAllUsers = async (): Promise<User[]> => {
   return data;
 };
 
-export const getStudentsByTutor = async (id: string): Promise<User[]> => {
-  const { data } = await userApi.get<User[]>(`/user/${id}/students`);
+export const getStudentsByTutor = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/students`);
+  return data;
+};
+
+export const getViewersByUniversity = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/viewers`);
+  return data;
+};
+
+export const getManagersByUniversity = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/infomanagers`);
   return data;
 };
 

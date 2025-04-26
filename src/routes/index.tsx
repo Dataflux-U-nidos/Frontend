@@ -6,6 +6,9 @@ import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import { Presentation, House, University, BriefcaseBusiness } from "lucide-react";
+import UniversityViewersScreen from "@/components/screens/UniversityViewersScreen";
+import UniversityManagersScreen from "@/components/screens/UniversityManagersScreen";
+import UniversityRoutes from "./UniversityRoutes";
 
 // Carga perezosa (lazy) de componentes
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
@@ -50,6 +53,19 @@ export const tutorMenu = [
   }
 ]
 
+export const universityMenu = [
+  {
+    title: "Visualizadores",
+    url: "/university-viewers",
+    icon: Presentation,
+  },
+  {
+    title: "Gestores de información",
+    url: "/university-managers",
+    icon: House,
+  },
+]
+
 const currentUser = {
   name: "Laura Rojas",
   email: "laura@example.com",
@@ -83,6 +99,15 @@ export const AppRoutes = () => {
           <Route element={<TutorRoutes />}>
             <Route path="/" element={<Layout navMain={tutorMenu} user={currentUser} />}>
               <Route path="tutor-students" element={<TutorStudentsScreen />} />
+            </Route>
+          </Route>
+
+          <Route element={<UniversityRoutes />}>
+            <Route path="/" element={<Layout navMain={universityMenu} user={currentUser} />}>
+              <Route path="university-viewers" element={<UniversityViewersScreen />} />
+            </Route>
+            <Route path="/" element={<Layout navMain={universityMenu} user={currentUser} />}>
+              <Route path="university-managers" element={<UniversityManagersScreen />} />
             </Route>
           </Route>
 

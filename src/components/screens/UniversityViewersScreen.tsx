@@ -6,18 +6,15 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
-  useGetStudentsByTutor,
+  useGetViewersByUniversity,
   useUpdateUser,
   useDeleteUser,
 } from "@/hooks";
 
-interface Student {
+interface Viewer {
   id?: string;
   email: string;
   name: string;
-  age: number;
-  school: string;
-  location: string;
   firstName?: string;
   lastName?: string;
 }
@@ -29,8 +26,8 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new student
-const studentFormFields: FormField[] = [
+// Form fields for adding a new viewer
+const viewerFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -47,12 +44,6 @@ const studentFormFields: FormField[] = [
     name: "email",
     label: "Correo Electrónico",
     type: "email",
-    required: true,
-  },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
     required: true,
   },
   {
@@ -63,8 +54,8 @@ const studentFormFields: FormField[] = [
   },
 ];
 
-// Form fields for editing a student (sin contraseña)
-const studentEditFormFields: FormField[] = [
+// Form fields for editing a viewer (sin contraseña)
+const viewerEditFormFields: FormField[] = [
   {
     name: "firstName",
     label: "Nombre",
@@ -83,73 +74,55 @@ const studentEditFormFields: FormField[] = [
     type: "email",
     required: true,
   },
-  {
-    name: "age",
-    label: "Edad",
-    type: "number",
-    required: true,
-  },
-  {
-    name: "school",
-    label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
-    type: "text",
-    required: false,
-  },
 ];
 
-export default function TutorStudentsScreen() {
+export default function UniversityViewersScreen() {
   // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
-  const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: getViewers } = useGetViewersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
 
-  // State to manage students data
-  const [studentsData, setStudentsData] = useState<Student[]>([]);
+  // State to manage viewers data
+  const [viewersData, setViewersData] = useState<Viewer[]>([]);
 
   // State to manage filtered data
-  const [filteredData, setFilteredData] = useState<Student[]>([]);
+  const [filteredData, setFilteredData] = useState<Viewer[]>([]);
 
-  // State to manage the modal for viewing student details
+  // State to manage the modal for viewing viewer details
   const [showDetailsModal, setShowDetailsModal] = useState(false);
 
-  // State to manage the modal for adding a new student
+  // State to manage the modal for adding a new viewer
   const [showAddModal, setShowAddModal] = useState(false);
   
-  // State to manage the modal for editing a student
+  // State to manage the modal for editing a viewer
   const [showEditModal, setShowEditModal] = useState(false);
   
-  // State to manage confirmation dialog for deleting a student
+  // State to manage confirmation dialog for deleting a viewer
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   
   // State to manage loading states
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // State to manage the selected student for details
-  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  // State to manage the selected viewer for details
+  const [selectedViewer, setSelectedViewer] = useState<Viewer | null>(null);
   
-  // State to manage the student to delete
-  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  // State to manage the viewer to delete
+  const [viewerToDelete, setViewerToDelete] = useState<Viewer | null>(null);
   
-  // State to manage the student to edit
-  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
+  // State to manage the viewer to edit
+  const [viewerToEdit, setViewerToEdit] = useState<Viewer | null>(null);
 
   // Estado para manejar notificaciones
   const [notification, setNotification] = useState<Notification | null>(null);
 
-  // loads students when component mounts
+  // loads viewers when component mounts
   useEffect(() => {
-    const fetchStudents = async () => {
+    const fetchViewers = async () => {
       try {
-        const students = await getStudents();
-        const mappedStudents = students.map((user) => {
+        const viewers = await getViewers();
+        const mappedViewers = viewers.map((user) => {
           // Extraer el nombre y apellido
           const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
           const nameParts = fullName.split(' ');
@@ -162,20 +135,17 @@ export default function TutorStudentsScreen() {
             name: fullName,
             firstName: firstName,
             lastName: lastName,
-            age: user.age || 0,
-            school: user.school ?? 'No disponible',
-            location: user.locality ?? 'No disponible'
           };
-        }) as Student[];
-        setStudentsData(mappedStudents);
-        setFilteredData(mappedStudents);
+        }) as Viewer[];
+        setViewersData(mappedViewers);
+        setFilteredData(mappedViewers);
       } catch (error) {
-        console.error("Error fetching students:", error);
+        console.error("Error fetching viewers:", error);
       }
     };
 
-    fetchStudents();
-  }, [getStudents]);
+    fetchViewers();
+  }, [getViewers]);
 
   // Manejador para cerrar la notificación
   const handleCloseNotification = () => {
@@ -193,98 +163,92 @@ export default function TutorStudentsScreen() {
     }
   }, [notification]);
 
-  // Manager for viewing student details
-  const handleViewDetails = (student: Student) => {
-    setSelectedStudent(student);
+  // Manager for viewing viewer details
+  const handleViewDetails = (viewer: Viewer) => {
+    setSelectedViewer(viewer);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedStudent(null);
+    setSelectedViewer(null);
   };
 
-  // Manager for opening the add student modal
+  // Manager for opening the add viewer modal
   const handleOpenAddModal = () => {
     setShowAddModal(true);
   };
 
-  // Manager for closing the add student modal
+  // Manager for closing the add viewer modal
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
   
   // Manager for initiating edit process
-  const handleInitiateEdit = (student: Student) => {
-    setStudentToEdit(student);
+  const handleInitiateEdit = (viewer: Viewer) => {
+    setViewerToEdit(viewer);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setStudentToEdit(null);
+    setViewerToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditStudent = async (formData: any) => {
-    if (!studentToEdit || !studentToEdit.id) return;
+  const handleEditViewer = async (formData: any) => {
+    if (!viewerToEdit || !viewerToEdit.id) return;
     
     setIsEditing(true);
     
     try {
       const userData = {
-        id: studentToEdit.id,
+        id: viewerToEdit.id,
         name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        locality: formData.location,
       };
       
       await updateUser(userData);
       
       // Cerrar el modal de edición
       setShowEditModal(false);
-      setStudentToEdit(null);
+      setViewerToEdit(null);
       
-      // Actualizar la lista de estudiantes
-      const updatedStudent = {
-        ...studentToEdit,
+      // Actualizar la lista de visualizadores
+      const updatedViewer = {
+        ...viewerToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        age: formData.age,
-        school: formData.school,
-        location: formData.location
       };
       
-      const updatedStudents = studentsData.map(student => 
-        student.id === updatedStudent.id ? updatedStudent : student
+      const updatedViewers = viewersData.map(viewer => 
+        viewer.id === updatedViewer.id ? updatedViewer : viewer
       );
       
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setViewersData(updatedViewers);
+      setFilteredData(updatedViewers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante actualizado',
-        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+        title: 'Visualizador actualizado',
+        message: `El visualizador ${updatedViewer.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
-      console.error("Error actualizando estudiante:", error);
+      console.error("Error actualizando visualizador:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al actualizar estudiante',
+        title: 'Error al actualizar visualizador',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+          : 'Ha ocurrido un error al intentar actualizar el visualizador.'
       });
     } finally {
       setIsEditing(false);
@@ -292,68 +256,67 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for initiating delete process
-  const handleInitiateDelete = (student: Student) => {
-    setStudentToDelete(student);
+  const handleInitiateDelete = (viewer: Viewer) => {
+    setViewerToDelete(viewer);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setStudentToDelete(null);
+    setViewerToDelete(null);
   };
   
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+    if (!viewerToDelete || !viewerToDelete.id) return;
     
     setIsDeleting(true);
     
     try {
-      await deleteUser(studentToDelete.id);
+      await deleteUser(viewerToDelete.id);
       
       // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setStudentToDelete(null);
+      setViewerToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
+      // Actualizar la lista de visualizadores filtrando el eliminado
+      const updatedViewers = viewersData.filter(
+        viewer => viewer.id !== viewerToDelete.id
       );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
+      setViewersData(updatedViewers);
+      setFilteredData(updatedViewers);
       
       // Mostrar notificación de éxito
       setNotification({
         type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+        title: 'Visualizador eliminado',
+        message: `El visualizador ${viewerToDelete.name} ha sido eliminado exitosamente.`
       });
     } catch (error) {
-      console.error("Error eliminando estudiante:", error);
+      console.error("Error eliminando visualizador:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al eliminar estudiante',
+        title: 'Error al eliminar visualizador',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+          : 'Ha ocurrido un error al intentar eliminar el visualizador.'
       });
     } finally {
       setIsDeleting(false);
     }
   };
 
-  // Manager for adding a new student
-  const handleAddStudent = async (formData: any) => {
+  // Manager for adding a new viewer
+  const handleAddViewer = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
-      age: formData.age,
       password: formData.password,
-      userType: "STUDENT",
+      userType: "VIEWER",
     };
 
     console.log("Enviando:", userData);
@@ -364,13 +327,13 @@ export default function TutorStudentsScreen() {
       
       setNotification({
         type: 'success',
-        title: '¡Estudiante creado!',
-        message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        title: 'Visualizador creado!',
+        message: `El visualizador ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
-      const students = await getStudents();
-      const mappedStudents = students.map((user) => {
+      // Actualizar la lista de visualizadores
+      const viewers = await getViewers();
+      const mappedViewers = viewers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
@@ -382,63 +345,52 @@ export default function TutorStudentsScreen() {
           name: fullName,
           firstName: firstName,
           lastName: lastName,
-          age: user.age || 0,
-          school: user.school ?? 'No disponible',
-          location: user.locality ?? 'No disponible'
         };
-      }) as Student[];
-      setStudentsData(mappedStudents);
-      setFilteredData(mappedStudents);
+      }) as Viewer[];
+      setViewersData(mappedViewers);
+      setFilteredData(mappedViewers);
       
     } catch (error) {
-      console.error("Error creando estudiante:", error);
+      console.error("Error creando visualizador:", error);
       
       // Mostrar notificación de error
       setNotification({
         type: 'error',
-        title: 'Error al crear estudiante',
+        title: 'Error al crear visualizador',
         message: error instanceof Error 
           ? error.message 
-          : 'Ha ocurrido un error al intentar crear el estudiante.'
+          : 'Ha ocurrido un error al intentar crear el visualizador.'
       });
     }
   };
 
-  // Manager for searching students
+  // Manager for searching viewers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
-      setFilteredData(studentsData);
+      setFilteredData(viewersData);
       return;
     }
 
     const lowerCaseSearch = searchTerm.toLowerCase();
-    const filtered = studentsData.filter(
-      (student) =>
-        student.name.toLowerCase().includes(lowerCaseSearch) ||
-        student.email.toLowerCase().includes(lowerCaseSearch) ||
-        student.school?.toLowerCase().includes(lowerCaseSearch) ||
-        student.location?.toLowerCase().includes(lowerCaseSearch)
+    const filtered = viewersData.filter(
+      (viewer) =>
+        viewer.name.toLowerCase().includes(lowerCaseSearch) ||
+        viewer.email.toLowerCase().includes(lowerCaseSearch)
     );
 
     setFilteredData(filtered);
   };
 
-  // Configuration for student details display
+  // Configuration for viewer details display
   const entityDisplayConfig = {
-    fields: ["name", "email", "age", "school", "location"] as (keyof Student)[],
+    fields: ["name", "email"] as (keyof Viewer)[],
     labels: {
       name: "Nombre",
       email: "Correo",
-      age: "Edad",
-      school: "Colegio",
-      location: "Localidad",
-    },
-    formatters: {
-      age: (value: number) => `${value} años`,
     },
     avatar: {
-      field: "name" as keyof Student,
-      fallback: (student: Student) => student.name.split(" ")[0].charAt(0),
+      field: "name" as keyof Viewer,
+      fallback: (viewer: Viewer) => viewer.name.split(" ")[0].charAt(0),
       bgColor: "bg-orange-500",
       textColor: "text-white",
     },
@@ -469,15 +421,13 @@ export default function TutorStudentsScreen() {
   ];
 
   const tableConfig = {
-    caption: "Estudiantes asignados",
+    caption: "Visualizadores asignados",
     rowsPerPage: 6,
     onViewDetails: handleViewDetails,
-    displayColumns: ["email", "name", "age", "school"],
+    displayColumns: ["email", "name"],
     columnHeaders: {
       email: "Correo",
       name: "Nombre",
-      age: "Edad",
-      school: "Colegio",
     },
     actionButtonText: "Ver detalles",
     actions: tableActions
@@ -486,68 +436,65 @@ export default function TutorStudentsScreen() {
   const searchBarConfig = {
     onSearch: handleSearch,
     onAddEntity: handleOpenAddModal,
-    searchPlaceholder: "Buscar estudiante",
-    addButtonLabel: "Agregar estudiante",
-    showFilterButton: false // Quitamos el botón de filtro
+    searchPlaceholder: "Buscar visualizador",
+    addButtonLabel: "Agregar visualizador",
+    showFilterButton: false 
   };
 
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddStudent,
-    fields: studentFormFields,
-    title: "Agregar Nuevo Estudiante",
-    description: "Completa el formulario para agregar un nuevo estudiante.",
-    submitButtonText: "Agregar Estudiante",
+    onSubmit: handleAddViewer,
+    fields: viewerFormFields,
+    title: "Agregar Nuevo Visualizador",
+    description: "Completa el formulario para agregar un nuevo visualizador.",
+    submitButtonText: "Agregar Visualizador",
     cancelButtonText: "Cancelar",
   };
   
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditStudent,
-    fields: studentEditFormFields,
-    title: "Editar Estudiante",
-    description: "Modifica la información del estudiante.",
+    onSubmit: handleEditViewer,
+    fields: viewerEditFormFields,
+    title: "Editar Visualizador",
+    description: "Modifica la información del visualizador.",
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
-      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
-      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    defaultValues: viewerToEdit && {
+      firstName: viewerToEdit.firstName ?? viewerToEdit.name.split(' ')[0] ?? '',
+      lastName: viewerToEdit.lastName ?? viewerToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: viewerToEdit.email,
     }
   };
 
 
   return (
     <>
-      {/* Modal de confirmación para eliminar estudiante */}
+      {/* Modal de confirmación para eliminar visualizador */}
       <ConfirmationDialog
         isOpen={showDeleteModal}
         onClose={handleCancelDelete}
         onConfirm={handleConfirmDelete}
-        title="Eliminar estudiante"
-        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        title="Eliminar visualizador"
+        description={`¿Estás seguro de que deseas eliminar a ${viewerToDelete?.name}? Esta acción no se puede deshacer.`}
         confirmButtonText="Eliminar"
         cancelButtonText="Cancelar"
         variant="danger"
         isLoading={isDeleting}
       />
       
-      {/* Formulario para agregar estudiantes */}
+      {/* Formulario para agregar visualizadores */}
       <EntityForm {...addFormConfig} />
       
-      {/* Formulario para editar estudiantes */}
+      {/* Formulario para editar visualizadores */}
       <EntityForm {...editFormConfig} />
       
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
-        entityType="Estudiantes"
+        entityType="Visualizadores"
         // Components
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
@@ -557,13 +504,13 @@ export default function TutorStudentsScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedStudent}
+        selectedEntity={selectedViewer}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
-        pageTitle="Tus Estudiantes"
-        pageDescription="Gestiona la información de los estudiantes a tu cargo"
-        detailsModalTitle="Detalles del Estudiante"
-        detailsModalDescription="Información detallada del estudiante seleccionado"
+        pageTitle="Tus Visualizadores"
+        pageDescription="Gestiona la información de los visualizadores a tu cargo"
+        detailsModalTitle="Detalles del Visualizador"
+        detailsModalDescription="Información detallada del visualizador seleccionado"
         // Configuration for the details modal
         entityDisplayConfig={entityDisplayConfig}
         notification={notification}
