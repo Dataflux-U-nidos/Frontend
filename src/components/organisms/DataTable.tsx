@@ -144,7 +144,17 @@ export function DataTable<T extends Entity>({
         </div>
       ))}
       <div className="mt-3 flex justify-end space-x-2">
-        {/* Botones de acciones adicionales */}
+        {/* Primero el botón de detalles (si hay onViewDetails) */}
+        {onViewDetails && (
+          <Button 
+            onClick={() => handleViewDetails(row)} 
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
+          >
+            {actionButtonText}
+          </Button>
+        )}
+        
+        {/* Luego los botones de acciones adicionales */}
         {actions.map((action, i) => (
           <Button 
             key={`action-${i}`}
@@ -155,16 +165,6 @@ export function DataTable<T extends Entity>({
             {action.label}
           </Button>
         ))}
-        
-        {/* Botón de detalles (si hay onViewDetails) */}
-        {onViewDetails && (
-          <Button 
-            onClick={() => handleViewDetails(row)} 
-            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
-          >
-            {actionButtonText}
-          </Button>
-        )}
       </div>
     </div>
   );
@@ -208,7 +208,17 @@ export function DataTable<T extends Entity>({
                 {/* Celda para botones de acciones */}
                 <TableCell className="p-4">
                   <div className="flex space-x-2">
-                    {/* Botones de acciones adicionales */}
+                    {/* Primero el botón de detalles (si hay onViewDetails) */}
+                    {onViewDetails && (
+                      <Button 
+                        onClick={() => handleViewDetails(row)} 
+                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
+                      >
+                        {actionButtonText}
+                      </Button>
+                    )}
+                    
+                    {/* Luego los botones de acciones adicionales */}
                     {actions.map((action, i) => (
                       <Button 
                         key={`action-${i}`}
@@ -219,16 +229,6 @@ export function DataTable<T extends Entity>({
                         {action.label}
                       </Button>
                     ))}
-                    
-                    {/* Botón de detalles (si hay onViewDetails) */}
-                    {onViewDetails && (
-                      <Button 
-                        onClick={() => handleViewDetails(row)} 
-                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
-                      >
-                        {actionButtonText}
-                      </Button>
-                    )}
                   </div>
                 </TableCell>
               </TableRow>
