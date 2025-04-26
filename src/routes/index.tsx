@@ -6,9 +6,11 @@ import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
+import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
 
 import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
+
 
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
@@ -134,6 +136,7 @@ export const AppRoutes = () => {
 
           <Route element={<ViewerRoutes />}>
             <Route path="/" element={<Layout navMain={viewerMenu} user={userData} />}>
+              <Route path="/account" element={<AccountViewerScreen />} />
               <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
