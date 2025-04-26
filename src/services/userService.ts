@@ -1,6 +1,6 @@
 // src/services/userService.ts
 import { userApi } from "../lib/api";
-import { CreateUserInput, UpdateUserInput, User } from "../types";
+import { CreateUserInput, UpdateUserInput, User, Student } from "../types";
 
 export const createUser = async (newUser: CreateUserInput): Promise<User> => {
   const response = await userApi.post<User>("/user", newUser);
@@ -15,11 +15,9 @@ export const getAllUsers = async (): Promise<User[]> => {
   return data;
 };
 
-export const getStudentsByTutor = async (
-  tutorToken: string
-): Promise<User[]> => {
-  const { data } = await userApi.get<User[]>(`/user/${tutorToken}/students`);
-  return data;
+export const getStudentsByTutor = async (id: string): Promise<User[]> => {
+    const { data } = await userApi.get<Student[]>(`/user/${id}/students`);
+    return data;
 };
 
 export const deleteUser = async (id: string): Promise<void> => {

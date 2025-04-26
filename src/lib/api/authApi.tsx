@@ -1,8 +1,11 @@
 import axios from "axios";
-
+import { jwtDecode } from "jwt-decode";
 const ACCESS_TOKEN_KEY = "accessToken";
 const REFRESH_TOKEN_KEY = "refreshToken";
 
+interface JwtPayload {
+  id: string;  
+}
 export function setTokens({
   accessToken,
   refreshToken,
@@ -28,7 +31,14 @@ export function getAccessToken() {
 export function getRefreshToken() {
   return localStorage.getItem(REFRESH_TOKEN_KEY);
 }
-
+export function getUserId() {
+  const token = getAccessToken();
+  let tutorId: string | undefined;
+  if (!token) return null;
+  const decoded = jwtDecode<JwtPayload>(token);
+  tutorId = decoded.id;
+  return tutorId;
+}
 export const authApi = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_URL,
   // Para enviar y recibir cookies httpOnly
