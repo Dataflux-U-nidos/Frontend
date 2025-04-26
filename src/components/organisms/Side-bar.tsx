@@ -16,6 +16,7 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
     user: {
       name: string
       email: string
+      userType: string
       avatar: string
     }
   }
