@@ -3,6 +3,7 @@ import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
+import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
   useGetStudentsByTutor,
@@ -12,11 +13,14 @@ import {
 import { useAuthContext } from "@/context/AuthContext";
 
 interface Student {
+  id?: string;
   email: string;
   name: string;
   age: number;
   school: string;
   location: string;
+  firstName?: string;
+  lastName?: string;
 }
 
 // Interfaz para la notificación
@@ -60,10 +64,52 @@ const studentFormFields: FormField[] = [
   },
 ];
 
+// Form fields for editing a student (sin contraseña)
+const studentEditFormFields: FormField[] = [
+  {
+    name: "firstName",
+    label: "Nombre",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "lastName",
+    label: "Apellido",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "email",
+    label: "Correo Electrónico",
+    type: "email",
+    required: true,
+  },
+  {
+    name: "age",
+    label: "Edad",
+    type: "number",
+    required: true,
+  },
+  {
+    name: "school",
+    label: "Colegio",
+    type: "text",
+    required: false,
+  },
+  {
+    name: "location",
+    label: "Localidad",
+    type: "text",
+    required: false,
+  },
+];
+
 export default function TutorStudentsScreen() {
-  // Get the current user from the context
+  // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getStudents } = useGetStudentsByTutor();
+  const { mutateAsync: deleteUser } = useDeleteUser();
+  const { mutateAsync: updateUser } = useUpdateUser();
 
   // State to manage students data
   const [studentsData, setStudentsData] = useState<Student[]>([]);
@@ -76,21 +122,52 @@ export default function TutorStudentsScreen() {
 
   // State to manage the modal for adding a new student
   const [showAddModal, setShowAddModal] = useState(false);
+  
+  // State to manage the modal for editing a student
+  const [showEditModal, setShowEditModal] = useState(false);
+  
+  // State to manage confirmation dialog for deleting a student
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  
+  // State to manage loading states
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   // State to manage the selected student for details
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  
+  // State to manage the student to delete
+  const [studentToDelete, setStudentToDelete] = useState<Student | null>(null);
+  
+  // State to manage the student to edit
+  const [studentToEdit, setStudentToEdit] = useState<Student | null>(null);
 
   // Estado para manejar notificaciones
   const [notification, setNotification] = useState<Notification | null>(null);
 
+  // Cargar estudiantes al montar el componente
   useEffect(() => {
     const fetchStudents = async () => {
       try {
         const students = await getStudents();
-        const mappedStudents = students.map((user) => ({
-          ...user,
-          location: "Unknown",
-        })) as Student[];
+        const mappedStudents = students.map((user) => {
+          // Extraer el nombre y apellido
+          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
+          const nameParts = fullName.split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          return {
+            id: user.id,
+            email: user.email,
+            name: fullName,
+            firstName: firstName,
+            lastName: lastName,
+            age: user.age || 0,
+            school: user.school || 'No disponible',
+            location: user.locality || 'No disponible'
+          };
+        }) as Student[];
         setStudentsData(mappedStudents);
         setFilteredData(mappedStudents);
       } catch (error) {
@@ -138,6 +215,136 @@ export default function TutorStudentsScreen() {
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
+  
+  // Manager for initiating edit process
+  const handleInitiateEdit = (student: Student) => {
+    setStudentToEdit(student);
+    setShowEditModal(true);
+  };
+  
+  // Manager for canceling edit process
+  const handleCancelEdit = () => {
+    setShowEditModal(false);
+    setStudentToEdit(null);
+  };
+  
+  // Manager for confirming and executing edit
+  const handleEditStudent = async (formData: any) => {
+    if (!studentToEdit || !studentToEdit.id) return;
+    
+    setIsEditing(true);
+    
+    try {
+      const userData = {
+        id: studentToEdit.id,
+        name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        age: formData.age,
+        school: formData.school,
+        locality: formData.location,
+      };
+      
+      await updateUser(userData);
+      
+      // Cerrar el modal de edición
+      setShowEditModal(false);
+      setStudentToEdit(null);
+      
+      // Actualizar la lista de estudiantes
+      const updatedStudent = {
+        ...studentToEdit,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        age: formData.age,
+        school: formData.school,
+        location: formData.location
+      };
+      
+      const updatedStudents = studentsData.map(student => 
+        student.id === updatedStudent.id ? updatedStudent : student
+      );
+      
+      setStudentsData(updatedStudents);
+      setFilteredData(updatedStudents);
+      
+      // Mostrar notificación de éxito
+      setNotification({
+        type: 'success',
+        title: 'Estudiante actualizado',
+        message: `El estudiante ${updatedStudent.name} ha sido actualizado exitosamente.`
+      });
+    } catch (error) {
+      console.error("Error actualizando estudiante:", error);
+      
+      // Mostrar notificación de error
+      setNotification({
+        type: 'error',
+        title: 'Error al actualizar estudiante',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar actualizar el estudiante.'
+      });
+    } finally {
+      setIsEditing(false);
+    }
+  };
+  
+  // Manager for initiating delete process
+  const handleInitiateDelete = (student: Student) => {
+    setStudentToDelete(student);
+    setShowDeleteModal(true);
+  };
+  
+  // Manager for canceling delete process
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setStudentToDelete(null);
+  };
+  
+  // Manager for confirming and executing delete
+  const handleConfirmDelete = async () => {
+    if (!studentToDelete || !studentToDelete.id) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      await deleteUser(studentToDelete.id);
+      
+      // Cerrar el modal de confirmación
+      setShowDeleteModal(false);
+      setStudentToDelete(null);
+      
+      // Actualizar la lista de estudiantes filtrando el eliminado
+      const updatedStudents = studentsData.filter(
+        student => student.id !== studentToDelete.id
+      );
+      setStudentsData(updatedStudents);
+      setFilteredData(updatedStudents);
+      
+      // Mostrar notificación de éxito
+      setNotification({
+        type: 'success',
+        title: 'Estudiante eliminado',
+        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+      });
+    } catch (error) {
+      console.error("Error eliminando estudiante:", error);
+      
+      // Mostrar notificación de error
+      setNotification({
+        type: 'error',
+        title: 'Error al eliminar estudiante',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Manager for adding a new student
   const handleAddStudent = async (formData: any) => {
@@ -167,10 +374,23 @@ export default function TutorStudentsScreen() {
       
       // Actualizar la lista de estudiantes
       const students = await getStudents();
-      const mappedStudents = students.map((user) => ({
-        ...user,
-        location: "Unknown",
-      })) as Student[];
+      const mappedStudents = students.map((user) => {
+        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        
+        return {
+          id: user.id,
+          email: user.email,
+          name: fullName,
+          firstName: firstName,
+          lastName: lastName,
+          age: user.age || 0,
+          school: user.school || 'No disponible',
+          location: user.locality || 'No disponible'
+        };
+      }) as Student[];
       setStudentsData(mappedStudents);
       setFilteredData(mappedStudents);
       
@@ -228,6 +448,30 @@ export default function TutorStudentsScreen() {
     },
   };
 
+  // Definir acciones para la tabla
+  const tableActions = [
+    {
+      label: "Editar",
+      onClick: handleInitiateEdit,
+      variant: "outline",
+      icon: (
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+      )
+    },
+    {
+      label: "Eliminar",
+      onClick: handleInitiateDelete,
+      variant: "danger",
+      icon: (
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      )
+    }
+  ];
+
   const tableConfig = {
     caption: "Estudiantes asignados",
     rowsPerPage: 6,
@@ -240,6 +484,7 @@ export default function TutorStudentsScreen() {
       school: "Colegio",
     },
     actionButtonText: "Ver detalles",
+    actions: tableActions
   };
 
   const searchBarConfig = {
@@ -250,7 +495,7 @@ export default function TutorStudentsScreen() {
     showFilterButton: false // Quitamos el botón de filtro
   };
 
-  const formConfig = {
+  const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
     onSubmit: handleAddStudent,
@@ -259,6 +504,26 @@ export default function TutorStudentsScreen() {
     description: "Completa el formulario para agregar un nuevo estudiante.",
     submitButtonText: "Agregar Estudiante",
     cancelButtonText: "Cancelar",
+  };
+  
+  const editFormConfig = {
+    isOpen: showEditModal,
+    onClose: handleCancelEdit,
+    onSubmit: handleEditStudent,
+    fields: studentEditFormFields,
+    title: "Editar Estudiante",
+    description: "Modifica la información del estudiante.",
+    submitButtonText: "Guardar Cambios",
+    cancelButtonText: "Cancelar",
+    isLoading: isEditing,
+    defaultValues: studentToEdit && {
+      firstName: studentToEdit.firstName || studentToEdit.name.split(' ')[0] || '',
+      lastName: studentToEdit.lastName || studentToEdit.name.split(' ').slice(1).join(' ') || '',
+      email: studentToEdit.email,
+      age: studentToEdit.age,
+      school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
+      location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
+    }
   };
 
   // Componente de notificación personalizado
@@ -337,6 +602,25 @@ export default function TutorStudentsScreen() {
       {/* Notificación personalizada */}
       <CustomNotification />
       
+      {/* Modal de confirmación para eliminar estudiante */}
+      <ConfirmationDialog
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar estudiante"
+        description={`¿Estás seguro de que deseas eliminar a ${studentToDelete?.name}? Esta acción no se puede deshacer.`}
+        confirmButtonText="Eliminar"
+        cancelButtonText="Cancelar"
+        variant="danger"
+        isLoading={isDeleting}
+      />
+      
+      {/* Formulario para agregar estudiantes */}
+      <EntityForm {...addFormConfig} />
+      
+      {/* Formulario para editar estudiantes */}
+      <EntityForm {...editFormConfig} />
+      
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
@@ -348,7 +632,7 @@ export default function TutorStudentsScreen() {
         // Props for componentes
         searchBarProps={searchBarConfig}
         tableProps={tableConfig}
-        formProps={formConfig}
+        formProps={addFormConfig}
         // State and handlers for modals
         selectedEntity={selectedStudent}
         showDetailsModal={showDetailsModal}

@@ -14,6 +14,14 @@ interface Entity {
   [key: string]: any;
 }
 
+// Nueva interfaz para acciones
+interface Action<T> {
+  label: string;
+  onClick: (entity: T) => void;
+  variant?: "default" | "danger" | "secondary" | "outline";
+  icon?: React.ReactNode;
+}
+
 interface DataTableProps<T extends Entity> {
   data: T[];
   caption?: string;
@@ -23,6 +31,8 @@ interface DataTableProps<T extends Entity> {
   columnHeaders?: Record<string, string>; // Traducciones de encabezados
   actionButtonText?: string;
   className?: string;
+  actions?: Action<T>[];  // Nueva propiedad para múltiples acciones
+  isLoading?: boolean;
 }
 
 export function DataTable<T extends Entity>({ 
@@ -33,14 +43,27 @@ export function DataTable<T extends Entity>({
   displayColumns,
   columnHeaders = {},
   actionButtonText = "Ver detalles",
-  className = ""
+  className = "",
+  actions = [],
+  isLoading = false
 }: DataTableProps<T>) {
   const [sortKey, setSortKey] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [currentPage, setCurrentPage] = useState(1);
 
+  if (isLoading) {
+    return (
+      <div className="rounded-lg overflow-hidden shadow p-6 text-center">
+        <div className="animate-pulse flex justify-center">
+          <div className="h-6 w-6 bg-gray-200 rounded-full mr-2"></div>
+          <div className="h-6 w-32 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    );
+  }
+
   if (data.length === 0) {
-    return <p>No hay datos disponibles.</p>;
+    return <p className="p-4 text-center text-gray-500">No hay datos disponibles.</p>;
   }
 
   // Determinar las columnas a mostrar
@@ -88,6 +111,25 @@ export function DataTable<T extends Entity>({
     }
   };
 
+  // Obtener el color de fondo del botón según la variante
+  const getButtonBgClass = (variant?: string) => {
+    switch (variant) {
+      case "danger":
+        return "bg-red-500 hover:bg-red-600";
+      case "secondary":
+        return "bg-gray-500 hover:bg-gray-600";
+      case "outline":
+        return "bg-transparent border border-orange-500 text-orange-500 hover:bg-orange-50";
+      default:
+        return "bg-orange-500 hover:bg-orange-600";
+    }
+  };
+
+  // Obtener el color de texto del botón según la variante
+  const getButtonTextClass = (variant?: string) => {
+    return variant === "outline" ? "text-orange-500" : "text-white";
+  };
+
   // Función para renderizar vista móvil de cada fila
   const renderMobileRow = (row: T, index: number) => (
     <div key={index} className="bg-peach-50 p-4 rounded-lg shadow mb-3 border border-gray-200">
@@ -101,13 +143,28 @@ export function DataTable<T extends Entity>({
           </span>
         </div>
       ))}
-      <div className="mt-3 flex justify-end">
-        <Button 
-          onClick={() => handleViewDetails(row)} 
-          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
-        >
-          {actionButtonText}
-        </Button>
+      <div className="mt-3 flex justify-end space-x-2">
+        {/* Botones de acciones adicionales */}
+        {actions.map((action, i) => (
+          <Button 
+            key={`action-${i}`}
+            onClick={() => action.onClick(row)}
+            className={`${getButtonBgClass(action.variant)} ${getButtonTextClass(action.variant)} rounded-md px-3 py-1 text-sm flex items-center`}
+          >
+            {action.icon && <span className="mr-1">{action.icon}</span>}
+            {action.label}
+          </Button>
+        ))}
+        
+        {/* Botón de detalles (si hay onViewDetails) */}
+        {onViewDetails && (
+          <Button 
+            onClick={() => handleViewDetails(row)} 
+            className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
+          >
+            {actionButtonText}
+          </Button>
+        )}
       </div>
     </div>
   );
@@ -131,7 +188,7 @@ export function DataTable<T extends Entity>({
                   {sortKey === header ? (sortOrder === "asc" ? " ↑" : " ↓") : ""}
                 </TableHead>
               ))}
-              {/* Columna adicional para el botón de detalles */}
+              {/* Columna adicional para acciones */}
               <TableHead className="p-4 text-left text-sm font-medium text-gray-500">
                 Acciones
               </TableHead>
@@ -148,14 +205,31 @@ export function DataTable<T extends Entity>({
                     {row[header]}
                   </TableCell>
                 ))}
-                {/* Celda para el botón de detalles */}
+                {/* Celda para botones de acciones */}
                 <TableCell className="p-4">
-                  <Button 
-                    onClick={() => handleViewDetails(row)} 
-                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
-                  >
-                    {actionButtonText}
-                  </Button>
+                  <div className="flex space-x-2">
+                    {/* Botones de acciones adicionales */}
+                    {actions.map((action, i) => (
+                      <Button 
+                        key={`action-${i}`}
+                        onClick={() => action.onClick(row)}
+                        className={`${getButtonBgClass(action.variant)} ${getButtonTextClass(action.variant)} rounded-md px-3 py-1 text-sm flex items-center`}
+                      >
+                        {action.icon && <span className="mr-1">{action.icon}</span>}
+                        {action.label}
+                      </Button>
+                    ))}
+                    
+                    {/* Botón de detalles (si hay onViewDetails) */}
+                    {onViewDetails && (
+                      <Button 
+                        onClick={() => handleViewDetails(row)} 
+                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
+                      >
+                        {actionButtonText}
+                      </Button>
+                    )}
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
