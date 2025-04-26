@@ -1,59 +1,63 @@
 import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent,
-  } from "../atoms/ui/card"
-  import { Brush, Dumbbell, Lightbulb } from "lucide-react"
-  
-  const iconMap: Record<string, React.FC<any>> = {
-    Brush,
-    Dumbbell,
-    Lightbulb,
-    // More As needed
-  }
-  
-  const colorMap: Record<string, string> = {
-    orange: "text-orange-500",
-    yellow: "text-yellow-500",
-    pink: "text-pink-500",
-    blue: "text-blue-500",
-    green: "text-green-500",
-    purple: "text-purple-500",
-    red: "text-red-500",
-    indigo: "text-indigo-500",
-  }
-  
-  type Preference = {
-    label: string;
-    icon: string; 
-    color: string;
-  }
-  
-  type PreferencesCardProps = {
-    preferences: Preference[]
-  }
-  
-  export function PreferencesCard({ preferences }: PreferencesCardProps) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Preferencias</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2 text-gray-700 text-base">
-          {preferences.map(({ label, icon, color }) => {
-            // Si el icono existe en el mapa, úsalo; de lo contrario, usa un fallback
-            const Icon = iconMap[icon] || (() => <div className="w-5 h-5 bg-gray-200 rounded-full" />);
-            const colorClass = colorMap[color] || "text-gray-500";
-            
-            return (
-              <div key={label} className="flex items-center gap-2">
-                <Icon className={`w-5 h-5 ${colorClass}`} />
-                {label}
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+} from "../atoms/ui/card"
+import { 
+  Brush, 
+  Dumbbell, 
+  Lightbulb, 
+  Palette, 
+  Shapes, 
+  Music, 
+  Film, 
+  Book,
+  Code
+} from "lucide-react"
+
+const iconMap: Record<string, React.FC<any>> = {
+  Brush,
+  Dumbbell,
+  Lightbulb,
+  Palette,
+  Shapes,
+  Music,
+  Film,
+  Book,
+  Code
+}
+
+type Preference = {
+  label: string;
+  icon: string; 
+  color: string;
+}
+
+type PreferencesCardProps = {
+  preferences: Preference[]
+}
+
+export function PreferencesCard({ preferences }: PreferencesCardProps) {
+  return (
+    <Card className="bg-amber-50 shadow-md border-0 rounded-2xl overflow-hidden h-full">
+      <CardHeader className="bg-white pb-4">
+        <CardTitle className="text-2xl font-bold">Preferencias</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-6 p-6">
+        {preferences.map(({ label, icon, color }) => {
+          const Icon = iconMap[icon] || (() => <div className="w-6 h-6 bg-gray-200 rounded-full" />);
+          
+          return (
+            <div key={label} className="flex items-center gap-3">
+              <div className={`w-8 h-8 rounded-full bg-white shadow-sm flex items-center justify-center`}>
+                <Icon className={`w-5 h-5 text-${color}-500`} />
               </div>
-            )
-          })}
-        </CardContent>
-      </Card>
-    )
-  }
+              <span className="text-gray-700 font-medium">{label}</span>
+            </div>
+          )
+        })}
+      </CardContent>
+    </Card>
+  )
+}

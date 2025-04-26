@@ -7,7 +7,9 @@ interface AccountTemplateProps {
   initialValues: any; // Cambiado a any para evitar dependencias con el tipo User
   onSubmit: (values: any) => void;
   onCancel: () => void;
+  onDeleteAccount?: () => void; // Nuevo prop para manejar la eliminación de cuenta
   loading: boolean;
+  deleteLoading?: boolean; // Estado de carga para la eliminación
   error: string | null;
   success: string | null;
 }
@@ -17,7 +19,9 @@ export default function AccountTemplate({
   initialValues,
   onSubmit,
   onCancel,
+  onDeleteAccount,
   loading,
+  deleteLoading,
   error,
   success
 }: AccountTemplateProps) {
@@ -53,7 +57,9 @@ export default function AccountTemplate({
             initialValues={initialValues}
             onSubmit={onSubmit}
             onCancel={onCancel}
+            onDeleteAccount={onDeleteAccount}
             loading={loading}
+            deleteLoading={deleteLoading}
           />
         </div>
       </div>

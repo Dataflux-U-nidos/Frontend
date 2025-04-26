@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
-import { Presentation, House, University, BriefcaseBusiness } from "lucide-react";
+import { Presentation, House, University, BriefcaseBusiness, BookOpenCheck, ChartSpline } from "lucide-react";
 
 // Carga perezosa (lazy) de componentes
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
@@ -38,17 +38,17 @@ export const studentMenu = [
   {
     title: "Test vocacional",
     url: "/student-vocationalTest",
-    icon: BriefcaseBusiness,
+    icon: BookOpenCheck,
   },
   {
     title: "Test psicométrico",
     url: "/student-psychometricTest",
-    icon: BriefcaseBusiness,
+    icon: BookOpenCheck,
   },
   {
     title: "Proyección en el mercado laboral",
     url: "/student-carrerProspects",
-    icon: BriefcaseBusiness,
+    icon: ChartSpline,
   },
 ]
 

@@ -28,7 +28,9 @@ import {
     Dog,
     Paintbrush,
     TrendingUp as Marketing,
-    Globe
+    Globe,
+    Monitor
+
   } from "lucide-react"
   
   const iconMap: Record<string, React.FC<any>> = {
@@ -61,21 +63,9 @@ import {
     "Relaciones Internacionales": Globe
   }
   
-  // Mapa de colores para Tailwind
-  const colorMap: Record<string, string> = {
-    orange: "text-orange-600",
-    yellow: "text-yellow-600",
-    pink: "text-pink-600",
-    blue: "text-blue-600",
-    green: "text-green-600",
-    purple: "text-purple-600",
-    red: "text-red-600",
-    indigo: "text-indigo-600",
-  }
-  
   type Career = {
     name: string;
-    icon?: string;  // Ahora es opcional, se determinará automáticamente si no se proporciona
+    icon?: string;
     color: string;
   }
   
@@ -84,23 +74,22 @@ import {
   }
   
   export function TopCareersCard({ careers }: TopCareersCardProps) {
+  
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>TOP carreras</CardTitle>
+      <Card className="bg-blue-50 shadow-md border-0 rounded-2xl overflow-hidden">
+        <CardHeader className="bg-white pb-4">
+          <CardTitle className="text-2xl font-bold">TOP carreras</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-3 text-center gap-4">
-          {careers.map(({ name, icon, color }) => {
-            // Primero busca un icono específico para la carrera, luego busca el icono proporcionado,
-            // o usa un fallback si ninguno de los dos existe
-            let careerName = name.trim();
-            const SpecificIcon = iconMap[careerName] || iconMap[icon || ""] || (() => <div className="w-8 h-8 bg-gray-200 rounded-full" />);
-            const colorClass = colorMap[color] || "text-gray-600";
+        <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
+          {careers.map((career) => {
+            const Icon = iconMap[career.name] || Monitor;
             
             return (
-              <div key={name} className="flex flex-col items-center gap-2">
-                <SpecificIcon className={`w-8 h-8 ${colorClass}`} />
-                <span className="text-sm">{name}</span>
+              <div key={career.name} className="bg-white rounded-xl shadow-sm p-4 flex flex-col items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+                  <Icon className="w-8 h-8 text-gray-500" />
+                </div>
+                <span className="text-gray-700 font-medium text-center">{career.name}</span>
               </div>
             )
           })}

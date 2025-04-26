@@ -9,7 +9,7 @@ export const mockStudentData = {
     school: "Colegio Naval Santa Fé",
     location: "Chapinero",
     avatar: collegeStudentImg, 
-    // FALTA PONER IMAGEN BUENA XD
+    // FALTA PONER IMAGEN BUENA 
     personality: [
       { trait: "Extrovertido", value: 70, color: "green" },
       { trait: "Lógico", value: 60, color: "blue" },
