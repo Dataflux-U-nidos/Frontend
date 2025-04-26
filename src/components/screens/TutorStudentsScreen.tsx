@@ -28,7 +28,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new student
+// Form fields for adding a new student with password validation
 const studentFormFields: FormField[] = [
   {
     name: "firstName",
@@ -53,12 +53,30 @@ const studentFormFields: FormField[] = [
     label: "Edad",
     type: "number",
     required: true,
+    validation: {
+      min: {
+        value: 1,
+        message: "La edad debe ser un número positivo"
+      },
+      max: {
+        value: 120,
+        message: "La edad no puede ser mayor a 120 años"
+      }
+    }
   },
   {
     name: "password",
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -87,6 +105,16 @@ const studentEditFormFields: FormField[] = [
     label: "Edad",
     type: "number",
     required: true,
+    validation: {
+      min: {
+        value: 1,
+        message: "La edad debe ser un número positivo"
+      },
+      max: {
+        value: 120,
+        message: "La edad no puede ser mayor a 120 años"
+      }
+    }
   },
   {
     name: "school",
@@ -473,6 +501,7 @@ export default function TutorStudentsScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // FIX: Usar undefined en lugar de null para defaultValues cuando studentToEdit es null
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -483,14 +512,15 @@ export default function TutorStudentsScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: studentToEdit && {
+    // Corregido: Usar un operador ternario para asegurar que defaultValues sea undefined en lugar de null
+    defaultValues: studentToEdit ? {
       firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
       lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: studentToEdit.email,
       age: studentToEdit.age,
       school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
       location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
-    }
+    } : undefined
   };
 
   // Componente de notificación personalizado
