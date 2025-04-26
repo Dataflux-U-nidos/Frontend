@@ -6,6 +6,7 @@ import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 import LoadingTemplate from "../templates/LoadingTemplate";
 import { useUpdateMyUser } from "@/hooks/user/useUpdateMyUserHook";
 import { useDeleteMyUser } from "@/hooks/user/useDeleteMyUserHook";
+import { useAuthContext } from "@/context/AuthContext";
 
 const accountFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Nombre", required: true },
@@ -29,6 +30,7 @@ export default function AccountScreen() {
   const { mutateAsync: deleteUser } = useDeleteMyUser();
 
   const { mutateAsync: fetchUser } = useGetMyUser();
+  const { logout } = useAuthContext()
 
   useEffect(() => {
     const loadUser = async () => {
@@ -68,29 +70,16 @@ export default function AccountScreen() {
     setDeleteLoading(true);
     setError(null);
 
-    // Simulamos un proceso de eliminación
-    setTimeout(() => {
-      console.log("Eliminando cuenta del usuario...");
-      setDeleteLoading(false);
-
-      // Redirigir al usuario a la página de inicio o login después de eliminar la cuenta
-      navigate("/login", { replace: true });
-    }, 1500);
-
-    // ALREADY IMPLEMENTED
-    // Uncomment this block to enable the delete account functionality
-    /*
     try {
-      // Llamar a la función para eliminar la cuenta
       await deleteUser();
-      // Redirigir al usuario a la página de inicio o login
-      navigate("/login", { replace: true });
+      await logout();
+      navigate("/auth", { replace: true });
     } catch (err) {
       setError("Error al eliminar la cuenta. Intenta nuevamente.");
       console.error("Error eliminando cuenta:", err);
       setDeleteLoading(false);
     }
-    */
+
   };
 
   const handleCancel = () => {
