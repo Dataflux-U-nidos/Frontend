@@ -17,11 +17,13 @@ type InputType =
   | "email"
   | "document"
   | "password"
+  | "create-password"
   | "phone"
   | "user"
   | "address"
   | "extension-phone"
   | "search"
+  | "number"
   | undefined
 
 function getConfigForType(type: InputType) {
@@ -74,12 +76,20 @@ function getConfigForType(type: InputType) {
         maxLength: 100,
         icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
       }
+    case "number":
+      return {
+        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos"),
+        maxLength: 3,
+        icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
+        
+      }
     default:
       return {
         schema: z.string().max(100),
         maxLength: 100,
         icon: undefined,
       }
+     
   }
 }
 
@@ -111,7 +121,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       getConfigForType(inputType)
 
     let nativeType: React.HTMLInputTypeAttribute = "text"
-    if (inputType === "password") {
+    if (inputType === "password" || inputType === "create-password") {
       nativeType = showPassword ? "text" : "password"
     } else if (inputType === "email") {
       nativeType = "email"
@@ -144,7 +154,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           className={cn(inputStyle, finalIcon ? "pl-8" : "pl-2")}
           {...props}
         />
-        {inputType === "password" && (
+        {(inputType === "password" || inputType === "create-password") && (
           <Button
             type="button"
             variant="ghost"

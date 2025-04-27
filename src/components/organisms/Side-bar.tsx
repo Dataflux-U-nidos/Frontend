@@ -1,12 +1,4 @@
 import * as React from "react"
-import {
-    LayoutGrid,
-    Upload,
-    History,
-    FileStack,
-    ChartLine,
-} from "lucide-react"
-
 
 import { NavMain } from "../molecules/side-navigation/Nav-main"
 import { NavUser } from "../molecules/side-navigation/Nav-user"
@@ -19,58 +11,32 @@ import {
 } from "../atoms/ui/sidebar"
 import { LogoIcon } from "../atoms/icons"
 
-// This is sample data.
-const data = {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+    navMain: Parameters<typeof NavMain>[0]["items"]
     user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
-    },
-    navMain: [
-        {
-            title: "Programas",
-            url: "/programs",
-            icon: LayoutGrid,
-        },
-        {
-            title: "Universidades",
-            url: "/universities",
-            icon: Upload,
-        },
-        {
-            title: "Test vocacional",
-            url: "/vocational-tes",
-            icon: FileStack,
-        },
-        {
-            title: "Test psicométrico",
-            url: "/psychometric-test",
-            icon: History,
-        },
-        {
-            title: "Proyección en el mercado",
-            url: "/market-projection",
-            icon: ChartLine,
-        },
-    ],
-}
-
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+      name: string
+      email: string
+      userType: string
+      avatar: string
+    }
+  }
+  
+  export function AppSidebar({ navMain, user, ...props }: AppSidebarProps) {
     return (
-        <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader className="flex justify-center items-center">
-                <div className="max-w-26 max-h-9.5 w-full h-auto">
-                    <LogoIcon />
-                </div>
-            </SidebarHeader>
-
-            <SidebarContent>
-                <NavMain items={data.navMain} />
-            </SidebarContent>
-            <SidebarFooter>
-                <NavUser user={data.user} />
-            </SidebarFooter>
-            <SidebarRail />
-        </Sidebar>
+      <Sidebar collapsible="icon" {...props}>
+        <SidebarHeader className="flex justify-center items-center">
+          <div className="max-w-26 max-h-9.5 w-full h-auto">
+            <LogoIcon />
+          </div>
+        </SidebarHeader>
+  
+        <SidebarContent>
+          <NavMain items={navMain} />
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={user} />
+        </SidebarFooter>
+        <SidebarRail />
+      </Sidebar>
     )
-}
+  }

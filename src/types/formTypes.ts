@@ -10,12 +10,14 @@ export type FieldType =
     | "select"
     | "custom"
     | "password"
+    | "create-password"
     | "extension-phone"
     | "phone"
     | "document"
     | "address"
     | "user"
     | "textarea"
+    | "number"
 
 /**
  * Estructura base para cualquier campo.

@@ -4,7 +4,8 @@ export interface User {
     last_name: string;
     email: string;
     password: string;
-    age: number;
+    age?: number;
+    userType: string; // "STUDENT" | "VIEWER" | "ADMIN"
     locality?: string;
     school?: string;
     preferences?: Record<string, unknown>;
