@@ -165,7 +165,14 @@ export default function UniversityMarketingUsersScreen() {
   
   // Manager for initiating edit process
   const handleInitiateEdit = (marketingUser: MarketingUser) => {
-    setMarketingUserToEdit(marketingUser);
+    const userToEdit = {
+      ...marketingUser,
+      firstName: marketingUser.firstName || marketingUser.name.split(' ')[0] || '',
+      lastName: marketingUser.lastName || 
+                (marketingUser.name.includes(' ') ? 
+                  marketingUser.name.substring(marketingUser.name.indexOf(' ') + 1).trim() : '')
+    };
+    setMarketingUserToEdit(userToEdit);
     setShowEditModal(true);
   };
   
@@ -435,6 +442,7 @@ export default function UniversityMarketingUsersScreen() {
       email: marketingUserToEdit.email,
     }
   };
+  console.log("defaultValues", editFormConfig.defaultValues);
 
 
   return (

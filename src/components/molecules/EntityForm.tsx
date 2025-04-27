@@ -29,6 +29,7 @@ interface EntityFormProps {
   cancelButtonText?: string;
   isLoading?: boolean;
   error?: string | null;
+  defaultValues?: Record<string, any> | null;
 }
 
 export const EntityForm: React.FC<EntityFormProps> = ({
@@ -41,7 +42,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
   submitButtonText = "Guardar",
   cancelButtonText = "Cancelar",
   isLoading = false,
-  error = null
+  error = null,
+  defaultValues // Usar esta nueva prop
 }) => {
   // Estado para gestionar todos los campos de forma dinámica
   const [formData, setFormData] = React.useState<Record<string, any>>({});
@@ -51,11 +53,15 @@ export const EntityForm: React.FC<EntityFormProps> = ({
     if (isOpen) {
       const initialData: Record<string, any> = {};
       fields.forEach(field => {
-        initialData[field.name] = field.defaultValue || "";
+        // Primero revisar si hay un valor en defaultValues, luego usar field.defaultValue
+        initialData[field.name] = 
+          (defaultValues && defaultValues[field.name] !== undefined) 
+            ? defaultValues[field.name] 
+            : (field.defaultValue || "");
       });
       setFormData(initialData);
     }
-  }, [isOpen, fields]);
+  }, [isOpen, fields, defaultValues]); // Agregar defaultValues como dependencia
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
