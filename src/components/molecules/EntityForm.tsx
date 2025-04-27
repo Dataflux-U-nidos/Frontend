@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -80,7 +80,7 @@ export const EntityForm: React.FC<EntityFormProps> = ({
         initialData[field.name] = 
           (defaultValues && defaultValues[field.name] !== undefined) 
             ? defaultValues[field.name] 
-            : (field.defaultValue || "");
+            : (field.defaultValue ?? "");
       });
       setFormData(initialData);
       // Limpiar errores al abrir
