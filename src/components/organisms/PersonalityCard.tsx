@@ -15,9 +15,9 @@ type PersonalityCardProps = {
   personality: PersonalityTrait[]
 }
 
-export function PersonalityCard({ personality }: PersonalityCardProps) {
+export function PersonalityCard({ personality }: Readonly<PersonalityCardProps>) {
   // Crear mapeos de colores específicos basados en la imagen de referencia
-  const getBackgroundColor = (color: string) => {
+ /* const getBackgroundColor = (color: string) => {
     const colorMap: Record<string, string> = {
       blue: "bg-blue-50",
       green: "bg-green-50", 
@@ -28,7 +28,7 @@ export function PersonalityCard({ personality }: PersonalityCardProps) {
       teal: "bg-teal-50"
     };
     return colorMap[color] || "bg-gray-50";
-  };
+  };*/
 
   const getTextColor = (color: string) => {
     const colorMap: Record<string, string> = {
