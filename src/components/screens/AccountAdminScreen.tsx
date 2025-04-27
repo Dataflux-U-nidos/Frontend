@@ -17,12 +17,6 @@ const accountFields: FormField[] = [
     placeholder: "Correo electrónico",
     required: true,
   },
-  // {
-  //   type: "user",
-  //   key: "locality",
-  //   placeholder: "Localidad",
-  //   required: true,
-  // }
 ];
 
 export default function AccountScreen() {
@@ -36,7 +30,7 @@ export default function AccountScreen() {
   const { mutateAsync: deleteUser } = useDeleteMyUser();
 
   const { mutateAsync: fetchUser } = useGetMyUser();
-  const { logout } = useAuthContext();
+  const { logout } = useAuthContext()
 
   useEffect(() => {
     const loadUser = async () => {
@@ -47,11 +41,7 @@ export default function AccountScreen() {
           last_name: user.last_name,
           email: user.email,
         };
-        const mappedUser = {
-          ...userData,
-          location: user.locality,
-        };
-        setUserData(mappedUser);
+        setUserData(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -88,10 +78,11 @@ export default function AccountScreen() {
       console.error("Error eliminando cuenta:", err);
       setDeleteLoading(false);
     }
+
   };
 
   const handleCancel = () => {
-    navigate("/student-profile");
+    navigate("/viewer-dashboard");
   };
 
   return userData ? (

@@ -14,6 +14,7 @@ type LayoutProps = {
   user: {
     name: string
     email: string
+    userType: string
     avatar: string
   }
 }

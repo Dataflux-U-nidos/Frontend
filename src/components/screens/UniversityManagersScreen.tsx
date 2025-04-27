@@ -25,7 +25,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new manager
+// Form fields for adding a new manager with password validation
 const managerFormFields: FormField[] = [
   {
     name: "firstName",
@@ -50,6 +50,14 @@ const managerFormFields: FormField[] = [
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -428,6 +436,7 @@ export default function UniversityManagersScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // Fixed defaultValues to use ternary operator instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -438,11 +447,11 @@ export default function UniversityManagersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: managerToEdit && {
+    defaultValues: managerToEdit ? {
       firstName: managerToEdit.firstName ?? managerToEdit.name.split(' ')[0] ?? '',
       lastName: managerToEdit.lastName ?? managerToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: managerToEdit.email,
-    }
+    } : undefined
   };
 
 

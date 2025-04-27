@@ -6,9 +6,14 @@ import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
+import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
 
 import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
+import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
+import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
+import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
+
 
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
@@ -113,7 +118,8 @@ export const AppRoutes = () => {
           const userData = {
             name: user.name,
             last_name: user.last_name,
-            email: user.email}
+            email: user.email,
+            userType: user.userType}
           setUserData(userData);
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -133,41 +139,39 @@ export const AppRoutes = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
 
           <Route element={<ViewerRoutes />}>
-            <Route path="/" element={<Layout navMain={viewerMenu} user={userData} />}>
+            <Route element={<Layout navMain={viewerMenu} user={userData} />}>
+              <Route path="/account-viewer" element={<AccountViewerScreen />} />
               <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
             </Route>
           </Route>
 
           <Route element={<StudentRoutes />}>
-            <Route path="/" element={<Layout navMain={studentMenu} user={userData} />}>
-            <Route path="/account" element={<AccountScreen />} />
+            <Route element={<Layout navMain={studentMenu} user={userData} />}>
+            <Route path="/account-student" element={<AccountScreen />} />
             <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
 
           <Route element={<TutorRoutes />}>
-            <Route path="/" element={<Layout navMain={tutorMenu} user={userData} />}>
-              <Route path="tutor-students" element={<TutorStudentsScreen />} />
+            <Route element={<Layout navMain={tutorMenu} user={userData} />}>
+              <Route path="/account-tutor" element={<AccountTutorScreen />} />
+              <Route path="/tutor-students" element={<TutorStudentsScreen />} />
             </Route>
           </Route>
 
           <Route element={<UniversityRoutes />}>
-            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
-              <Route path="university-viewers" element={<UniversityViewersScreen />} />
-            </Route>
-            <Route path="/" element={<Layout navMain={universityMenu} user={userData} />}>
-              <Route path="university-managers" element={<UniversityManagersScreen />} />
+            <Route element={<Layout navMain={universityMenu} user={userData} />}>
+              <Route path="/account-university" element={<AccountUniversityScreen />} />
+              <Route path="/university-viewers" element={<UniversityViewersScreen />} />
+              <Route path="/university-managers" element={<UniversityManagersScreen />} />
             </Route>
           </Route>
 
           <Route element={<AdminRoutes />}>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
-              <Route path="admin-support" element={<AdminSupportScreen />} />
-            </Route>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
-              <Route path="admin-finances" element={<AdminFinancesScreen />} />
-            </Route>
-            <Route path="/" element={<Layout navMain={adminMenu} user={userData} />}>
+            <Route element={<Layout navMain={adminMenu} user={userData} />}>
+              <Route path="/account-admin" element={<AccountAdminScreen />} />
+              <Route path="/admin-support" element={<AdminSupportScreen />} />
+              <Route path="/admin-finances" element={<AdminFinancesScreen />} />
               <Route path="admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
