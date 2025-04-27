@@ -5,5 +5,7 @@ export interface LoginInput {
 
 export interface LoginResponse {
     userType: string;
+    accessToken: string;
+    refreshToken: string;
 }
 

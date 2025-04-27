@@ -1,0 +1,498 @@
+import  { useState, useEffect } from "react";
+import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
+import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
+import { DataTable } from "@/components/organisms/DataTable";
+import { EntityForm, FormField } from "@/components/molecules/EntityForm";
+import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import {
+  useCreateUser,
+  useGetSupportByAdmin,
+  useUpdateUser,
+  useDeleteUser,
+} from "@/hooks";
+
+interface SupportUser {
+  id?: string;
+  email: string;
+  name: string;
+  firstName?: string;
+  lastName?: string;
+}
+
+interface Notification {
+  type: 'success' | 'error';
+  title: string;
+  message: string;
+}
+
+// Form fields for adding a new SupportUser with password validation
+const SupportUserFormFields: FormField[] = [
+  {
+    name: "firstName",
+    label: "Nombre",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "lastName",
+    label: "Apellido",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "email",
+    label: "Correo Electrónico",
+    type: "email",
+    required: true,
+  },
+  {
+    name: "password",
+    label: "Contraseña",
+    type: "password",
+    required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
+  },
+];
+
+// Form fields for editing a SupportUser (sin contraseña)
+const SupportUserEditFormFields: FormField[] = [
+  {
+    name: "firstName",
+    label: "Nombre",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "lastName",
+    label: "Apellido",
+    type: "text",
+    required: true,
+  },
+  {
+    name: "email",
+    label: "Correo Electrónico",
+    type: "email",
+    required: true,
+  },
+];
+
+export default function UniversitySupportUsersScreen() {
+  // Hooks for CRUD
+  const { mutateAsync: createUser } = useCreateUser();
+  const { mutateAsync: getSupportUsers } = useGetSupportByAdmin();
+  const { mutateAsync: deleteUser } = useDeleteUser();
+  const { mutateAsync: updateUser } = useUpdateUser();
+
+  // state variables
+  const [SupportUsersData, setSupportUsersData] = useState<SupportUser[]>([]);
+  const [filteredData, setFilteredData] = useState<SupportUser[]>([]);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedSupportUser, setSelectedSupportUser] = useState<SupportUser | null>(null);
+  const [SupportUserToDelete, setSupportUserToDelete] = useState<SupportUser | null>(null);
+  const [SupportUserToEdit, setSupportUserToEdit] = useState<SupportUser | null>(null);
+  const [notification, setNotification] = useState<Notification | null>(null);
+
+  // loads SupportUsers when component mounts
+  useEffect(() => {
+    const fetchSupportUsers = async () => {
+      try {
+        const SupportUsers = await getSupportUsers();
+        const mappedSupportUsers = SupportUsers.map((user) => {
+
+            const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
+          const nameParts = fullName.split(' ');
+          const firstName = nameParts[0] || '';
+          const lastName = nameParts.slice(1).join(' ') || '';
+          
+          return {
+            id: user.id,
+            email: user.email,
+            name: fullName,
+            firstName: firstName,
+            lastName: lastName,
+          };
+        }) as SupportUser[];
+        setSupportUsersData(mappedSupportUsers);
+        setFilteredData(mappedSupportUsers);
+      } catch (error) {
+        console.error("Error fetching SupportUsers:", error);
+      }
+    };
+
+    fetchSupportUsers();
+  }, [getSupportUsers]);
+
+  const handleCloseNotification = () => {
+    setNotification(null);
+  };
+
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  // Manager for viewing SupportUser details
+  const handleViewDetails = (SupportUser: SupportUser) => {
+    setSelectedSupportUser(SupportUser);
+    setShowDetailsModal(true);
+  };
+
+  // Manager for closing the details modal
+  const handleCloseDetailsModal = () => {
+    setShowDetailsModal(false);
+    setSelectedSupportUser(null);
+  };
+
+  // Manager for opening the add SupportUser modal
+  const handleOpenAddModal = () => {
+    setShowAddModal(true);
+  };
+
+  // Manager for closing the add SupportUser modal
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+  };
+  
+  // Manager for initiating edit process
+  const handleInitiateEdit = (SupportUser: SupportUser) => {
+    setSupportUserToEdit(SupportUser);
+    setShowEditModal(true);
+  };
+  
+  // Manager for canceling edit process
+  const handleCancelEdit = () => {
+    setShowEditModal(false);
+    setSupportUserToEdit(null);
+  };
+  
+  // Manager for confirming and executing edit
+  const handleEditSupportUser = async (formData: any) => {
+    if (!SupportUserToEdit || !SupportUserToEdit.id) return;
+    
+    setIsEditing(true);
+    
+    try {
+      const userData = {
+        id: SupportUserToEdit.id,
+        name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+      };
+      
+      await updateUser(userData);
+      
+      // Cerrar el modal de edición
+      setShowEditModal(false);
+      setSupportUserToEdit(null);
+      
+      const updatedSupportUser = {
+        ...SupportUserToEdit,
+        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+      };
+      
+      const updatedSupportUsers = SupportUsersData.map(SupportUser => 
+        SupportUser.id === updatedSupportUser.id ? updatedSupportUser : SupportUser
+      );
+      
+      setSupportUsersData(updatedSupportUsers);
+      setFilteredData(updatedSupportUsers);
+      
+      // Mostrar notificación de éxito
+      setNotification({
+        type: 'success',
+        title: 'Usuario de soporte actualizado',
+        message: `El usuario de soporte ${updatedSupportUser.name} ha sido actualizado exitosamente.`
+      });
+    } catch (error) {
+      console.error("Error actualizando usuario de soporte:", error);
+      
+      // Mostrar notificación de error
+      setNotification({
+        type: 'error',
+        title: 'Error al actualizar usuario de soporte',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar actualizar el usuario de soporte.'
+      });
+    } finally {
+      setIsEditing(false);
+    }
+  };
+  
+  // Manager for initiating delete process
+  const handleInitiateDelete = (SupportUser: SupportUser) => {
+    setSupportUserToDelete(SupportUser);
+    setShowDeleteModal(true);
+  };
+  
+  // Manager for canceling delete process
+  const handleCancelDelete = () => {
+    setShowDeleteModal(false);
+    setSupportUserToDelete(null);
+  };
+  
+  // Manager for confirming and executing delete
+  const handleConfirmDelete = async () => {
+    if (!SupportUserToDelete || !SupportUserToDelete.id) return;
+    
+    setIsDeleting(true);
+    
+    try {
+      await deleteUser(SupportUserToDelete.id);
+      
+      // Cerrar el modal de confirmación
+      setShowDeleteModal(false);
+      setSupportUserToDelete(null);
+      
+      const updatedSupportUsers = SupportUsersData.filter(
+        SupportUser => SupportUser.id !== SupportUserToDelete.id
+      );
+      setSupportUsersData(updatedSupportUsers);
+      setFilteredData(updatedSupportUsers);
+      
+      // Mostrar notificación de éxito
+      setNotification({
+        type: 'success',
+        title: 'Usuario de soporte eliminado',
+        message: `El usuario de soporte ${SupportUserToDelete.name} ha sido eliminado exitosamente.`
+      });
+    } catch (error) {
+      console.error("Error eliminando usuario de soporte:", error);
+      
+      // Mostrar notificación de error
+      setNotification({
+        type: 'error',
+        title: 'Error al eliminar usuario de soporte',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar eliminar el usuario de soporte.'
+      });
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Manager for adding a new SupportUser
+  const handleAddSupportUser = async (formData: any) => {
+    const userData = {
+      name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      password: formData.password,
+      userType: "SUPPORT",
+    };
+
+    console.log("Enviando:", userData);
+    
+    try {
+      await createUser(userData);
+      handleCloseAddModal();
+      
+      setNotification({
+        type: 'success',
+        title: 'Usuario de soporte creado!',
+        message: `El usuario de soporte ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+      });
+      
+      const SupportUsers = await getSupportUsers();
+      const mappedSupportUsers = SupportUsers.map((user) => {
+        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
+        const nameParts = fullName.split(' ');
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.slice(1).join(' ') || '';
+        
+        return {
+          id: user.id,
+          email: user.email,
+          name: fullName,
+          firstName: firstName,
+          lastName: lastName,
+        };
+      }) as SupportUser[];
+      setSupportUsersData(mappedSupportUsers);
+      setFilteredData(mappedSupportUsers);
+      
+    } catch (error) {
+      console.error("Error creando usuario de soporte:", error);
+      
+      setNotification({
+        type: 'error',
+        title: 'Error al crear usuario de soporte',
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar crear el usuario de soporte.'
+      });
+    }
+  };
+
+  // Manager for searching SupportUsers
+  const handleSearch = (searchTerm: string) => {
+    if (!searchTerm.trim()) {
+      setFilteredData(SupportUsersData);
+      return;
+    }
+
+    const lowerCaseSearch = searchTerm.toLowerCase();
+    const filtered = SupportUsersData.filter(
+      (SupportUser) =>
+        SupportUser.name.toLowerCase().includes(lowerCaseSearch) ||
+        SupportUser.email.toLowerCase().includes(lowerCaseSearch)
+    );
+
+    setFilteredData(filtered);
+  };
+
+  // Configuration for SupportUser details display
+  const entityDisplayConfig = {
+    fields: ["name", "email"] as (keyof SupportUser)[],
+    labels: {
+      name: "Nombre",
+      email: "Correo",
+    },
+    avatar: {
+      field: "name" as keyof SupportUser,
+      fallback: (SupportUser: SupportUser) => SupportUser.name.split(" ")[0].charAt(0),
+      bgColor: "bg-orange-500",
+      textColor: "text-white",
+    },
+  };
+
+  const tableActions = [
+    {
+      label: "Editar",
+      onClick: handleInitiateEdit,
+      variant: "outline",
+      icon: (
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+      )
+    },
+    {
+      label: "Eliminar",
+      onClick: handleInitiateDelete,
+      variant: "danger",
+      icon: (
+        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      )
+    }
+  ];
+
+  const tableConfig = {
+    caption: "Usuarios de soporte asignados",
+    rowsPerPage: 6,
+    onViewDetails: handleViewDetails,
+    displayColumns: ["email", "name"],
+    columnHeaders: {
+      email: "Correo",
+      name: "Nombre",
+    },
+    actionButtonText: "Ver detalles",
+    actions: tableActions
+  };
+
+  const searchBarConfig = {
+    onSearch: handleSearch,
+    onAddEntity: handleOpenAddModal,
+    searchPlaceholder: "Buscar usuario de soporte",
+    addButtonLabel: "Agregar usuario de soporte",
+    showFilterButton: false 
+  };
+
+  const addFormConfig = {
+    isOpen: showAddModal,
+    onClose: handleCloseAddModal,
+    onSubmit: handleAddSupportUser,
+    fields: SupportUserFormFields,
+    title: "Agregar Nuevo Usuario de soporte",
+    description: "Completa el formulario para agregar un nuevo usuario de soporte.",
+    submitButtonText: "Agregar Usuario de soporte",
+    cancelButtonText: "Cancelar",
+  };
+  
+  // Fixed defaultValues to use ternary instead of && to avoid type error
+  const editFormConfig = {
+    isOpen: showEditModal,
+    onClose: handleCancelEdit,
+    onSubmit: handleEditSupportUser,
+    fields: SupportUserEditFormFields,
+    title: "Editar Usuario de soporte",
+    description: "Modifica la información del usuario de soporte.",
+    submitButtonText: "Guardar Cambios",
+    cancelButtonText: "Cancelar",
+    isLoading: isEditing,
+    defaultValues: SupportUserToEdit ? {
+      firstName: SupportUserToEdit.firstName ?? SupportUserToEdit.name.split(' ')[0] ?? '',
+      lastName: SupportUserToEdit.lastName ?? SupportUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
+      email: SupportUserToEdit.email,
+    } : undefined
+  };
+
+
+  return (
+    <>
+      <ConfirmationDialog
+        isOpen={showDeleteModal}
+        onClose={handleCancelDelete}
+        onConfirm={handleConfirmDelete}
+        title="Eliminar usuario de soporte"
+        description={`¿Estás seguro de que deseas eliminar a ${SupportUserToDelete?.name}? Esta acción no se puede deshacer.`}
+        confirmButtonText="Eliminar"
+        cancelButtonText="Cancelar"
+        variant="danger"
+        isLoading={isDeleting}
+      />
+      
+      <EntityForm {...addFormConfig} />
+      <EntityForm {...editFormConfig} />
+      
+      <ListPageTemplate
+        // Data and entity type
+        data={filteredData}
+        entityType="Usuarios de soporte"
+        // Components
+        SearchBarComponent={SearchFilterBar}
+        TableComponent={DataTable}
+        FormComponent={EntityForm}
+        // Props for componentes
+        searchBarProps={searchBarConfig}
+        tableProps={tableConfig}
+        formProps={addFormConfig}
+        // State and handlers for modals
+        selectedEntity={selectedSupportUser}
+        showDetailsModal={showDetailsModal}
+        onCloseDetailsModal={handleCloseDetailsModal}
+        pageTitle="Tus Usuarios de soporte"
+        pageDescription="Gestiona la información de los usuario de soporte a tu cargo"
+        detailsModalTitle="Detalles del Usuario de soporte"
+        detailsModalDescription="Información detallada del usuario de soporte seleccionado"
+        // Configuration for the details modal
+        entityDisplayConfig={entityDisplayConfig}
+        notification={notification}
+        onCloseNotification={handleCloseNotification}
+      />
+    </>
+  );
+}
