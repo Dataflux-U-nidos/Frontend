@@ -13,7 +13,7 @@ export interface FormField {
   label: string;
   type: string;
   required?: boolean;
-  options?: { value: string; label: string }[]; // Para select
+  options?: { value: string; label: string }[];
   placeholder?: string;
   defaultValue?: any;
 }
@@ -43,17 +43,14 @@ export const EntityForm: React.FC<EntityFormProps> = ({
   cancelButtonText = "Cancelar",
   isLoading = false,
   error = null,
-  defaultValues // Usar esta nueva prop
+  defaultValues
 }) => {
-  // Estado para gestionar todos los campos de forma dinámica
   const [formData, setFormData] = React.useState<Record<string, any>>({});
 
-  // Inicializar el formulario con valores por defecto
   React.useEffect(() => {
     if (isOpen) {
       const initialData: Record<string, any> = {};
       fields.forEach(field => {
-        // Primero revisar si hay un valor en defaultValues, luego usar field.defaultValue
         initialData[field.name] = 
           (defaultValues && defaultValues[field.name] !== undefined) 
             ? defaultValues[field.name] 
@@ -61,7 +58,7 @@ export const EntityForm: React.FC<EntityFormProps> = ({
       });
       setFormData(initialData);
     }
-  }, [isOpen, fields, defaultValues]); // Agregar defaultValues como dependencia
+  }, [isOpen, fields, defaultValues]); 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
