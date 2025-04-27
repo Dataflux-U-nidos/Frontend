@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,30 @@ export interface FormField {
   options?: { value: string; label: string }[];
   placeholder?: string;
   defaultValue?: any;
+  helpText?: string;
+  validation?: {
+    pattern?: {
+      value: RegExp;
+      message: string;
+    };
+    minLength?: {
+      value: number;
+      message: string;
+    };
+    maxLength?: {
+      value: number;
+      message: string;
+    };
+    min?: {
+      value: number;
+      message: string;
+    };
+    max?: {
+      value: number;
+      message: string;
+    };
+    validate?: (value: any) => boolean | string;
+  };
 }
 
 interface EntityFormProps {
@@ -46,6 +70,8 @@ export const EntityForm: React.FC<EntityFormProps> = ({
   defaultValues
 }) => {
   const [formData, setFormData] = React.useState<Record<string, any>>({});
+  // Estado para errores de validación
+  const [validationErrors, setValidationErrors] = React.useState<Record<string, string>>({});
 
   React.useEffect(() => {
     if (isOpen) {
@@ -57,8 +83,63 @@ export const EntityForm: React.FC<EntityFormProps> = ({
             : (field.defaultValue || "");
       });
       setFormData(initialData);
+      // Limpiar errores al abrir
+      setValidationErrors({});
     }
-  }, [isOpen, fields, defaultValues]); 
+  }, [isOpen, fields, defaultValues, defaultValues]); 
+
+  const validateField = (field: FormField, value: any): string => {
+    // Validar si es requerido
+    if (field.required && (!value || value.toString().trim() === "")) {
+      return `El campo ${field.label} es obligatorio`;
+    }
+
+    // Si no hay validaciones adicionales o el campo está vacío (y no es requerido), no hay error
+    if (!field.validation || (!value && !field.required)) {
+      return "";
+    }
+
+    const validation = field.validation;
+
+    // Validar patrón (regex)
+    if (validation.pattern && value) {
+      if (!validation.pattern.value.test(value)) {
+        return validation.pattern.message;
+      }
+    }
+
+    // Validar longitud mínima
+    if (validation.minLength && value && value.length < validation.minLength.value) {
+      return validation.minLength.message;
+    }
+
+    // Validar longitud máxima
+    if (validation.maxLength && value && value.length > validation.maxLength.value) {
+      return validation.maxLength.message;
+    }
+
+    // Validar valor mínimo (para números)
+    if (validation.min && typeof value === 'number' && value < validation.min.value) {
+      return validation.min.message;
+    }
+
+    // Validar valor máximo (para números)
+    if (validation.max && typeof value === 'number' && value > validation.max.value) {
+      return validation.max.message;
+    }
+
+    // Función de validación personalizada
+    if (validation.validate && value) {
+      const validationResult = validation.validate(value);
+      if (typeof validationResult === 'string') {
+        return validationResult;
+      } else if (validationResult === false) {
+        return `El campo ${field.label} no es válido`;
+      }
+    }
+
+    return ""; // No hay error
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target as HTMLInputElement;
@@ -73,19 +154,49 @@ export const EntityForm: React.FC<EntityFormProps> = ({
       return;
     }
     
+    // Manejar cambios normales
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+    
+    // Validar el campo al cambiar
+    const field = fields.find(f => f.name === name);
+    if (field) {
+      const error = validateField(field, value);
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: error
+      }));
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    
+    // Validar todos los campos antes de enviar
+    const newErrors: Record<string, string> = {};
+    let hasErrors = false;
+    
+    fields.forEach(field => {
+      const error = validateField(field, formData[field.name]);
+      if (error) {
+        newErrors[field.name] = error;
+        hasErrors = true;
+      }
+    });
+    
+    setValidationErrors(newErrors);
+    
+    // Si no hay errores, enviar el formulario
+    if (!hasErrors) {
+      onSubmit(formData);
+    }
   };
 
   const renderField = (field: FormField) => {
-    const { name, label, type, required, options, placeholder } = field;
+    const { name, label, type, required, options, placeholder, helpText } = field;
+    const hasError = validationErrors[name] && validationErrors[name].length > 0;
 
     switch (type) {
       case 'select':
@@ -101,7 +212,11 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               value={formData[name] || ""}
               onChange={handleChange}
               disabled={isLoading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                hasError 
+                  ? "border-red-300 focus:ring-red-500" 
+                  : "border-gray-300 focus:ring-orange-500"
+              } disabled:bg-gray-100 disabled:cursor-not-allowed`}
             >
               <option value="">Seleccione...</option>
               {options?.map(option => (
@@ -110,6 +225,12 @@ export const EntityForm: React.FC<EntityFormProps> = ({
                 </option>
               ))}
             </select>
+            {hasError && (
+              <p className="text-xs text-red-500 mt-1">{validationErrors[name]}</p>
+            )}
+            {helpText && !hasError && (
+              <p className="text-xs text-gray-500 mt-1">{helpText}</p>
+            )}
           </div>
         );
         
@@ -128,8 +249,18 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               onChange={handleChange}
               disabled={isLoading}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                hasError 
+                  ? "border-red-300 focus:ring-red-500" 
+                  : "border-gray-300 focus:ring-orange-500"
+              } disabled:bg-gray-100 disabled:cursor-not-allowed`}
             />
+            {hasError && (
+              <p className="text-xs text-red-500 mt-1">{validationErrors[name]}</p>
+            )}
+            {helpText && !hasError && (
+              <p className="text-xs text-gray-500 mt-1">{helpText}</p>
+            )}
           </div>
         );
 
@@ -148,6 +279,9 @@ export const EntityForm: React.FC<EntityFormProps> = ({
             <label htmlFor={name} className="text-sm font-medium text-gray-700">
               {label}
             </label>
+            {hasError && (
+              <p className="text-xs text-red-500 ml-6">{validationErrors[name]}</p>
+            )}
           </div>
         );
         
@@ -166,8 +300,18 @@ export const EntityForm: React.FC<EntityFormProps> = ({
               value={formData[name] || ""}
               onChange={handleChange}
               disabled={isLoading}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+              className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 ${
+                hasError 
+                  ? "border-red-300 focus:ring-red-500" 
+                  : "border-gray-300 focus:ring-orange-500"
+              } disabled:bg-gray-100 disabled:cursor-not-allowed`}
             />
+            {hasError && (
+              <p className="text-xs text-red-500 mt-1">{validationErrors[name]}</p>
+            )}
+            {helpText && !hasError && (
+              <p className="text-xs text-gray-500 mt-1">{helpText}</p>
+            )}
           </div>
         );
     }

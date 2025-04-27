@@ -25,7 +25,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new SupportUser
+// Form fields for adding a new SupportUser with password validation
 const SupportUserFormFields: FormField[] = [
   {
     name: "firstName",
@@ -50,6 +50,14 @@ const SupportUserFormFields: FormField[] = [
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -424,6 +432,7 @@ export default function UniversitySupportUsersScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // Fixed defaultValues to use ternary instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -434,11 +443,11 @@ export default function UniversitySupportUsersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: SupportUserToEdit && {
+    defaultValues: SupportUserToEdit ? {
       firstName: SupportUserToEdit.firstName ?? SupportUserToEdit.name.split(' ')[0] ?? '',
       lastName: SupportUserToEdit.lastName ?? SupportUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: SupportUserToEdit.email,
-    }
+    } : undefined
   };
 
 

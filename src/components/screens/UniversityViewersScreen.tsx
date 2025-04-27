@@ -26,7 +26,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new viewer
+// Form fields for adding a new viewer with password validation
 const viewerFormFields: FormField[] = [
   {
     name: "firstName",
@@ -51,6 +51,14 @@ const viewerFormFields: FormField[] = [
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -429,6 +437,7 @@ export default function UniversityViewersScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // Fixed defaultValues to use ternary operator instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -439,11 +448,11 @@ export default function UniversityViewersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: viewerToEdit && {
+    defaultValues: viewerToEdit ? {
       firstName: viewerToEdit.firstName ?? viewerToEdit.name.split(' ')[0] ?? '',
       lastName: viewerToEdit.lastName ?? viewerToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: viewerToEdit.email,
-    }
+    } : undefined
   };
 
 

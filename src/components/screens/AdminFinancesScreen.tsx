@@ -26,7 +26,7 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new financeUser
+// Form fields for adding a new financeUser with password validation
 const financeUserFormFields: FormField[] = [
   {
     name: "firstName",
@@ -51,6 +51,14 @@ const financeUserFormFields: FormField[] = [
     label: "Contraseña",
     type: "password",
     required: true,
+    validation: {
+      pattern: {
+        value: /^(?=.*[0-9])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+      }
+    },
+    placeholder: "Mínimo 8 caracteres y al menos un número",
+    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
   },
 ];
 
@@ -420,6 +428,7 @@ export default function UniversityFinanceUsersScreen() {
     cancelButtonText: "Cancelar",
   };
   
+  // Fixed defaultValues to use ternary operator instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -430,11 +439,11 @@ export default function UniversityFinanceUsersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: financeUserToEdit && {
+    defaultValues: financeUserToEdit ? {
       firstName: financeUserToEdit.firstName ?? financeUserToEdit.name.split(' ')[0] ?? '',
       lastName: financeUserToEdit.lastName ?? financeUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
       email: financeUserToEdit.email,
-    }
+    } : undefined
   };
 
 
