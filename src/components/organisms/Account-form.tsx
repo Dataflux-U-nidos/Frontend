@@ -1,10 +1,6 @@
 import { FormField } from "@/types/formTypes";
 import { useForm, Controller } from "react-hook-form";
 import { 
-  User as UserIcon,
-  Mail,
-  Book,
-  Building,
   Trash2
 } from "lucide-react";
 import { useState } from "react";
@@ -33,7 +29,7 @@ export default function AccountForm({
   onCancel,
   onDeleteAccount,
   loading
-}: AccountFormProps) {
+}: Readonly<AccountFormProps>) {
   const { control, handleSubmit, formState: { errors } } = useForm<AccountFormValues>({
     defaultValues: {
       ...initialValues,
@@ -42,20 +38,6 @@ export default function AccountForm({
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const getIconForField = (type: string) => {
-    switch(type) {
-      case 'email':
-        return <Mail className="h-5 w-5 text-gray-400" />;
-      case 'user':
-        return <UserIcon className="h-5 w-5 text-gray-400" />;
-      case 'program':
-        return <Book className="h-5 w-5 text-gray-400" />;
-      case 'institution':
-        return <Building className="h-5 w-5 text-gray-400" />;
-      default:
-        return null;
-    }
-  };
 
   const handleDeleteClick = () => {
     if (showDeleteConfirm) {
