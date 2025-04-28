@@ -79,6 +79,16 @@ export default function AuthScreen() {
     else if (userType === "UNIVERSITY" && location.pathname !== "/university-viewers") {
       navigate("/university-viewers");
     }
+    else if (userType === "INFOMANAGER" && location.pathname !== "/infomanager-main") {
+      navigate("/infomanager-main");
+    }
+    else if (userType === "MARKETING" && location.pathname !== "/marketing-main") {
+      navigate("/marketing-main");
+    } 
+    else if (userType === "FINANCES" && location.pathname !== "/finances-main") {
+      navigate("/finances-main");
+    }
+    
   }, [userType, location.pathname, navigate]);
 
   const handleLogin = async (credentials: { email: string; password: string }) => {

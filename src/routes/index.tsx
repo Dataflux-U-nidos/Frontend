@@ -7,6 +7,9 @@ import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import InfoManagerRoutes from "./InfoManagerRoutes"; 
+import MarketingRoutes from "./MarketingRoutes";
+import FinancesRoutes from "./FinancesRoutes";
 
 import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
@@ -29,8 +32,9 @@ const UniversityManagersScreen = lazy (() => import("@/components/screens/Univer
 const AdminSupportScreen = lazy (() => import("@/components/screens/AdminSupportScreen"));
 const AdminFinancesScreen = lazy (() => import("@/components/screens/AdminFinancesScreen"));
 const AdminMarketingScreen = lazy (() => import("@/components/screens/AdminMarketingScreen"));
-
-
+const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManagerMainScreen"));
+const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
+const FinancesMainScreen = lazy(() => import("../components/screens/FinancesMainScreen"));
 
 
 export const viewerMenu = [
@@ -167,6 +171,10 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
+          <Route element={<InfoManagerRoutes />}>
+            <Route path="/infomanager-main" element={<InfoManagerMainScreen />} />
+          </Route>
+
           <Route element={<AdminRoutes />}>
             <Route element={<Layout navMain={adminMenu} user={userData} />}>
               <Route path="/account-admin" element={<AccountAdminScreen />} />
@@ -175,6 +183,15 @@ export const AppRoutes = () => {
               <Route path="admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
+
+          <Route element={<MarketingRoutes />}>
+            <Route path="/marketing-main" element={<MarketingMainScreen />} />
+          </Route>
+
+          <Route element={<FinancesRoutes />}>
+            <Route path="/finances-main" element={<FinancesMainScreen />} />
+          </Route>
+
           
         </Routes>
       </Suspense>
