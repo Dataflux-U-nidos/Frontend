@@ -1,5 +1,5 @@
 // /src/routes/AppRoutes.tsx
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import StudentRoutes from "./StudentRoutes"; 
 import AdminRoutes from "./AdminRoutes";
@@ -8,8 +8,6 @@ import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
 
-import { Presentation, House, University, BookOpenCheck, ChartSpline } from "lucide-react";
-import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
@@ -18,7 +16,6 @@ import LayoutScreen from "@/components/screens/LayoutScreen";
 
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
-const Layout = lazy(() => import("../components/templates/Layout"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
 const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
 const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));

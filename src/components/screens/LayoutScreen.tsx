@@ -4,7 +4,7 @@ import { sidebarData } from "@/data/sidebar-data"
 import type { NavItem, SidebarData } from "@/types/sideBar"
 
 export default function LayoutScreen() {
-    const { user, logout } = useAuthContext()
+    const { user } = useAuthContext()
 
     function filterSidebarDataByRole(data: SidebarData, userRole: string): SidebarData {
         return {
@@ -48,14 +48,6 @@ export default function LayoutScreen() {
         user && user.userType
             ? filterSidebarDataByRole(sidebarData, user.userType)
             : sidebarData
-    
-    async function handleLogout() {
-        try {
-            await logout()
-        } catch (error) {
-            console.error("Error cerrando sesión:", error)
-        }
-    }
 
     function getInitials() {
         if (!user) return ""
