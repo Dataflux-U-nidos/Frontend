@@ -12,7 +12,6 @@ import {
 import { LogoIcon } from "../atoms/icons"
 import { User } from "@/types"
 import { SidebarData } from "@/types/sideBar"
-import { sidebarData } from "@/data/sidebar-data"
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
     navMain: SidebarData

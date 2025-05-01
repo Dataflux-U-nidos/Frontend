@@ -38,7 +38,7 @@ export default function LayoutScreen() {
                             }
                         }
                     })
-                    .filter(Boolean) as NavItem[] // Forzamos a NavItem tras filtrar nulos
+                    .filter(Boolean) as NavItem[] 
             }))
         }
     }
@@ -49,7 +49,6 @@ export default function LayoutScreen() {
             ? filterSidebarDataByRole(sidebarData, user.userType)
             : sidebarData
     
-    // Lógica de logout
     async function handleLogout() {
         try {
             await logout()

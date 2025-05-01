@@ -32,7 +32,7 @@ export type SidebarItem = {
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
-    roles: string[]; // Puedes filtrar por roles si es necesario
+    roles: string[];
 };
 
 
