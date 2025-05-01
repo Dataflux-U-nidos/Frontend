@@ -9,6 +9,7 @@ export interface User {
     locality?: string;
     school?: string;
     preferences?: Record<string, unknown>;
+    avatar?: string;
   }
   
   //excludes id when creating a new user
