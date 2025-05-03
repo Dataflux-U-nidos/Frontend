@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { NavMain } from "../molecules/side-navigation/Nav-main"
+import { NavGroup } from "../molecules/side-navigation/NavGroup"
 import { NavUser } from "../molecules/side-navigation/Nav-user"
 import {
     Sidebar,
@@ -10,18 +10,17 @@ import {
     SidebarRail,
 } from "../atoms/ui/sidebar"
 import { LogoIcon } from "../atoms/icons"
+import { User } from "@/types"
+import { SidebarData } from "@/types/sideBar"
 
 type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
-    navMain: Parameters<typeof NavMain>[0]["items"]
-    user: {
-      name: string
-      email: string
-      userType: string
-      avatar: string
-    }
+    navMain: SidebarData
+    user: User |null
+    getInitials: () => string
   }
   
-  export function AppSidebar({ navMain, user, ...props }: AppSidebarProps) {
+
+  export function AppSidebar({ navMain, user, getInitials, ...props }: AppSidebarProps) {
     return (
       <Sidebar collapsible="icon" {...props}>
         <SidebarHeader className="flex justify-center items-center">
@@ -31,10 +30,12 @@ type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
         </SidebarHeader>
   
         <SidebarContent>
-          <NavMain items={navMain} />
+          {navMain.navGroups.map((group) => (
+                    <NavGroup key={group.title} title={group.title} items={group.items} />
+                ))}
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={user} />
+          <NavUser user={user} getInitials = {getInitials} />
         </SidebarFooter>
         <SidebarRail />
       </Sidebar>
