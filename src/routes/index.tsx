@@ -7,6 +7,9 @@ import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import InfoManagerRoutes from "./InfoManagerRoutes"; 
+import MarketingRoutes from "./MarketingRoutes";
+import FinancesRoutes from "./FinancesRoutes";
 
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
@@ -69,6 +72,10 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
+          <Route element={<InfoManagerRoutes />}>
+            <Route path="/infomanager-main" element={<InfoManagerMainScreen />} />
+          </Route>
+
           <Route element={<AdminRoutes />}>
             <Route element={<LayoutScreen />}>
               <Route path="/account-admin" element={<AccountAdminScreen />} />
@@ -77,6 +84,15 @@ export const AppRoutes = () => {
               <Route path="admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
+
+          <Route element={<MarketingRoutes />}>
+            <Route path="/marketing-main" element={<MarketingMainScreen />} />
+          </Route>
+
+          <Route element={<FinancesRoutes />}>
+            <Route path="/finances-main" element={<FinancesMainScreen />} />
+          </Route>
+
           
         </Routes>
       </Suspense>
