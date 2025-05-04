@@ -7,7 +7,6 @@ import {
   TableHead,
   TableCell,
 } from "../atoms/ui/table"; // ajusta la ruta si es necesario
-import { University } from "lucide-react";
 
 type DataRow = Record<string, any>;
 
