@@ -30,6 +30,10 @@ const UniversityManagersScreen = lazy (() => import("@/components/screens/Univer
 const AdminSupportScreen = lazy (() => import("@/components/screens/AdminSupportScreen"));
 const AdminFinancesScreen = lazy (() => import("@/components/screens/AdminFinancesScreen"));
 const AdminMarketingScreen = lazy (() => import("@/components/screens/AdminMarketingScreen"));
+const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManagerMainScreen"));
+const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
+const FinancesMainScreen = lazy(() => import("../components/screens/FinancesMainScreen"));
+
 
 export const AppRoutes = () => {
 
@@ -81,7 +85,7 @@ export const AppRoutes = () => {
               <Route path="/account-admin" element={<AccountAdminScreen />} />
               <Route path="/admin-support" element={<AdminSupportScreen />} />
               <Route path="/admin-finances" element={<AdminFinancesScreen />} />
-              <Route path="admin-marketing" element={<AdminMarketingScreen />} />
+              <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
 
