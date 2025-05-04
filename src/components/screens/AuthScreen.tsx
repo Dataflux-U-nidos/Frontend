@@ -15,22 +15,22 @@ const tutorFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
   { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
   { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
-  { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
 const studentFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
   { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
-  {type: "number", key: "age", placeholder: "Ingresa tu edad", required: true },
+  { type: "number", key: "age", placeholder: "Ingresa tu edad", required: true },
   { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
-  { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
-  
+  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+
 ];
 
 const universityFields: FormField[] = [
   { type: "user", key: "name", placeholder: "Ingresa nombre de la institución", required: true },
   { type: "address", key: "address", placeholder: "Ingresa la dirección", required: true },
   { type: "email", key: "email", placeholder: "Ingresa correo institucional", required: true },
-  { type: "create-password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
 ];
 
 // Registry fields definitions for each userType
@@ -104,7 +104,7 @@ export default function AuthScreen() {
       age: data.age,
       address: data.address,
     };
-    
+
     console.log("Enviando:", userData);
     await registryAccount(userData);
     await login(userData.email, userData.password);

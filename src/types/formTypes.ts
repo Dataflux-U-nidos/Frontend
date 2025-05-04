@@ -13,6 +13,7 @@ export type InputType =
     | "address"
     | "extension-phone"
     | "search"
+    | "number"
     | undefined;
 
 export type FieldType =

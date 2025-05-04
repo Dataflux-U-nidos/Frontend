@@ -59,6 +59,12 @@ export function getConfigForType(type: InputType) {
         maxLength: 100,
         icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
       }
+    case "number":
+      return {
+        maxLength: 3,
+        icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
+
+      }
     default:
       return {
         maxLength: 100,
