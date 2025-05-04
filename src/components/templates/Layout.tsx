@@ -8,21 +8,19 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "../atoms/ui/sidebar"
+import { User } from "@/types"
+import { SidebarData } from "@/types/sideBar"
 
 type LayoutProps = {
-  navMain: Parameters<typeof AppSidebar>[0]["navMain"]
-  user: {
-    name: string
-    email: string
-    userType: string
-    avatar: string
-  }
+  navMain: SidebarData
+  user: User | null
+  getInitials: () => string
 }
 
-export default function Layout({ navMain, user }: LayoutProps) {
+export default function Layout({ navMain, user, getInitials }: LayoutProps) {
   return (
     <SidebarProvider>
-      <AppSidebar navMain={navMain} user={user} />
+      <AppSidebar navMain={navMain} user={user} getInitials = {getInitials} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
