@@ -12,7 +12,7 @@ import AccountUniversityScreen from "@/components/screens/AccountUniversityScree
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
 
-
+const TestPsicometrico = lazy(() => import("@/components/screens/TestPsicometricoScreen"));
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
@@ -38,6 +38,7 @@ export const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/test" element={<TestPsicometrico />} />
 
           <Route element={<ViewerRoutes />}>
             <Route element={<LayoutScreen />}>
