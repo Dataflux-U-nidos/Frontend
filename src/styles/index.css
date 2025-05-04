@@ -1,5 +1,6 @@
 @import "tailwindcss";
 
+
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:is(.dark *));
@@ -94,6 +95,8 @@
   -webkit-text-fill-color: #000 !important;
 }
 
+
+
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -156,6 +159,8 @@
   }
 }
 
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -164,3 +169,5 @@
     @apply bg-background text-foreground;
   }
 }
+
+

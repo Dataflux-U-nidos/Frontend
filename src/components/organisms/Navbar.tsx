@@ -5,6 +5,7 @@ import { Button, buttonVariants } from "../atoms/ui/button";
 const routeList = [
   { href: "#features", label: "Funcionalidades" },
   { href: "#testimonials", label: "Testimonios" },
+  { href: "#pricing", label: "Planes Universidades" },
 ];
 
 interface NavbarProps {
@@ -30,10 +31,6 @@ export const Navbar = ({ onCreateAccount }: NavbarProps) => {
 
         {/* login and registry buttons */}
         <div className="hidden md:flex items-center space-x-4">
-
-          <Button type="submit" variant="secondary" size="lg" onClick={onCreateAccount}>
-            Crear Cuenta
-          </Button>
         </div>
 
         {/* Mobile Menu */}

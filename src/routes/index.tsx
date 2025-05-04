@@ -132,7 +132,7 @@ export const AppRoutes = () => {
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
         <Routes>
-          <Route path="/" element={<Navigate to="/auth" />} />
+          <Route path="/" element={<Navigate to="/landing" />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
