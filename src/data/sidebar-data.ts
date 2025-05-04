@@ -4,6 +4,8 @@ import {
   University,
   BookOpenCheck,
   ChartSpline,
+  HandCoins,
+  Headset,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -36,7 +38,8 @@ export const sidebarData: SidebarData = {
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
 
         // Financiero
-
+        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
+        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES"] },
         // Marketing
         
 

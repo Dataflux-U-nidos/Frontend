@@ -85,8 +85,8 @@ export default function AuthScreen() {
     else if (userType === "MARKETING" && location.pathname !== "/marketing-main") {
       navigate("/marketing-main");
     } 
-    else if (userType === "FINANCES" && location.pathname !== "/finances-main") {
-      navigate("/finances-main");
+    else if (userType === "FINANCES" && location.pathname !== "/finances-partialIncome") {
+      navigate("/finances-income");
     }
     
   }, [userType, location.pathname, navigate]);
