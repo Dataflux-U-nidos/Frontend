@@ -17,6 +17,16 @@ const incomeData = [
 
 ];
 
+// Configuración de columnas para DataTable
+const displayColumns = ['university', 'suscription', 'cost'];
+  
+// Traducción de encabezados
+const columnHeaders = {
+  university: 'Universidad',
+  suscription: 'Suscripción',
+  cost: 'Costo'
+};
+
 export default function FinancesMainScreen() {
   // const { mutateAsync: getIncomes } = useGetIncomes();
   // const [incomeData, setIncomeData] = useState<IncomeItem[]>([]);
@@ -66,6 +76,8 @@ export default function FinancesMainScreen() {
         data={incomeData} 
         title='Ingresos por Universidad' 
         totalCost={totalCost}
+        displayColumns={displayColumns}
+        columnHeaders={columnHeaders}
       />
     </div>
   );
