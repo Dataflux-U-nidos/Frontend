@@ -1,6 +1,6 @@
+import { HeroCards } from "./HeroCards";
 import { AuroraText } from "../atoms/magicui/aurora-text";
 import { Button } from "../atoms/ui/button";
-import { CircleImage } from "../atoms/ui/circle";
 
 interface HeroProps {
   onCreateAccount: () => void;
@@ -8,7 +8,7 @@ interface HeroProps {
 export const Hero = ({ onCreateAccount }: HeroProps) => {
 
   return (
-    <section className="grid lg:grid-cols-2 place-items-center py-20 md:py-20 mx-30">
+    <section className="grid lg:grid-cols-2 place-items-center py-20 md:py-20 mx-10">
 
       {/* Main text content */}
       <div className="text-center space-y-10 ">
@@ -26,20 +26,12 @@ export const Hero = ({ onCreateAccount }: HeroProps) => {
         </div>
       </div>
 
-      {/* Diagonal images */}
-      <div className="relative w-fit h-fit">
-        <CircleImage
-          src="https://freedesignfile.com/upload/2017/10/Smile-college-student-Stock-Photo.jpg"
-          alt="Usuario"
-          className="absolute left-25"
-        />
-        <CircleImage
-          src="https://freedesignfile.com/upload/2017/10/Smile-college-student-Stock-Photo.jpg"
-          alt="Usuario"
-          className="absolute right-35"
-        />
+      {/* Hero cards sections */}
+      <div className="relative z-10">
+        <HeroCards />
       </div>
-    
     </section>
   );
 };
+
+

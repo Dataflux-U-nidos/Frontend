@@ -1,7 +1,6 @@
-// /src/routes/AppRoutes.tsx
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import StudentRoutes from "./StudentRoutes"; 
+import StudentRoutes from "./StudentRoutes";
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
@@ -16,7 +15,7 @@ import AccountUniversityScreen from "@/components/screens/AccountUniversityScree
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
 
-
+const TestPsicometrico = lazy(() => import("@/components/screens/TestPsicometricoScreen"));
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
@@ -25,11 +24,11 @@ const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboard
 const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
 const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
 const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
-const UniversityViewersScreen = lazy (() => import("@/components/screens/UniversityViewersScreen"));
-const UniversityManagersScreen = lazy (() => import("@/components/screens/UniversityManagersScreen"));
-const AdminSupportScreen = lazy (() => import("@/components/screens/AdminSupportScreen"));
-const AdminFinancesScreen = lazy (() => import("@/components/screens/AdminFinancesScreen"));
-const AdminMarketingScreen = lazy (() => import("@/components/screens/AdminMarketingScreen"));
+const UniversityViewersScreen = lazy(() => import("@/components/screens/UniversityViewersScreen"));
+const UniversityManagersScreen = lazy(() => import("@/components/screens/UniversityManagersScreen"));
+const AdminSupportScreen = lazy(() => import("@/components/screens/AdminSupportScreen"));
+const AdminFinancesScreen = lazy(() => import("@/components/screens/AdminFinancesScreen"));
+const AdminMarketingScreen = lazy(() => import("@/components/screens/AdminMarketingScreen"));
 const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManagerMainScreen"));
 const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
 const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
@@ -43,11 +42,12 @@ export const AppRoutes = () => {
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
         <Routes>
-          <Route path="/" element={<Navigate to="/auth" />} />
+          <Route path="/" element={<Navigate to="/landing" />} />
           <Route path="/landing" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/test" element={<TestPsicometrico />} />
 
           <Route element={<ViewerRoutes />}>
             <Route element={<LayoutScreen />}>
@@ -58,20 +58,20 @@ export const AppRoutes = () => {
 
           <Route element={<StudentRoutes />}>
             <Route element={<LayoutScreen />}>
-            <Route path="/account-student" element={<AccountScreen />} />
-            <Route path="/student-profile" element={<StudentProfileScreen />} />
+              <Route path="/account-student" element={<AccountScreen />} />
+              <Route path="/student-profile" element={<StudentProfileScreen />} />
             </Route>
           </Route>
 
           <Route element={<TutorRoutes />}>
-            <Route element={<LayoutScreen/>}>
+            <Route element={<LayoutScreen />}>
               <Route path="/account-tutor" element={<AccountTutorScreen />} />
               <Route path="/tutor-students" element={<TutorStudentsScreen />} />
             </Route>
           </Route>
 
           <Route element={<UniversityRoutes />}>
-            <Route element={<LayoutScreen/>}>
+            <Route element={<LayoutScreen />}>
               <Route path="/account-university" element={<AccountUniversityScreen />} />
               <Route path="/university-viewers" element={<UniversityViewersScreen />} />
               <Route path="/university-managers" element={<UniversityManagersScreen />} />
