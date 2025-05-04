@@ -9,8 +9,8 @@ export default function TestPsicometricoScreen() {
     const { answers } = useSurveyStore();
 
     useEffect(() => {
-        const totalItems = Object.keys(answers).length;
-        const filled = Object.values(answers).filter(Boolean).length;
+        //const totalItems = Object.keys(answers).length;
+        //const filled = Object.values(answers).filter(Boolean).length;
     }, [answers, navigate]);
     console.log("TestPsicometricoScreen", testData);
     return <TestTemplate data={testData} />;

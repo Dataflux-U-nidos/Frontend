@@ -1,7 +1,7 @@
-import { IncomeItem } from '@/types/financeIncomesType';
+//import { IncomeItem } from '@/types/financeIncomesType';
 import FinanciesPartialTemplate from '../templates/FinancesIncomeTemplate';
-import { useEffect, useState } from 'react';
-import { useGetIncomes } from '@/hooks/finances/useGetIncomesHook';
+//import { useEffect, useState } from 'react';
+//import { useGetIncomes } from '@/hooks/finances/useGetIncomesHook';
 import LoadingTemplate from '../templates/LoadingTemplate';
 
 

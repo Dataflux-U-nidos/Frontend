@@ -16,7 +16,7 @@ interface LandingTemplateProps {
 export const LandingTemplate = ({ features, featureList, reviews, onCreateAccount, pricingList }: LandingTemplateProps) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Navbar onCreateAccount={onCreateAccount}/>
+      <Navbar/>
       <main>
         <Hero onCreateAccount={onCreateAccount}/>
         <Features features={features} featureList={featureList} />

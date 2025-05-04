@@ -14,6 +14,7 @@ export type InputType =
     | "extension-phone"
     | "search"
     | "number"
+    | "create-password"
     | undefined;
 
 export type FieldType =

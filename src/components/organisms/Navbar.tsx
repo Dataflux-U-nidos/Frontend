@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LogoIcon } from "../atoms/icons";
-import { Button, buttonVariants } from "../atoms/ui/button";
+import { buttonVariants } from "../atoms/ui/button";
 
 const routeList = [
   { href: "#features", label: "Funcionalidades" },
@@ -8,11 +8,7 @@ const routeList = [
   { href: "#pricing", label: "Planes Universidades" },
 ];
 
-interface NavbarProps {
-  onCreateAccount: () => void;
-}
-
-export const Navbar = ({ onCreateAccount }: NavbarProps) => {
+export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);  return (
     <header className="sticky top-0 z-40 w-full border-b border-orange-200 bg-white">
       <nav className="flex items-center justify-between h-14 px-4 w-full max-w-[1400px] mx-auto">
