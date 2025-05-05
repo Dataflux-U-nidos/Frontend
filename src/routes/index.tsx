@@ -6,6 +6,9 @@ import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import InfoManagerRoutes from "./InfoManagerRoutes"; 
+import MarketingRoutes from "./MarketingRoutes";
+import FinancesRoutes from "./FinancesRoutes";
 
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
@@ -28,9 +31,12 @@ const UniversityManagersScreen = lazy(() => import("@/components/screens/Univers
 const AdminSupportScreen = lazy(() => import("@/components/screens/AdminSupportScreen"));
 const AdminFinancesScreen = lazy(() => import("@/components/screens/AdminFinancesScreen"));
 const AdminMarketingScreen = lazy(() => import("@/components/screens/AdminMarketingScreen"));
+const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManagerMainScreen"));
+const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
+const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
+const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 
 export const AppRoutes = () => {
-
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
@@ -73,15 +79,34 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
+          <Route element={<InfoManagerRoutes />}>
+            <Route path="/infomanager-main" element={<InfoManagerMainScreen />} />
+          </Route>
+
           <Route element={<AdminRoutes />}>
             <Route element={<LayoutScreen />}>
               <Route path="/account-admin" element={<AccountAdminScreen />} />
               <Route path="/admin-support" element={<AdminSupportScreen />} />
               <Route path="/admin-finances" element={<AdminFinancesScreen />} />
-              <Route path="admin-marketing" element={<AdminMarketingScreen />} />
+              <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
             </Route>
           </Route>
 
+          <Route element={<MarketingRoutes />}>
+            <Route element={<LayoutScreen />}>
+              <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
+              <Route path="/marketing-university" element={<MarketingMainScreen />} />
+              <Route path="/marketing-scholar" element={<MarketingMainScreen />} />
+            </Route>
+          </Route>
+
+          <Route element={<FinancesRoutes />}>
+            <Route element={<LayoutScreen />}>
+              <Route path="/finances-income" element={<FinancesIncomeScreen />} />
+              <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
+            </Route>
+          </Route>
+          
         </Routes>
       </Suspense>
     </BrowserRouter>

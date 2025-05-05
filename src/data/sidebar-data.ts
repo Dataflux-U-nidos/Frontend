@@ -4,6 +4,9 @@ import {
   University,
   BookOpenCheck,
   ChartSpline,
+  HandCoins,
+  Headset,
+  School,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -36,10 +39,12 @@ export const sidebarData: SidebarData = {
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
 
         // Financiero
-
-        // Marketing
+        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
+        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES"] },
         
-
+        // Marketing
+        { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },
+        { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING"] },
       ],
     },
   ],

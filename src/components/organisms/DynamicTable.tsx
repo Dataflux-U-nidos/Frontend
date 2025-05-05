@@ -37,7 +37,11 @@ export const DynamicTable: React.FC<DynamicTableProps> = ({
     name: "Nombre",
     age: "Edad",
     school: "Colegio",
-    location: "Localidad"
+    location: "Localidad",
+    university: "Universidad",
+    suscription: "Suscripción",
+    cost: "Costo"
+
   };
 
   const sortedData = [...data].sort((a, b) => {
