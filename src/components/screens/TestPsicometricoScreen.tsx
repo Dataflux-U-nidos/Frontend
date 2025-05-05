@@ -17,6 +17,7 @@ export default function TestPsicometricoScreen() {
     if (loading) return <div>Cargando test...</div>;
     if (error) return <div>{error}</div>;
     if (!data) return <div>No se pudo cargar el test.</div>;
+    console.log("Data:", data);
   
     return <TestTemplate data={data} />;
 }

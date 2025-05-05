@@ -11,7 +11,8 @@ export const usePsychometricTest = () => {
     const fetchData = async () => {
       try {
         const result = await getPsychometricTest();
-        setData(result.data); // O ajusta según estructura real
+        setData(result.schema.psicometric);
+        console.log("Psychometric Test Data:", result.schema.psicometric);
       } catch (err) {
         console.error("Error loading psychometric test:", err);
         setError("Error cargando el test");
