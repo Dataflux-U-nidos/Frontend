@@ -9,7 +9,7 @@ export const useUpdateCampaign = () => {
     const mutation = useMutation({
         mutationFn: ({ id, updates }: { id: string; updates: UpdateCampaignInput }) => 
             updateCampaign(id, updates),
-        onSuccess: (data, variables) => {
+        onSuccess: ( variables) => {
             // Invalidar todas las queries de campañas
             queryClient.invalidateQueries({ queryKey: ["campaigns"] });
             // También invalidar la query específica
