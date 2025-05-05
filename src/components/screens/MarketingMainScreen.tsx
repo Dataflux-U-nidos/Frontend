@@ -180,8 +180,20 @@ export default function MarketingMainScreen() {
     setShowAddModal(false);
   };
 
-  // Manejador para iniciar el proceso de edición
   const handleInitiateEdit = (campaign: Campaign) => {
+    console.log("Campaign recibida para editar:", JSON.stringify(campaign));
+    
+    // Verificación adaptada para manejar tanto _id como id
+    if (!campaign || (!campaign._id && !campaign.id)) {
+      console.error("Error: Campaña inválida o sin ID", campaign);
+      setNotification({
+        type: 'error',
+        title: 'Error al iniciar edición',
+        message: 'No se puede editar esta campaña porque falta información necesaria.'
+      });
+      return;
+    }
+    
     setCampaignToEdit(campaign);
     setShowEditModal(true);
   };
@@ -193,54 +205,64 @@ export default function MarketingMainScreen() {
   };
 
   // Manejador para confirmar y ejecutar la edición
-  const handleEditCampaign = async (formData: any) => {
-    if (!campaignToEdit || !campaignToEdit._id) {
-      console.error("No hay campaña para editar o falta el ID");
-      return;
-    }
+  // Función corregida de handleEditCampaign
+const handleEditCampaign = async (formData: any) => {
+  if (!campaignToEdit) {
+    console.error("No hay campaña para editar");
+    return;
+  }
 
-    setIsEditing(true);
-    console.log("Editando campaña con ID:", campaignToEdit._id);
+  // Usar id o _id, el que esté disponible
+  const campaignId = campaignToEdit.id || campaignToEdit._id;
+  
+  if (!campaignId) {
+    console.error("Campaña sin ID válido");
+    return;
+  }
 
-    try {
-      const updates = {
-        name: formData.name,
-        description: formData.description,
-        date: new Date(formData.date).toISOString(),
-        cost: Number(formData.cost),
-      };
+  setIsEditing(true);
+  console.log("Editando campaña con ID:", campaignId);
 
-      console.log("Enviando actualizaciones:", updates);
+  try {
+    const updates = {
+      name: formData.name,
+      description: formData.description,
+      date: new Date(formData.date).toISOString(),
+      cost: Number(formData.cost),
+      type: formData.type
+    };
 
-      await updateCampaign({
-        id: campaignToEdit._id,
-        updates
-      });
+    console.log("Enviando actualizaciones:", updates);
 
-      // Refrescar la lista de campañas
-      await refetchCampaigns();
-      
-      setShowEditModal(false);
-      setCampaignToEdit(null);
+    await updateCampaign({
+      id: campaignId,
+      updates
+    });
 
-      setNotification({
-        type: 'success',
-        title: 'Campaña actualizada',
-        message: `La campaña ${formData.name} ha sido actualizada exitosamente.`
-      });
-    } catch (error) {
-      console.error("Error completo al actualizar:", error);
-      setNotification({
-        type: 'error',
-        title: 'Error al actualizar campaña',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar la campaña.'
-      });
-    } finally {
-      setIsEditing(false);
-    }
-  };
+    // Refrescar la lista de campañas
+    await refetchCampaigns();
+    
+    setShowEditModal(false);
+    setCampaignToEdit(null);
+
+    setNotification({
+      type: 'success',
+      title: 'Campaña actualizada',
+      message: `La campaña ${formData.name} ha sido actualizada exitosamente.`
+    });
+  } catch (error) {
+    console.error("Error completo al actualizar:", error);
+    setNotification({
+      type: 'error',
+      title: 'Error al actualizar campaña',
+      message: error instanceof Error 
+        ? error.message 
+        : 'Ha ocurrido un error al intentar actualizar la campaña.'
+    });
+  } finally {
+    setIsEditing(false);
+  }
+};
 
   // Manejador para iniciar el proceso de eliminación
   const handleInitiateDelete = (campaign: Campaign) => {
@@ -256,19 +278,27 @@ export default function MarketingMainScreen() {
 
   // Manejador para confirmar y ejecutar la eliminación
   const handleConfirmDelete = async () => {
-    if (!campaignToDelete || !campaignToDelete._id) return;
-
+    if (!campaignToDelete) return;
+    
+    // Usar id o _id, el que esté disponible
+    const campaignId = campaignToDelete.id || campaignToDelete._id;
+    
+    if (!campaignId) {
+      console.error("Campaña sin ID válido");
+      return;
+    }
+  
     setIsDeleting(true);
-
+  
     try {
-      await deleteCampaign(campaignToDelete._id);
+      await deleteCampaign(campaignId);
       
       // Refrescar la lista de campañas
       await refetchCampaigns();
       
       setShowDeleteModal(false);
       setCampaignToDelete(null);
-
+  
       setNotification({
         type: 'success',
         title: 'Campaña eliminada',
@@ -370,7 +400,6 @@ export default function MarketingMainScreen() {
   };
 
   // Acciones para la tabla
-  // Acciones para la tabla
   const tableActions = [
     {
       label: "Editar",
@@ -446,10 +475,11 @@ export default function MarketingMainScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: campaignToEdit ? {
-      name: campaignToEdit.name,
-      description: campaignToEdit.description,
-      date: new Date(campaignToEdit.date).toISOString().slice(0, 16), // para 'datetime-local'
-      cost: campaignToEdit.cost
+      name: campaignToEdit.name || "",
+      description: campaignToEdit.description || "",
+      type: campaignToEdit.type || "scholar",
+      date: campaignToEdit.date ? new Date(campaignToEdit.date).toISOString().slice(0, 16) : "",
+      cost: campaignToEdit.cost || 0
     } : undefined
   };
 
