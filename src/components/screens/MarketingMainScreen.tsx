@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
-import { Campaign } from "@/types/campaignType";
+import { Campaign } from "@/types/campaingType";
+import { useAuthContext } from "@/context/AuthContext";
+import {
+  useCreateCampaign,
+  useGetAllCampaigns,
+  useUpdateCampaign,
+  useDeleteCampaign,
+} from "@/hooks";
 
 interface Notification {
   type: 'success' | 'error';
@@ -72,6 +79,16 @@ const campaignEditFormFields: FormField[] = [
     required: true,
   },
   {
+    name: "type",
+    label: "Tipo de Campaña",
+    type: "select",
+    required: true,
+    options: [
+      { value: "scholar", label: "Escolar" },
+      { value: "university", label: "Universitaria" }
+    ]
+  },
+  {
     name: "date",
     label: "Fecha",
     type: "datetime-local",
@@ -91,56 +108,10 @@ const campaignEditFormFields: FormField[] = [
   }
 ];
 
-// Datos quemados de campañas
-const mockCampaigns: Campaign[] = [
-  {
-    _id: "680c5ef04c6bfd0ca594657a",
-    name: "Summer Scholarship Drive",
-    description: "Campaign to raise awareness about the spring scholarship opportunities.",
-    date: "2025-05-15T09:00:00.000Z",
-    cost: 2500,
-    type: "scholar",
-    createdBy: "6809c8c96ec3b4550862725c",
-    createdAt: "2025-04-26T04:20:00.164Z",
-    updatedAt: "2025-04-26T04:22:12.411Z"
-  },
-  {
-    _id: "680c5ef04c6bfd0ca594657b",
-    name: "Open House University Campaign",
-    description: "Marketing campaign for university open house event.",
-    date: "2025-06-01T09:00:00.000Z",
-    cost: 3500,
-    type: "university",
-    createdBy: "6809c8c96ec3b4550862725c",
-    createdAt: "2025-04-26T04:20:00.164Z",
-    updatedAt: "2025-04-26T04:22:12.411Z"
-  },
-  {
-    _id: "680c5ef04c6bfd0ca594657c",
-    name: "High School Outreach Program",
-    description: "Visiting local high schools to promote university programs.",
-    date: "2025-04-10T09:00:00.000Z",
-    cost: 1800,
-    type: "scholar",
-    createdBy: "6809c8c96ec3b4550862725c",
-    createdAt: "2025-04-26T04:20:00.164Z",
-    updatedAt: "2025-04-26T04:22:12.411Z"
-  },
-  {
-    _id: "680c5ef04c6bfd0ca594657d",
-    name: "Digital Marketing - Universities",
-    description: "Social media campaign targeting university students.",
-    date: "2025-07-01T09:00:00.000Z",
-    cost: 4200,
-    type: "university",
-    createdBy: "6809c8c96ec3b4550862725c",
-    createdAt: "2025-04-26T04:20:00.164Z",
-    updatedAt: "2025-04-26T04:22:12.411Z"
-  }
-];
-
 export default function MarketingMainScreen() {
   const location = useLocation();
+  const { user } = useAuthContext();
+  
   const [campaignsData, setCampaignsData] = useState<Campaign[]>([]);
   const [filteredData, setFilteredData] = useState<Campaign[]>([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -157,17 +128,22 @@ export default function MarketingMainScreen() {
   // Determinar el tipo de campaña basado en la ruta
   const campaignType = location.pathname.includes('university') ? 'university' : 'scholar';
 
-  // Cargar campañas cuando el componente se monta o cuando cambia el tipo
+  // Hooks para CRUD - Usando getAllCampaigns en lugar de getCampaignsByUser
+  const { mutateAsync: createCampaign } = useCreateCampaign();
+  const { data: allCampaigns, refetch: refetchCampaigns } = useGetAllCampaigns();
+  const { mutateAsync: updateCampaign } = useUpdateCampaign();
+  const { mutateAsync: deleteCampaign } = useDeleteCampaign();
+
+  // Cargar y filtrar campañas cuando cambia el tipo o se obtienen datos
   useEffect(() => {
-    const loadCampaigns = () => {
-      // Filtrar campañas según el tipo
-      const filteredCampaigns = mockCampaigns.filter(campaign => campaign.type === campaignType);
+    if (allCampaigns) {
+      // Si eres un usuario de marketing, filtra solo tus campañas
+      // Si es necesario, puedes filtrar por createdBy === user.id
+      const filteredCampaigns = allCampaigns.filter(campaign => campaign.type === campaignType);
       setCampaignsData(filteredCampaigns);
       setFilteredData(filteredCampaigns);
-    };
-
-    loadCampaigns();
-  }, [campaignType]);
+    }
+  }, [allCampaigns, campaignType]);
 
   const handleCloseNotification = () => {
     setNotification(null);
@@ -218,40 +194,48 @@ export default function MarketingMainScreen() {
 
   // Manejador para confirmar y ejecutar la edición
   const handleEditCampaign = async (formData: any) => {
-    if (!campaignToEdit) return;
+    if (!campaignToEdit || !campaignToEdit._id) {
+      console.error("No hay campaña para editar o falta el ID");
+      return;
+    }
 
     setIsEditing(true);
+    console.log("Editando campaña con ID:", campaignToEdit._id);
 
     try {
-      // Simulación de actualización
-      const updatedCampaign = {
-        ...campaignToEdit,
+      const updates = {
         name: formData.name,
         description: formData.description,
-        date: formData.date,
-        cost: formData.cost,
-        updatedAt: new Date().toISOString()
+        date: new Date(formData.date).toISOString(),
+        cost: Number(formData.cost),
       };
 
-      const updatedCampaigns = campaignsData.map(campaign => 
-        campaign._id === updatedCampaign._id ? updatedCampaign : campaign
-      );
+      console.log("Enviando actualizaciones:", updates);
 
-      setCampaignsData(updatedCampaigns);
-      setFilteredData(updatedCampaigns);
+      await updateCampaign({
+        id: campaignToEdit._id,
+        updates
+      });
+
+      // Refrescar la lista de campañas
+      await refetchCampaigns();
+      
       setShowEditModal(false);
       setCampaignToEdit(null);
 
       setNotification({
         type: 'success',
         title: 'Campaña actualizada',
-        message: `La campaña ${updatedCampaign.name} ha sido actualizada exitosamente.`
+        message: `La campaña ${formData.name} ha sido actualizada exitosamente.`
       });
     } catch (error) {
+      console.error("Error completo al actualizar:", error);
       setNotification({
         type: 'error',
         title: 'Error al actualizar campaña',
-        message: 'Ha ocurrido un error al intentar actualizar la campaña.'
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar actualizar la campaña.'
       });
     } finally {
       setIsEditing(false);
@@ -272,18 +256,16 @@ export default function MarketingMainScreen() {
 
   // Manejador para confirmar y ejecutar la eliminación
   const handleConfirmDelete = async () => {
-    if (!campaignToDelete) return;
+    if (!campaignToDelete || !campaignToDelete._id) return;
 
     setIsDeleting(true);
 
     try {
-      // Simulación de eliminación
-      const updatedCampaigns = campaignsData.filter(
-        campaign => campaign._id !== campaignToDelete._id
-      );
-
-      setCampaignsData(updatedCampaigns);
-      setFilteredData(updatedCampaigns);
+      await deleteCampaign(campaignToDelete._id);
+      
+      // Refrescar la lista de campañas
+      await refetchCampaigns();
+      
       setShowDeleteModal(false);
       setCampaignToDelete(null);
 
@@ -293,10 +275,13 @@ export default function MarketingMainScreen() {
         message: `La campaña ${campaignToDelete.name} ha sido eliminada exitosamente.`
       });
     } catch (error) {
+      console.error("Error eliminando campaña:", error);
       setNotification({
         type: 'error',
         title: 'Error al eliminar campaña',
-        message: 'Ha ocurrido un error al intentar eliminar la campaña.'
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar eliminar la campaña.'
       });
     } finally {
       setIsDeleting(false);
@@ -306,37 +291,35 @@ export default function MarketingMainScreen() {
   // Manejador para agregar una nueva campaña
   const handleAddCampaign = async (formData: any) => {
     try {
-      // Simulación de creación de campaña
-      const newCampaign: Campaign = {
-        _id: Date.now().toString(), // ID temporal
+      const campaignData = {
         name: formData.name,
         description: formData.description,
-        date: formData.date,
-        cost: formData.cost,
-        type: formData.type,
-        createdBy: "current_user_id", // En producción, usar el ID del usuario actual
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        date: new Date(formData.date).toISOString(),
+        cost: Number(formData.cost),
+        type: formData.type as "scholar" | "university",
+        createdBy: user?.id || ""
       };
 
-      // Si la campaña creada coincide con el tipo actual, agregarla a la lista
-      if (newCampaign.type === campaignType) {
-        setCampaignsData([...campaignsData, newCampaign]);
-        setFilteredData([...filteredData, newCampaign]);
-      }
-
+      await createCampaign(campaignData);
+      
+      // Refrescar la lista de campañas
+      await refetchCampaigns();
+      
       handleCloseAddModal();
 
       setNotification({
         type: 'success',
         title: '¡Campaña creada!',
-        message: `La campaña ${newCampaign.name} ha sido creada exitosamente.`
+        message: `La campaña ${campaignData.name} ha sido creada exitosamente.`
       });
     } catch (error) {
+      console.error("Error creando campaña:", error);
       setNotification({
         type: 'error',
         title: 'Error al crear campaña',
-        message: 'Ha ocurrido un error al intentar crear la campaña.'
+        message: error instanceof Error 
+          ? error.message 
+          : 'Ha ocurrido un error al intentar crear la campaña.'
       });
     }
   };
@@ -373,7 +356,9 @@ export default function MarketingMainScreen() {
       date: (value: string) => new Date(value).toLocaleDateString('es-CO', {
         year: 'numeric',
         month: 'long',
-        day: 'numeric'
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
       }),
     },
     avatar: {
@@ -385,10 +370,14 @@ export default function MarketingMainScreen() {
   };
 
   // Acciones para la tabla
+  // Acciones para la tabla
   const tableActions = [
     {
       label: "Editar",
-      onClick: handleInitiateEdit,
+      onClick: (campaign: Campaign) => {
+        console.log("Botón editar clickeado para campaña:", campaign);
+        handleInitiateEdit(campaign);
+      },
       variant: "outline",
       icon: (
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -398,7 +387,10 @@ export default function MarketingMainScreen() {
     },
     {
       label: "Eliminar",
-      onClick: handleInitiateDelete,
+      onClick: (campaign: Campaign) => {
+        console.log("Botón eliminar clickeado para campaña:", campaign);
+        handleInitiateDelete(campaign);
+      },
       variant: "danger",
       icon: (
         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -407,6 +399,7 @@ export default function MarketingMainScreen() {
       )
     }
   ];
+
 
   const tableConfig = {
     caption: `Campañas ${campaignType === "scholar" ? "Escolares" : "Universitarias"}`,
@@ -455,7 +448,7 @@ export default function MarketingMainScreen() {
     defaultValues: campaignToEdit ? {
       name: campaignToEdit.name,
       description: campaignToEdit.description,
-      date: campaignToEdit.date.slice(0, 16), // Formato para datetime-local
+      date: new Date(campaignToEdit.date).toISOString().slice(0, 16), // para 'datetime-local'
       cost: campaignToEdit.cost
     } : undefined
   };
