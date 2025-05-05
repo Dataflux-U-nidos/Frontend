@@ -1,4 +1,4 @@
-import { ApiIncome, financeIncomesType } from "@/types/financeIncomesType";
+import { ApiIncome, financeIncomesType, totalRevenue } from "@/types/financeIncomesType";
 import { userApi } from "../lib/api";
 import { campaingsCosts } from "@/types/campaingsCostsType";
 
@@ -36,12 +36,20 @@ export const getAllIncomes = async (planTypes: string[]): Promise<financeIncomes
   }
 };
 
-export const getTotalIncome = async (): Promise<number> => {
+export const getTotalIncome = async (
+  start: string = "2025-05-01",
+  end: string = "2025-05-05"
+): Promise<number> => {
   try {
-    const { data } = await userApi.get<number>("/campaign/total"); // CAMBIAR RUTA
-    return data;
+    const { data } = await userApi.get<totalRevenue>("subscription-plan/revenue", {
+      params: {
+        start,
+        end,
+      },
+    });
+    return data.totalRevenue;
   } catch (error) {
     console.error("Error al obtener costo total:", error);
-    throw error; // Re-lanzar el error para que pueda ser manejado por el hook
+    throw error;
   }
 };

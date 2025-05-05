@@ -1,7 +1,8 @@
-import { DataTable } from '../organisms/DataTable';
+import { DataTable } from "../organisms/DataTable";
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/ui/card";
 import { DollarSign } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../atoms/ui/tabs";
+import { DatePickerWithRange } from "../molecules/date-range-picker";
 
 interface IncomeData {
   university: string;
@@ -17,22 +18,26 @@ interface TableData {
   columnHeaders: Record<string, string>;
 }
 
-interface PartialIncomesTemplateProps {
+export interface PartialIncomesTemplateProps {
   tables: TableData[];
   mainTitle?: string;
   totalCost: number;
+  readonly range: { from: Date; to: Date };
+  readonly onRangeChange: (range: { from: Date; to: Date }) => void;
 }
 
 export default function PartialIncomesTemplate({
   tables,
   mainTitle,
   totalCost,
+  range,
+  onRangeChange,
 }: PartialIncomesTemplateProps) {
   // Format numbers as currency
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP',
+    return new Intl.NumberFormat("es-CO", {
+      style: "currency",
+      currency: "COP",
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount);
@@ -58,7 +63,11 @@ export default function PartialIncomesTemplate({
           </TabsList>
 
           {tables.map((table, index) => (
-            <TabsContent key={index} value={`table-${index}`} className="space-y-6">
+            <TabsContent
+              key={index}
+              value={`table-${index}`}
+              className="space-y-6"
+            >
               {table.title && (
                 <h2 className="text-lg font-semibold text-gray-800">
                   {table.title}
@@ -74,13 +83,23 @@ export default function PartialIncomesTemplate({
             </TabsContent>
           ))}
         </Tabs>
+        
+        <div className="mb-6"></div>
+
+        <DatePickerWithRange
+          from={range.from}
+          to={range.to}
+          onChange={onRangeChange}
+        />
 
         <div className="mb-6"></div>
         {/* Total Income Card */}
         <div className="mb-6 w-full">
           <Card className="bg-gradient-to-r from-cyan-50 to-emerald-50 border-green-200 shadow-md hover:shadow-lg transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-              <CardTitle className="text-lg font-medium text-green-800">Total Ingresos</CardTitle>
+              <CardTitle className="text-lg font-medium text-green-800">
+                Total Ingresos
+              </CardTitle>
               <DollarSign className="h-5 w-5 text-green-600" />
             </CardHeader>
             <CardContent>

@@ -10,5 +10,8 @@ export interface ApiIncome {
   }[];
 }
 
+export interface totalRevenue {
+  totalRevenue: number;
+}
 // Define financeIncomesType as an array of ApiIncome
 export type financeIncomesType = ApiIncome[];
