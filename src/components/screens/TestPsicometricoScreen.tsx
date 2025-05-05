@@ -10,8 +10,7 @@ export default function TestPsicometricoScreen() {
     const { data, loading, error } = usePsychometricTest();
   
     useEffect(() => {
-      const totalItems = Object.keys(answers).length;
-      const filled = Object.values(answers).filter(Boolean).length;
+    
     }, [answers, navigate]);
   
     if (loading) return <div>Cargando test...</div>;

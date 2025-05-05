@@ -10,8 +10,7 @@ export default function TestVocationalScreen() {
     const { data, loading, error } = useVocationalTest();
   
     useEffect(() => {
-      const totalItems = Object.keys(answers).length;
-      const filled = Object.values(answers).filter(Boolean).length;
+
     }, [answers, navigate]);
   
     if (loading) return <div>Cargando test...</div>;

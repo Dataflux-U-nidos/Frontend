@@ -1,5 +1,4 @@
 // src/services/passwordRecoveryService.ts
-import { ResponsiveContainer } from 'recharts';
 import { userApi } from '../lib/api';
 
 // src/services/studentTestService.ts
