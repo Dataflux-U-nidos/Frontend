@@ -10,9 +10,9 @@ export const usePsychometricTest = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getPsychometricTest();
-        setData(result.schema.psicometric);
-        console.log("Psychometric Test Data:", result.schema.psicometric);
+        const items = await getPsychometricTest();
+        setData(items);
+
       } catch (err) {
         console.error("Error loading psychometric test:", err);
         setError("Error cargando el test");
