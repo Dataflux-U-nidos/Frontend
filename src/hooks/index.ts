@@ -21,3 +21,8 @@ export * from './campaign/useGetCampaignByIdHook';
 export * from './campaign/useUpdateCampaignHook';
 export * from './campaign/useDeleteCampaignHook';
 export * from './campaign/useGetTotalInvestmentHook';
+
+//fot studentTests
+export * from './studentTests/useGetVocationalTestHook';
+export * from './studentTests/useGetVocationalPartialTestHook';
+export * from './studentTests/useGetPyschometricTestHook';

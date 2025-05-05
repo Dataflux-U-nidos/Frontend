@@ -185,23 +185,27 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
                                     />
                                 )
                             }
-                            return (
-                                <Input
+                            if (field.type !== "create-password") {
+                                return (
+                                  <Input
                                     inputType={field.type}
                                     placeholder={field.placeholder}
                                     autoComplete={
-                                        field.type === "email"
-                                            ? "email"
-                                            : field.type === "password"
-                                                ? "current-password"
-                                                : field.type === "user"
-                                                    ? "username"
-                                                    : "off"
+                                      field.type === "email"
+                                        ? "email"
+                                        : field.type === "password"
+                                          ? "current-password"
+                                          : field.type === "user"
+                                            ? "username"
+                                            : "off"
                                     }
                                     value={controllerField.value || ""}
                                     onChange={controllerField.onChange}
-                                />
-                            )
+                                  />
+                                )
+                              } else {
+                                // Render a different component or handle the "create-password" case differently
+                              }
                         })()}
                     </FormControl>
                     <FormMessage className="min-h-[1.25rem]">

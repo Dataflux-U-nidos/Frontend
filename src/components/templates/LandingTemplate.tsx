@@ -11,14 +11,15 @@ interface LandingTemplateProps {
   reviews: ReviewProps[];
   pricingList: PricingProps["plans"];
   onCreateAccount: () => void;
+  onPartialTest: () => void;
 }
 
-export const LandingTemplate = ({ features, featureList, reviews, onCreateAccount, pricingList }: LandingTemplateProps) => {
+export const LandingTemplate = ({ features, featureList, reviews, onCreateAccount, onPartialTest, pricingList }: LandingTemplateProps) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar/>
       <main>
-        <Hero onCreateAccount={onCreateAccount}/>
+        <Hero onPartialTest={onPartialTest}/>
         <Features features={features} featureList={featureList} />
         <Testimonials reviews={reviews}/>
         <Pricing plans={pricingList} />

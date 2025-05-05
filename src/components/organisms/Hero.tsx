@@ -3,9 +3,9 @@ import { AuroraText } from "../atoms/magicui/aurora-text";
 import { Button } from "../atoms/ui/button";
 
 interface HeroProps {
-  onCreateAccount: () => void;
+  onPartialTest: () => void;
 }
-export const Hero = ({ onCreateAccount }: HeroProps) => {
+export const Hero = ({ onPartialTest }: HeroProps) => {
 
   return (
     <section className="grid lg:grid-cols-2 place-items-center py-20 md:py-20 mx-10">
@@ -22,7 +22,7 @@ export const Hero = ({ onCreateAccount }: HeroProps) => {
           Encuentra la carrera adecuada para ti.
         </p>
         <div className="flex justify-center">
-          <Button variant="default" size="lg" onClick={onCreateAccount}>¡Comencemos!</Button>
+          <Button variant="default" size="lg" onClick={onPartialTest}>¡Haz tu test de prueba!</Button>
         </div>
       </div>
 

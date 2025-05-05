@@ -2,15 +2,15 @@ import { TestTemplate } from "@/components/templates/TestTemplate";
 import { useNavigate } from "react-router-dom";
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { useEffect } from "react";
-import { usePsychometricTest } from "@/hooks/studentTests/useGetPyschometricTestHook";
+import { usePartialVocationalTest } from "@/hooks/studentTests/useGetVocationalPartialTestHook";
 
-export default function TestPsicometricoScreen() {
+export default function TestPartialScreen() {
     const navigate = useNavigate();
     const { answers } = useSurveyStore();
-    const { data, loading, error } = usePsychometricTest();
+    const { data, loading, error } = usePartialVocationalTest();
   
     useEffect(() => {
-    
+
     }, [answers, navigate]);
   
     if (loading) return <div>Cargando test...</div>;
@@ -18,6 +18,6 @@ export default function TestPsicometricoScreen() {
     if (!data) return <div>No se pudo cargar el test.</div>;
     console.log("Data:", data);
   
-    return <TestTemplate data={data} 
-    pageTitle="Test Psicométrico" />;
+    return <TestTemplate data={data}
+    pageTitle="Test de Prueba" />;
 }
