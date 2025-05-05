@@ -1,6 +1,7 @@
 import { DataTable } from '../organisms/DataTable';
 import { Card, CardContent, CardHeader, CardTitle } from "../atoms/ui/card";
 import { DollarSign } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../atoms/ui/tabs";
 
 interface IncomeData {
   university: string;
@@ -8,22 +9,24 @@ interface IncomeData {
   cost: number;
 }
 
-interface PartialIncomesTemplateProps {
+interface TableData {
   data: IncomeData[];
   title?: string;
   caption?: string;
-  totalCost: number;
   displayColumns: string[];
   columnHeaders: Record<string, string>;
 }
 
+interface PartialIncomesTemplateProps {
+  tables: TableData[];
+  mainTitle?: string;
+  totalCost: number;
+}
+
 export default function PartialIncomesTemplate({
-  data,
-  title,
-  caption,
+  tables,
+  mainTitle,
   totalCost,
-  displayColumns,
-  columnHeaders,
 }: PartialIncomesTemplateProps) {
   // Format numbers as currency
   const formatCurrency = (amount: number) => {
@@ -35,22 +38,42 @@ export default function PartialIncomesTemplate({
     }).format(amount);
   };
 
-
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen  py-8 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-          {title}
-        </h1>
+        {mainTitle && (
+          <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            {mainTitle}
+          </h1>
+        )}
 
-        {/* Data Table */}
-        <DataTable<IncomeData>
-          data={data}
-          caption={caption}
-          rowsPerPage={5}
-          displayColumns={displayColumns}
-          columnHeaders={columnHeaders}
-        />
+        {/* Tabs for Multiple Tables */}
+        <Tabs defaultValue="table-0" className="space-y-6">
+          <TabsList className="flex flex-wrap gap-2">
+            {tables.map((table, index) => (
+              <TabsTrigger key={index} value={`table-${index}`}>
+                {table.title || `Tabla ${index + 1}`}
+              </TabsTrigger>
+            ))}
+          </TabsList>
+
+          {tables.map((table, index) => (
+            <TabsContent key={index} value={`table-${index}`} className="space-y-6">
+              {table.title && (
+                <h2 className="text-lg font-semibold text-gray-800">
+                  {table.title}
+                </h2>
+              )}
+              <DataTable<IncomeData>
+                data={table.data}
+                caption={table.caption}
+                rowsPerPage={5}
+                displayColumns={table.displayColumns}
+                columnHeaders={table.columnHeaders}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
 
         <div className="mb-6"></div>
         {/* Total Income Card */}

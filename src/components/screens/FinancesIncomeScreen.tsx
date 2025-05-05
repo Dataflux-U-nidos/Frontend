@@ -1,83 +1,85 @@
-//import { IncomeItem } from '@/types/financeIncomesType';
-import FinanciesPartialTemplate from '../templates/FinancesIncomeTemplate';
-//import { useEffect, useState } from 'react';
-//import { useGetIncomes } from '@/hooks/finances/useGetIncomesHook';
+import { useGetIncomes } from '@/hooks/finances/useGetIncomesHook';
+import PartialIncomesTemplate from '../templates/FinancesIncomeTemplate';
 import LoadingTemplate from '../templates/LoadingTemplate';
 
+// Define the API response structure
+interface ApiIncome {
+  planType: string;
+  costPerUnit: number;
+  count: number;
+  revenue: number;
+  universities: { id: string; name: string }[];
+}
 
-const incomeData = [
-  { university: 'Universidad Nacional', suscription: 'Premium', cost: 1500.50 },
-  { university: 'Universidad de los Andes', suscription: 'Básica', cost: 800.25 },
-  { university: 'Universidad Javeriana', suscription: 'Premium', cost: 2000.75 },
-  { university: 'Universidad del Rosario', suscription: 'Estándar', cost: 1200.00 },
-  { university: 'Universidad Nacional', suscription: 'Premium', cost: 1500.50 },
-  { university: 'Universidad de los Andes', suscription: 'Básica', cost: 800.25 },
-  { university: 'Universidad Javeriana', suscription: 'Premium', cost: 2000.75 },
-  { university: 'Universidad del Rosario', suscription: 'Estándar', cost: 1200.00 },
-
+// Fallback data mimicking API structure
+const fallbackIncomeData: ApiIncome[] = [
+  {
+    planType: 'BASIC',
+    costPerUnit: 9.99,
+    count: 2,
+    revenue: 19.98,
+    universities: [
+      { id: '681790325746ff7c53ade162', name: 'Uni' },
+      { id: '681793e62b0d5afac966d2f9', name: 'Uni Basic' },
+    ],
+  },
+  {
+    planType: 'PREMIUM',
+    costPerUnit: 19.99,
+    count: 3,
+    revenue: 59.97,
+    universities: [
+      { id: '681790325746ff7c53ade163', name: 'Uni Premium' },
+      { id: '681793e62b0d5afac966d2fa', name: 'Uni Elite' },
+      { id: '681793e62b0d5afac966d2fb', name: 'Uni Pro' },
+    ],
+  },
 ];
 
-// Configuración de columnas para DataTable
-const displayColumns = ['university', 'suscription', 'cost'];
-  
-// Traducción de encabezados
-const columnHeaders = {
-  university: 'Universidad',
-  suscription: 'Suscripción',
-  cost: 'Costo'
-};
+const PLAN_TYPES = ['BASIC', 'PREMIUM', 'STANDARD'];
 
 export default function FinancesMainScreen() {
-  // const { mutateAsync: getIncomes } = useGetIncomes();
-  // const [incomeData, setIncomeData] = useState<IncomeItem[]>([]);
-  // const [totalCost, setTotalCost] = useState<number>(0);
-  
-  // useEffect(() => {
-  //   // Función para cargar los datos
-  //   const loadIncomeData = async () => {
-  //     try {
-  //       const result = await getIncomes();
-        
-  //       if (result && result.data) {
-  //         setIncomeData(result.data);
-          
-  //         // Establecer el total
-  //         if (result.total !== undefined) {
-  //           setTotalCost(result.total);
-  //         } else {
-  //           // Calcular suma de todos los costos si no viene el total
-  //           const sum = result.data.reduce((acc, item) => acc + item.cost, 0);
-  //           setTotalCost(sum);
-  //         }
-  //       }
-  //     } catch (err) {
-  //       console.error("Error fetching income data:", err);
-  //     }
-  //   };
-  
-  //   // Llamar a la función cuando el componente se monta
-  //   loadIncomeData();
-  // }, [getIncomes]);
-  const totalCost = incomeData.reduce((sum, row) => sum + row.cost, 0);
+  const { incomes, loading, error } = useGetIncomes(PLAN_TYPES);
 
-  
-  // Mostrar spinner mientras se cargan los datos
-  if ( incomeData.length === 0) {
+  // Transform data into tables format
+  const transformToTables = (incomeData: ApiIncome[]) => {
+    return incomeData.map((plan) => ({
+      title: `Ingresos Plan ${plan.planType}`,
+      caption: `Suscripciones activas para el plan ${plan.planType}`,
+      data: plan.universities.map((uni) => ({
+        university: uni.name,
+        suscription: plan.planType,
+        cost: plan.revenue,
+      })),
+      displayColumns: ['university', 'suscription', 'cost'],
+      columnHeaders: {
+        university: 'Universidad',
+        suscription: 'Suscripción',
+        cost: 'Ingresos Totales (COP)',
+      },
+    }));
+  };
+
+  // Use fallback data if there's an error or no data
+  const dataToUse = error || !incomes || incomes.length === 0 ? fallbackIncomeData : incomes;
+  const tables = transformToTables(dataToUse);
+  const totalCost = dataToUse.reduce((acc, plan) => acc + plan.revenue, 0);
+
+  // Show loading template while data is being fetched
+  if (loading) {
     return (
       <div>
-        <LoadingTemplate/>
+        <LoadingTemplate />
       </div>
     );
   }
-  
+
   return (
     <div>
-      <FinanciesPartialTemplate 
-        data={incomeData} 
-        title='Ingresos por Universidad' 
+      <PartialIncomesTemplate
+        tables={tables}
+        mainTitle="Ingresos por Suscripción"
         totalCost={totalCost}
-        displayColumns={displayColumns}
-        columnHeaders={columnHeaders}
       />
     </div>
   );

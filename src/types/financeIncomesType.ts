@@ -1,14 +1,14 @@
-// Tipo para un ítem individual de ingreso
-export interface IncomeItem {
-    university: string;
-    suscription: string;
-    cost: number;
-  }
-  
-  // Tipo para la respuesta completa de la API
-  export interface financeIncomesType {
-    data: IncomeItem[];
-    scholarTotal: number;
-    universityTotal: number;
-    total: number;
-  }
+// Define the structure of a single income record
+export interface ApiIncome {
+  planType: string;
+  costPerUnit: number;
+  count: number;
+  revenue: number;
+  universities: {
+    id: string;
+    name: string;
+  }[];
+}
+
+// Define financeIncomesType as an array of ApiIncome
+export type financeIncomesType = ApiIncome[];
