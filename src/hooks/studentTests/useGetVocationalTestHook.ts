@@ -6,11 +6,11 @@ export const useVocationalTest = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => { 
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const items = await getVocationalTest();
-        setData({ vocational: items });
+        setData({ tests: items });
 
       } catch (err) {
         console.error("Error loading vocational test:", err);

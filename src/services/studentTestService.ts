@@ -18,5 +18,5 @@ export const getPsychometricTest = async () => {
   // Vocacional parcial
   export const getPartialVocationalTest = async () => {
     const resp = await userApi.get<any>("/student-test/vocational-partial");
-    return resp.data.vocational;
+    return resp.data.data.vocational;
   };

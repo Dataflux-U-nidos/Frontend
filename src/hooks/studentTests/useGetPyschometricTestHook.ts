@@ -10,7 +10,7 @@ export const usePsychometricTest = () => {
     const fetchData = async () => {
       try {
         const items = await getPsychometricTest();
-        setData({ psicometric: items });
+        setData({ tests: items });
 
       } catch (err) {
         console.error("Error loading psychometric test:", err);

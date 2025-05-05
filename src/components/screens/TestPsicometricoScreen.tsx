@@ -19,5 +19,6 @@ export default function TestPsicometricoScreen() {
     if (!data) return <div>No se pudo cargar el test.</div>;
     console.log("Data:", data);
   
-    return <TestTemplate data={data} />;
+    return <TestTemplate data={data} 
+    pageTitle="Test Psicométrico" />;
 }

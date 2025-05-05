@@ -131,6 +131,10 @@ export default function LandingScreen() {
     navigate("/auth");
   };
 
+  const handlePartialTest = () => {
+    navigate("/student-vocationalTest-partial");
+  };
+
   return (
     <LandingTemplate
       features={features}
@@ -138,6 +142,7 @@ export default function LandingScreen() {
       reviews={reviews}
       onCreateAccount={handleCreateAccount}
       pricingList={pricingList}
+      onPartialTest={handlePartialTest}
     />
   );
 };

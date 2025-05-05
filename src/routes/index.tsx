@@ -13,6 +13,8 @@ import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
 
 const TestPsicometrico = lazy(() => import("@/components/screens/TestPsicometricoScreen"));
+const TestVocational = lazy(() => import("@/components/screens/TestVocationalScreen"));
+const TestVocationalPartial = lazy(() => import("@/components/screens/TestVocationalPartialScreen"));
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
@@ -38,7 +40,7 @@ export const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/student-psychometricTest" element={<TestPsicometrico />} />
+          <Route path="/student-vocationalTest-partial" element={<TestVocationalPartial />} />
 
           <Route element={<ViewerRoutes />}>
             <Route element={<LayoutScreen />}>
@@ -51,6 +53,8 @@ export const AppRoutes = () => {
             <Route element={<LayoutScreen />}>
               <Route path="/account-student" element={<AccountScreen />} />
               <Route path="/student-profile" element={<StudentProfileScreen />} />
+              <Route path="/student-psychometricTest" element={<TestPsicometrico />} />
+              <Route path="/student-vocationalTest" element={<TestVocational />} />
             </Route>
           </Route>
 

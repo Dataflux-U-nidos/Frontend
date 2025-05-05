@@ -11,3 +11,8 @@ export * from './user/useGetManagersByUniversityHook';
 export * from './user/useGetSupportByAdminHook';
 export * from './user/useGetFinanceByAdminHook';
 export * from './user/useGetMarketingByAdminHook';
+
+//fot studentTests
+export * from './studentTests/useGetVocationalTestHook';
+export * from './studentTests/useGetVocationalPartialTestHook';
+export * from './studentTests/useGetPyschometricTestHook';
