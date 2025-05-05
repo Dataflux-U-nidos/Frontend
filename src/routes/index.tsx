@@ -38,7 +38,7 @@ export const AppRoutes = () => {
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
-          <Route path="/test" element={<TestPsicometrico />} />
+          <Route path="/student-psychometricTest" element={<TestPsicometrico />} />
 
           <Route element={<ViewerRoutes />}>
             <Route element={<LayoutScreen />}>

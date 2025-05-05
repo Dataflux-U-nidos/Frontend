@@ -1,25 +1,22 @@
 // src/services/passwordRecoveryService.ts
+import { ResponsiveContainer } from 'recharts';
 import { userApi } from '../lib/api';
 
-export const getPsychometricTest = async (): Promise<Record<string, any>> => {
-  const response = await userApi.get<{ data: { psicometric: Record<string, any> } }>(
-    "/student-test/psychometric"
-  );
-  return response.data.data.psicometric;
+// src/services/studentTestService.ts
+export const getPsychometricTest = async () => {
+  const resp = await userApi.get<{ data: { psicometric: Record<string, any> } }>("/student-test/psychometric");
+  return resp.data.data.psicometric;
 };
+
   
   // Vocacional completo
-  export const getVocationalTest = async (): Promise<any> => {
-    const response = await userApi.get<any>("/student-test/vocational");
-    console.log("Vocational Response Headers:", response.headers);
-    return response.data;
+  export const getVocationalTest = async () => {
+    const resp = await userApi.get<{ data: { vocational: Record<string, any> } }>("/student-test/vocational");
+    return resp.data.data.vocational;
   };
   
   // Vocacional parcial
-  export const getPartialVocationalTest = async (): Promise<any> => {
-    const response = await userApi.get<any>(
-      "/student-test/vocational-partial"
-    );
-    console.log("Partial Vocational Response Headers:", response.headers);
-    return response.data;
+  export const getPartialVocationalTest = async () => {
+    const resp = await userApi.get<any>("/student-test/vocational-partial");
+    return resp.data.vocational;
   };
