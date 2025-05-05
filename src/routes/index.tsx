@@ -34,10 +34,7 @@ const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMa
 const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 
-
-
 export const AppRoutes = () => {
-
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Cargando...</div>}>
@@ -92,7 +89,11 @@ export const AppRoutes = () => {
           </Route>
 
           <Route element={<MarketingRoutes />}>
-            <Route path="/marketing-main" element={<MarketingMainScreen />} />
+            <Route element={<LayoutScreen />}>
+              <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
+              <Route path="/marketing-university" element={<MarketingMainScreen />} />
+              <Route path="/marketing-scholar" element={<MarketingMainScreen />} />
+            </Route>
           </Route>
 
           <Route element={<FinancesRoutes />}>
@@ -101,7 +102,6 @@ export const AppRoutes = () => {
               <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
             </Route>
           </Route>
-
           
         </Routes>
       </Suspense>
