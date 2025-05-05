@@ -20,7 +20,8 @@ export type FieldType =
     InputType
     | "select"
     | "custom"
-    | "textarea";
+    | "textarea"
+    | "create-password";
 
 /**
  * Estructura base para cualquier campo.

@@ -29,8 +29,10 @@ export const Navbar = ({ onCreateAccount }: NavbarProps) => {
           ))}
         </div>
 
+
         {/* login and registry buttons */}
         <div className="hidden md:flex items-center space-x-4">
+        <Button onClick={onCreateAccount}>Iniciar sesión </Button>
         </div>
 
         {/* Mobile Menu */}

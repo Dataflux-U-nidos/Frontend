@@ -11,7 +11,7 @@ interface SurveyState {
 
 export const useSurveyStore = create<SurveyState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             answers: {},
             currentPage: 0,
             setAnswer: (key, value) => set((s) => ({ answers: { ...s.answers, [key]: value } })),

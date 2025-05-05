@@ -1,5 +1,4 @@
 import { Avatar, AvatarFallback, AvatarImage } from "../atoms/ui/avatar";
-import { Badge } from "../atoms/ui/badge";
 import { Button, buttonVariants } from "@/components/atoms/ui/button";
 import {
   Card,

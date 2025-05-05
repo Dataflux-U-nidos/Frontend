@@ -10,11 +10,6 @@ export class ErrorBoundary extends React.Component<
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error: any) {
-        // Actualiza el estado para mostrar UI de respaldo
-        return { hasError: true };
-    }
-
     componentDidCatch(error: any, info: any) {
         // Puedes enviar el error a tu servicio de logs
         console.error("ErrorBoundary caught:", error, info);

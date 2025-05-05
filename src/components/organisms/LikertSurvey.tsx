@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 const HEADER_OFFSET = 320; // px: título + margen superior
 
 const flattenItems = (data: any) =>
-    Object.values(data.psicometric).flatMap((domain: any) =>
+    Object.values(data.tests).flatMap((domain: any) =>
         Object.entries(domain).map(([k, v]: any) => ({
             key: k,
             description: v.description,
