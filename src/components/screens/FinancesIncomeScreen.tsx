@@ -36,7 +36,7 @@ const fallbackIncomeData: ApiIncome[] = [
   },
 ];
 
-const PLAN_TYPES = ['BASIC', 'PREMIUM', 'STANDARD'];
+const PLAN_TYPES = ['BASIC','STANDARD', 'PREMIUM' ];
 
 export default function FinancesMainScreen() {
   const { incomes, loading, error } = useGetIncomes(PLAN_TYPES);

@@ -29,7 +29,6 @@ export const getAllIncomes = async (planTypes: string[]): Promise<financeIncomes
   try {
     const incomePromises = planTypes.map((planType) => getIncomes(planType));
     const incomes = await Promise.all(incomePromises);
-    console.log("Data de ingresos para todos los planes:", incomes);
     return incomes;
   } catch (error) {
     console.error('Error al obtener costos parciales para todos los planes:', error);
