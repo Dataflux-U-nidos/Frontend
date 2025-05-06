@@ -41,6 +41,7 @@ export const sidebarData: SidebarData = {
         // Financiero
         { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
         { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES"] },
+        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES"] },
         
         // Marketing
         { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },

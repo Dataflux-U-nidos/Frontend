@@ -4,7 +4,9 @@ import featureProfileImage from "../../assets/feature-profile.svg";
 import featureReviewImage from "../../assets/feature-reviews.svg";
 import featureWageImage from "../../assets/feature-wage.svg";
 import { useNavigate } from "react-router-dom";
-import { Plan } from "@/components/organisms/Pricing";
+import { Plan, PopularPlanType } from "@/components/organisms/Pricing";
+import { useGetAllSubscriptions } from "@/hooks";
+import { useEffect, useState } from "react";
 
 const features: FeatureProps[] = [
   {
@@ -27,52 +29,7 @@ const features: FeatureProps[] = [
   },
 ];
 
-export const pricingList: Plan[] = [
-  {
-    title: "Mensual",
-    popular: 0,
-    price: 50000, // $50.000 COP/mes
-    description:
-      "Acceso completo a la plataforma durante un mes para tu institución.",
-    buttonText: "Suscripción mensual",
-    benefitList: [
-      "Panel de control de postulaciones",
-      "Reportes básicos de rendimiento estudiantil",
-      "Acceso a módulos de prueba de admisión",
-      "Soporte estándar 24/7",
-    ],
-  },
-  {
-    title: "Trimestral",
-    popular: 0,
-    price: 140000,
-    description:
-      "3 meses con un 6.7 % de descuento frente al plan mensual.",
-    buttonText: "Suscripción trimestral",
-    benefitList: [
-      "Reportes avanzados de seguimiento académico",
-      "Integración con sistemas internos (API)",
-      "Webinars trimestrales de reclutamiento",
-      "Soporte prioritario 24/7",
-      "Acceso a pruebas personalizadas",
-    ],
-  },
-  {
-    title: "Anual",
-    popular: 0,
-    price: 520000, // 4×140.000 = 560.000 – 7.1% ≈ 520.000
-    description:
-      "12 meses con un 7.1 % de descuento frente al plan trimestral.",
-    buttonText: "Suscripción anual",
-    benefitList: [
-      "Asesoría exclusiva de admisiones",
-      "Reportes detallados de cohortes",
-      "Sesiones de capacitación 1:1",
-      "Acceso al portal VIP de universidades",
-      "Soporte personalizado",
-    ],
-  },
-];
+
 
 const reviews = [
   //comentar el primero en caso de fallas
@@ -127,6 +84,26 @@ const featureList: string[] = [
 export default function LandingScreen() {
   const navigate = useNavigate();
 
+  // 1) Traer planes del backend
+  const { data: apiPlans, isLoading, error } = useGetAllSubscriptions();
+
+  // 2) Transformarlos al shape que espera <Pricing>
+  const [plans, setPlans] = useState<Plan[]>([]);
+  useEffect(() => {
+    if (apiPlans) {
+      setPlans(
+        apiPlans.map((p) => ({
+          title: p.name,
+          popular: p.type === "STANDARD" ? PopularPlanType.YES : PopularPlanType.NO,
+          price: p.cost,
+          description: p.description ?? "", // add a default value if description is undefined
+          buttonText: `Suscribirme (${p.name})`,
+          benefitList: p.benefits,
+        }))
+      );
+    }
+  }, [apiPlans]);
+
   const handleCreateAccount = () => {
     navigate("/auth");
   };
@@ -135,6 +112,7 @@ export default function LandingScreen() {
     navigate("/student-vocationalTest-partial");
   };
 
+  const pricingList = isLoading || error ? [] : plans;
   return (
     <LandingTemplate
       features={features}

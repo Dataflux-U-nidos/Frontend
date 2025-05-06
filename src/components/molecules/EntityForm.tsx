@@ -100,6 +100,9 @@ export const EntityForm: React.FC<EntityFormProps> = ({
     }
 
     const validation = field.validation;
+    const numericValue = (field.type === "number" && typeof value !== "number")
+      ? parseFloat(value)
+      : value;
 
     // Validar patrón (regex)
     if (validation.pattern && value) {
@@ -119,15 +122,13 @@ export const EntityForm: React.FC<EntityFormProps> = ({
     }
 
     // Validar valor mínimo (para números)
-    if (validation.min && typeof value === 'number' && value < validation.min.value) {
+    if (validation.min !== undefined && !isNaN(numericValue) && numericValue < validation.min.value) {
       return validation.min.message;
     }
-
-    // Validar valor máximo (para números)
-    if (validation.max && typeof value === 'number' && value > validation.max.value) {
+    if (validation.max !== undefined && !isNaN(numericValue) && numericValue > validation.max.value) {
       return validation.max.message;
     }
-
+    
     // Función de validación personalizada
     if (validation.validate && value) {
       const validationResult = validation.validate(value);
