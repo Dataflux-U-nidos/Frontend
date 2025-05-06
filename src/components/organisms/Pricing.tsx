@@ -10,7 +10,7 @@ import {
 } from "@/components/atoms/ui/card";
 import { Check } from "lucide-react";
 
-enum PopularPlanType {
+export enum PopularPlanType {
   NO = 0,
   YES = 1,
 }

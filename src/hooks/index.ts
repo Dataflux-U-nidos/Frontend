@@ -26,3 +26,7 @@ export * from './campaign/useGetTotalInvestmentHook';
 export * from './studentTests/useGetVocationalTestHook';
 export * from './studentTests/useGetVocationalPartialTestHook';
 export * from './studentTests/useGetPyschometricTestHook';
+
+// Subscription hooks
+export * from './subscription/useGetAllSubscriptionHook';
+export * from './subscription/useUpdateSubscriptionHook';
