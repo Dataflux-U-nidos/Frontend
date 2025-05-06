@@ -1,177 +1,25 @@
-import * as React from "react"
-import { Button } from "@/components/atoms/ui/button"
-import { cn } from "@/lib/utils"
-import { z } from "zod"
-import {
-  Mail,
-  Lock,
-  Phone,
-  User,
-  MapPin,
-  Search as SearchIcon,
-  Eye as EyeIcon,
-  EyeOff as EyeOffIcon,
-} from "lucide-react"
+import { cn } from "@/lib/utils";
+import * as React from "react";
 
-type InputType =
-  | "email"
-  | "document"
-  | "password"
-  | "create-password"
-  | "phone"
-  | "user"
-  | "address"
-  | "extension-phone"
-  | "search"
-  | "number"
-  | undefined
+const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
+    ({ className, type, ...props }, ref) => {
+        return (
+            <input
+                type={type}
+                className={cn(
+                    "flex h-9 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm shadow-black/5 transition-shadow placeholder:text-muted-foreground/70 focus-visible:border-ring focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-ring/20 disabled:cursor-not-allowed disabled:opacity-50",
+                    type === "search" &&
+                    "[&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none",
+                    type === "file" &&
+                    "p-0 pr-3 italic text-muted-foreground/70 file:me-3 file:h-full file:border-0 file:border-r file:border-solid file:border-input file:bg-transparent file:px-3 file:text-sm file:font-medium file:not-italic file:text-foreground",
+                    className,
+                )}
+                ref={ref}
+                {...props}
+            />
+        );
+    },
+);
+Input.displayName = "Input";
 
-function getConfigForType(type: InputType) {
-  switch (type) {
-    case "email":
-      return {
-        schema: z.string().email("El email no es válido").max(50),
-        maxLength: 50,
-        icon: <Mail className="w-5 h-5 text-gray-400" />,
-      }
-    case "password":
-      return {
-        schema: z.string().min(6).max(50),
-        maxLength: 50,
-        icon: <Lock className="w-5 h-5 text-gray-400" />,
-      }
-    case "phone":
-      return {
-        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(10),
-        maxLength: 10,
-        icon: <Phone className="w-5 h-5 text-gray-400" />,
-      }
-    case "extension-phone":
-      return {
-        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(2),
-        maxLength: 2,
-        icon: <Phone className="w-5 h-5 text-gray-400" />,
-      }
-    case "document":
-      return {
-        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(10),
-        maxLength: 10,
-        icon: <User className="w-5 h-5 text-gray-400" />,
-      }
-    case "user":
-      return {
-        schema: z.string().min(4).max(40),
-        maxLength: 40,
-        icon: <User className="w-5 h-5 text-gray-400" />,
-      }
-    case "address":
-      return {
-        schema: z.string().max(100),
-        maxLength: 100,
-        icon: <MapPin className="w-5 h-5 text-gray-400" />,
-      }
-    case "search":
-      return {
-        schema: z.string().max(100),
-        maxLength: 100,
-        icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
-      }
-    case "number":
-      return {
-        schema: z.string().regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos"),
-        maxLength: 3,
-        icon: <SearchIcon className="w-5 h-5 text-gray-400" />,
-        
-      }
-    default:
-      return {
-        schema: z.string().max(100),
-        maxLength: 100,
-        icon: undefined,
-      }
-     
-  }
-}
-
-const containerClass = `
-  relative flex items-center h-12
-  rounded-full bg-primary-grey-50
-  px-4 py-2 text-base border border-primary-grey-300
-  focus-visible:outline-none
-`
-
-const inputStyle = `
-  flex-1 bg-transparent outline-none
-  placeholder:text-gray-400
-`
-
-export interface InputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "type"> {
-  inputType?: InputType
-  icon?: React.ReactNode
-  value?: string
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
-}
-
-export const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, inputType, icon, value = "", onChange, maxLength, ...props }, ref) => {
-    const [showPassword, setShowPassword] = React.useState(false)
-
-    const {maxLength: defaultMaxLength, icon: defaultIcon } =
-      getConfigForType(inputType)
-
-    let nativeType: React.HTMLInputTypeAttribute = "text"
-    if (inputType === "password" || inputType === "create-password") {
-      nativeType = showPassword ? "text" : "password"
-    } else if (inputType === "email") {
-      nativeType = "email"
-    } else if (inputType === "search") {
-      nativeType = "search"
-    } else if (
-      inputType === "phone" ||
-      inputType === "extension-phone" ||
-      inputType === "document"
-    ) {
-      nativeType = "tel"
-    }
-
-    const finalIcon = icon ?? defaultIcon
-    const finalMaxLength = maxLength ?? defaultMaxLength
-
-    return (
-      <div className={cn(containerClass, className)}>
-        {finalIcon && (
-          <div className="absolute left-4 flex items-center justify-center w-5 h-5">
-            {finalIcon}
-          </div>
-        )}
-        <input
-          ref={ref}
-          type={nativeType}
-          maxLength={finalMaxLength}
-          value={value}
-          onChange={onChange}
-          className={cn(inputStyle, finalIcon ? "pl-8" : "pl-2")}
-          {...props}
-        />
-        {(inputType === "password" || inputType === "create-password") && (
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="absolute right-3"
-            onClick={() => setShowPassword(!showPassword)}
-          >
-            {showPassword ? (
-              <EyeOffIcon className="w-5 h-5 text-gray-400" />
-            ) : (
-              <EyeIcon className="w-5 h-5 text-gray-400" />
-            )}
-          </Button>
-        )}
-      </div>
-    )
-  }
-)
-
-Input.displayName = "Input"
+export { Input };

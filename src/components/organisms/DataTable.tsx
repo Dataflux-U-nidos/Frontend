@@ -189,9 +189,11 @@ export function DataTable<T extends Entity>({
                 </TableHead>
               ))}
               {/* Columna adicional para acciones */}
-              <TableHead className="p-4 text-left text-sm font-medium text-gray-500">
-                Acciones
-              </TableHead>
+              {(onViewDetails || actions.length > 0) && (
+                <TableHead className="p-4 text-center text-sm font-medium text-gray-500 w-fit">
+                  Acciones
+                </TableHead>
+              )}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -206,31 +208,33 @@ export function DataTable<T extends Entity>({
                   </TableCell>
                 ))}
                 {/* Celda para botones de acciones */}
-                <TableCell className="p-4">
-                  <div className="flex space-x-2">
-                    {/* Primero el botón de detalles (si hay onViewDetails) */}
-                    {onViewDetails && (
-                      <Button 
-                        onClick={() => handleViewDetails(row)} 
-                        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm"
-                      >
-                        {actionButtonText}
-                      </Button>
-                    )}
-                    
-                    {/* Luego los botones de acciones adicionales */}
-                    {actions.map((action, i) => (
-                      <Button 
-                        key={`action-${i}`}
-                        onClick={() => action.onClick(row)}
-                        className={`${getButtonBgClass(action.variant)} ${getButtonTextClass(action.variant)} rounded-md px-3 py-1 text-sm flex items-center`}
-                      >
-                        {action.icon && <span className="mr-1">{action.icon}</span>}
-                        {action.label}
-                      </Button>
-                    ))}
-                  </div>
-                </TableCell>
+                {(onViewDetails || actions.length > 0) && (
+                  <TableCell className="p-4 w-fit">
+                    <div className="flex justify-center items-center space-x-2">
+                      {/* Primero el botón de detalles (si hay onViewDetails) */}
+                      {onViewDetails && (
+                        <Button 
+                          onClick={() => handleViewDetails(row)} 
+                          className="bg-orange-500 hover:bg-orange-600 text-white rounded-md px-3 py-1 text-sm whitespace-nowrap"
+                        >
+                          {actionButtonText}
+                        </Button>
+                      )}
+                      
+                      {/* Luego los botones de acciones adicionales */}
+                      {actions.map((action, i) => (
+                        <Button 
+                          key={`action-${i}`}
+                          onClick={() => action.onClick(row)}
+                          className={`${getButtonBgClass(action.variant)} ${getButtonTextClass(action.variant)} rounded-md px-3 py-1 text-sm flex items-center whitespace-nowrap`}
+                        >
+                          {action.icon && <span className="mr-1">{action.icon}</span>}
+                          {action.label}
+                        </Button>
+                      ))}
+                    </div>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
           </TableBody>

@@ -1,0 +1,1260 @@
+{
+  "psicometric": {
+    "linguistic_verbal": {
+      "lv_1": {
+        "description": "Disfruto escribir relatos, ensayos o posts en mis ratos libres.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "linguistic_verbal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lv_2": {
+        "description": "Suelo encontrar la palabra exacta para expresar lo que pienso o siento.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "linguistic_verbal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lv_3": {
+        "description": "Me entusiasma leer libros, artículos o blogs con regularidad.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "linguistic_verbal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lv_4": {
+        "description": "Me resulta fácil explicar ideas complejas con ejemplos claros.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "linguistic_verbal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lv_5": {
+        "description": "Participo con gusto en debates, charlas o concursos de oratoria.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "linguistic_verbal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "logical_mathematical": {
+      "lm_1": {
+        "description": "Me atraen los juegos de lógica, rompecabezas o acertijos numéricos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "logical_mathematical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lm_2": {
+        "description": "Identifico patrones o relaciones entre datos sin mucha dificultad.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "logical_mathematical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lm_3": {
+        "description": "Antes de tomar decisiones, suelo analizar pros y contras de forma sistemática.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "logical_mathematical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lm_4": {
+        "description": "Disfruto resolver problemas paso a paso siguiendo un método.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "logical_mathematical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "lm_5": {
+        "description": "Me interesa entender cómo funcionan los algoritmos o fórmulas.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "logical_mathematical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "spatial_visual": {
+      "sv_1": {
+        "description": "Puedo imaginar con claridad cómo se verán los objetos al rotarlos o moverlos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "spatial_visual",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "sv_2": {
+        "description": "Me oriento bien usando mapas, planos o GPS en lugares nuevos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "spatial_visual",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "sv_3": {
+        "description": "Al leer diagramas o planos, capto rápido la información que representan.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "spatial_visual",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "sv_4": {
+        "description": "Cuando pienso en ideas, las visualizo como esquemas, bocetos o gráficos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "spatial_visual",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "sv_5": {
+        "description": "Me es natural notar detalles de formas, colores y proporciones en mi entorno.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "spatial_visual",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "musical": {
+      "mu_1": {
+        "description": "Reconozco melodías o ritmos con apenas unos compases de escucha.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "musical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "mu_2": {
+        "description": "Tiendo a marcar el pulso o tararear mientras realizo otras actividades.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "musical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "mu_3": {
+        "description": "Disfruto aprender sobre distintos géneros, compositores o instrumentos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "musical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "mu_4": {
+        "description": "Percibo fácilmente si una nota está afinada o desafinada.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "musical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "mu_5": {
+        "description": "La música influye notablemente en mi estado de ánimo y concentración.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "musical",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "bodily_kinesthetic": {
+      "bk_1": {
+        "description": "Aprendo mejor cuando puedo manipular objetos o moverme.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "bodily_kinesthetic",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "bk_2": {
+        "description": "Practico o disfruto actividades físicas (deporte, danza, teatro, manualidades).",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "bodily_kinesthetic",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "bk_3": {
+        "description": "Me resulta sencillo coordinar movimientos precisos con manos o cuerpo.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "bodily_kinesthetic",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "bk_4": {
+        "description": "Expreso emociones o ideas a través de gestos o postura corporal.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "bodily_kinesthetic",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "bk_5": {
+        "description": "Tengo buena conciencia del equilibrio, la fuerza y la velocidad de mis movimientos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "bodily_kinesthetic",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "interpersonal": {
+      "ip_1": {
+        "description": "Identifico con facilidad los sentimientos de otras personas por su tono o gestos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "interpersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "ip_2": {
+        "description": "Suelo mediar o facilitar la comunicación en trabajos de equipo.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "interpersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "ip_3": {
+        "description": "Me gusta escuchar activamente y hacer preguntas que ayuden a los demás.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "interpersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "ip_4": {
+        "description": "Disfruto colaborar y alcanzar metas comunes con un grupo.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "interpersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "ip_5": {
+        "description": "Adapto mi forma de hablar según la persona con la que interactúo.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "interpersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "intrapersonal": {
+      "it_1": {
+        "description": "Reflexiono con frecuencia sobre mis metas, valores y motivaciones.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "intrapersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "it_2": {
+        "description": "Reconozco mis fortalezas y áreas de mejora con claridad.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "intrapersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "it_3": {
+        "description": "Manejo mis emociones aplicando técnicas que sé que me funcionan.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "intrapersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "it_4": {
+        "description": "Puedo trabajar de forma autónoma sin perder el enfoque.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "intrapersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "it_5": {
+        "description": "Evalúo mis decisiones pasadas para aprender de ellas.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "intrapersonal",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    },
+    "naturalist": {
+      "na_1": {
+        "description": "Me apasiona observar, clasificar o cuidar plantas, animales o minerales.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "naturalist",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "na_2": {
+        "description": "Identifico fácilmente cambios en el clima, las estaciones o el entorno natural.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "naturalist",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "na_3": {
+        "description": "Disfruto leer o ver contenido sobre ecología, biología o geografía.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "naturalist",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "na_4": {
+        "description": "Prefiero actividades al aire libre, como senderismo, jardinería o campamentos.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "naturalist",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      },
+      "na_5": {
+        "description": "Siento responsabilidad por la conservación del medio ambiente.",
+        "metadata": {
+          "domain": "intelligence",
+          "competency": "naturalist",
+          "difficulty": "medium",
+          "required": true
+        },
+        "options": [
+          {
+            "text": "Totalmente en desacuerdo",
+            "value": 1
+          },
+          {
+            "text": "En desacuerdo",
+            "value": 2
+          },
+          {
+            "text": "Neutral",
+            "value": 3
+          },
+          {
+            "text": "De acuerdo",
+            "value": 4
+          },
+          {
+            "text": "Totalmente de acuerdo",
+            "value": 5
+          }
+        ]
+      }
+    }
+  }
+}

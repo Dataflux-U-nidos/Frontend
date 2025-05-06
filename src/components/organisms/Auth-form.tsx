@@ -24,12 +24,12 @@ interface AuthFormProps {
         selectedType: string;
         onSelectType: (type: string) => void;
         options: Array<{
-          value: string;
-          label: string;
-          icon: string;
-          description: string;
+            value: string;
+            label: string;
+            icon: string;
+            description: string;
         }>;
-      }
+    }
 
 }
 
@@ -106,13 +106,13 @@ export default function AuthForm({
                         <div className="flex-1 min-h-0 overflow-y-auto space-y-6">
                             {/* Type selector - only shown in registry tab */}
                             {userTypeOptions && (
-                                <UserTypeSelectorComponent 
-                                    selectedType={userTypeOptions.selectedType} 
+                                <UserTypeSelectorComponent
+                                    selectedType={userTypeOptions.selectedType}
                                     onSelectType={userTypeOptions.onSelectType}
                                     options={userTypeOptions.options}
                                 />
                             )}
-                            
+
                             <DynamicForm
                                 ref={registryFormRef}
                                 formDataConfig={registryFields}
@@ -123,7 +123,7 @@ export default function AuthForm({
                         </Button>
                     </form>
                 </TabsContent>
-                
+
                 {/* ... resto del código de la pestaña de registro ... */}
             </Tabs>
         </div>
