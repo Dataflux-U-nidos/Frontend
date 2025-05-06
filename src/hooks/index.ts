@@ -26,3 +26,9 @@ export * from './campaign/useGetTotalInvestmentHook';
 export * from './studentTests/useGetVocationalTestHook';
 export * from './studentTests/useGetVocationalPartialTestHook';
 export * from './studentTests/useGetPyschometricTestHook';
+
+// Major hooks
+export * from './major/useGetAllMajorsHook';
+export * from './major/useGetMajorByIdHook';
+export * from './major/useGetMajorsByInstitutionHook';
+export * from './major/useFilterMajorsHook';

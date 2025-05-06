@@ -1,80 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
-import { EntityDetailsModal } from "@/components/organisms/EntityDetailsModal";
 import { FilterModal, FilterField } from "@/components/molecules/FilterModal";
 import { Major, MajorFilters } from '@/types/majorType';
-import { useAuthContext } from "@/context/AuthContext";
-
-// Datos quemados para la demostración
-const mockMajors: Major[] = [
-  {
-    _id: "6817986a4019fde74c6ba876",
-    name: "Comunicación Social",
-    institutionId: "6802d607d02ebfa0f85c4237",
-    difficulty: "EASY",
-    price: 3500,
-    description: "Carrera enfocada en comunicación masiva y medios digitales. Desarrolla habilidades en periodismo, publicidad y relaciones públicas.",
-    pensumLink: "https://example.com/pensum-comunicacion",
-    jobId: "60f7d2a4c25e4b001c8f9d9e",
-    focus: "Publicidad",
-    createdAt: "2025-05-04T16:40:10.355Z",
-    updatedAt: "2025-05-04T16:40:10.355Z"
-  },
-  {
-    _id: "6817986a4019fde74c6ba877",
-    name: "Ingeniería de Software",
-    institutionId: "6802d607d02ebfa0f85c4237",
-    difficulty: "HARD",
-    price: 5200,
-    description: "Forma profesionales en el desarrollo y mantenimiento de soluciones software. Incluye programación, arquitectura, diseño y gestión de proyectos.",
-    pensumLink: "https://example.com/pensum-software",
-    jobId: "60f7d2a4c25e4b001c8f9d9f",
-    focus: "Desarrollo Web",
-    createdAt: "2025-05-03T14:22:30.145Z",
-    updatedAt: "2025-05-03T14:22:30.145Z"
-  },
-  {
-    _id: "6817986a4019fde74c6ba878",
-    name: "Administración de Empresas",
-    institutionId: "6802d607d02ebfa0f85c4238",
-    difficulty: "MEDIUM",
-    price: 4300,
-    description: "Prepara líderes empresariales con conocimientos en gestión financiera, recursos humanos, marketing y estrategia corporativa.",
-    pensumLink: "https://example.com/pensum-administracion",
-    jobId: "60f7d2a4c25e4b001c8f9da0",
-    focus: "Gestión Empresarial",
-    createdAt: "2025-05-02T11:15:45.789Z",
-    updatedAt: "2025-05-02T11:15:45.789Z"
-  },
-  {
-    _id: "6817986a4019fde74c6ba879",
-    name: "Medicina",
-    institutionId: "6802d607d02ebfa0f85c4239",
-    difficulty: "HARD",
-    price: 8500,
-    description: "Formación integral de médicos con énfasis en atención primaria, prevención de enfermedades y práctica clínica avanzada.",
-    pensumLink: "https://example.com/pensum-medicina",
-    jobId: "60f7d2a4c25e4b001c8f9da1",
-    focus: "Medicina General",
-    createdAt: "2025-05-01T09:30:20.456Z",
-    updatedAt: "2025-05-01T09:30:20.456Z"
-  },
-  {
-    _id: "6817986a4019fde74c6ba880",
-    name: "Psicología",
-    institutionId: "6802d607d02ebfa0f85c4240",
-    difficulty: "MEDIUM",
-    price: 3900,
-    description: "Estudio del comportamiento humano, desarrollo cognitivo y procesos mentales. Incluye evaluación, diagnóstico y tratamiento.",
-    pensumLink: "https://example.com/pensum-psicologia",
-    jobId: "60f7d2a4c25e4b001c8f9da2",
-    focus: "Psicología Clínica",
-    createdAt: "2025-04-30T16:45:10.123Z",
-    updatedAt: "2025-04-30T16:45:10.123Z"
-  }
-];
+import { useGetAllMajors, useFilterMajors } from "@/hooks";
 
 // Tipo para notificaciones
 interface Notification {
@@ -84,16 +14,19 @@ interface Notification {
 }
 
 export default function StudentMajorsScreen() {
-  const { user } = useAuthContext();
+  
+  // Obtenemos datos del backend utilizando nuestro hook
+  const { data: majors, isLoading, isError, error, refetch } = useGetAllMajors();
   
   // Estados
-  const [majorsData, setMajorsData] = useState<Major[]>(mockMajors);
-  const [filteredData, setFilteredData] = useState<Major[]>(mockMajors);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
   const [filters, setFilters] = useState<Record<string, any>>({});
+
+  // Usar el hook de filtrado para mantener los majors filtrados
+  const { filteredMajors, updateFilters } = useFilterMajors(majors || [], {});
 
   // Manejador para cerrar notificaciones
   const handleCloseNotification = () => {
@@ -130,39 +63,7 @@ export default function StudentMajorsScreen() {
   // Manejador para aplicar filtros
   const handleApplyFilters = (newFilters: Record<string, any>) => {
     setFilters(newFilters);
-    
-    let filtered = [...majorsData];
-    
-    // Filtrar por nombre (desde la barra de búsqueda)
-    if (newFilters.name) {
-      filtered = filtered.filter(major => 
-        major.name.toLowerCase().includes(newFilters.name.toLowerCase())
-      );
-    }
-    
-    // Filtrar por dificultad
-    if (newFilters.difficulty) {
-      filtered = filtered.filter(major => major.difficulty === newFilters.difficulty);
-    }
-    
-    // Filtrar por precio mínimo
-    if (newFilters.priceMin !== undefined) {
-      filtered = filtered.filter(major => major.price >= newFilters.priceMin);
-    }
-    
-    // Filtrar por precio máximo
-    if (newFilters.priceMax !== undefined) {
-      filtered = filtered.filter(major => major.price <= newFilters.priceMax);
-    }
-    
-    // Filtrar por enfoque
-    if (newFilters.focus) {
-      filtered = filtered.filter(major => 
-        major.focus.toLowerCase().includes(newFilters.focus.toLowerCase())
-      );
-    }
-    
-    setFilteredData(filtered);
+    updateFilters(newFilters as MajorFilters);
     setShowFilterModal(false);
   };
 
@@ -172,6 +73,22 @@ export default function StudentMajorsScreen() {
     const newFilters = { ...filters, name: searchTerm };
     handleApplyFilters(newFilters);
   };
+  
+  // Efecto para refrescar los datos al montar el componente
+  useEffect(() => {
+    refetch();
+  }, [refetch]);
+  
+  // Manejar errores de la API
+  useEffect(() => {
+    if (isError && error) {
+      setNotification({
+        type: 'error',
+        title: 'Error al cargar carreras',
+        message: error instanceof Error ? error.message : 'Ocurrió un error al obtener las carreras'
+      });
+    }
+  }, [isError, error]);
 
   // Renderizador personalizado para detalles de la carrera
   const renderMajorDetails = (major: Major) => (
@@ -314,13 +231,16 @@ export default function StudentMajorsScreen() {
       
       {/* Plantilla principal de lista */}
       <ListPageTemplate
-        data={filteredData}
+        data={filteredMajors}
         entityType="Carreras Universitarias"
         SearchBarComponent={SearchFilterBar}
         TableComponent={DataTable}
         FormComponent={() => null} // No necesitamos formulario aquí
         searchBarProps={searchBarConfig}
-        tableProps={tableConfig}
+        tableProps={{
+          ...tableConfig,
+          isLoading: isLoading,
+        }}
         formProps={{}}
         selectedEntity={selectedMajor}
         showDetailsModal={showDetailsModal}
