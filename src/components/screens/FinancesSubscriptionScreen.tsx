@@ -5,7 +5,6 @@ import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { Subscription } from "@/types/SubscriptionType";
 import { useGetAllSubscriptions, useUpdateSubscription } from "@/hooks";
-import { boolean } from "zod";
 
 interface Notification {
   type: 'success' | 'error';
@@ -197,7 +196,7 @@ export default function SubscriptionPlansScreen() {
 
   return (
     <>
-      {/* Formulario para editar planes */}
+    
       <EntityForm {...editFormConfig} />
 
       <ListPageTemplate
