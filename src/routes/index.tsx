@@ -36,6 +36,7 @@ const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMa
 const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 const StudentMajorsScreen = lazy(() => import("../components/screens/StudentMajorsScreen"));
+const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
 
 export const AppRoutes = () => {
   return (
@@ -106,6 +107,7 @@ export const AppRoutes = () => {
             <Route element={<LayoutScreen />}>
               <Route path="/finances-income" element={<FinancesIncomeScreen />} />
               <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
+              <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
             </Route>
           </Route>
           
