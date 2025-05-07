@@ -81,7 +81,7 @@ export function ListPageTemplate<T extends Entity>({
           onClose={onCloseNotification}
         />
       )}
-      <div className="flex flex-col md:flex-row h-screen bg-gray-100">
+      <div className="flex flex-col md:flex-row h-screen">
         {/* Sidebar for mobile */}
         <div className={`fixed inset-0 z-20 transition-opacity duration-300 ${sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}>
           <div className="absolute inset-0 bg-gray-600 opacity-75" onClick={() => setSidebarOpen(false)}></div>
