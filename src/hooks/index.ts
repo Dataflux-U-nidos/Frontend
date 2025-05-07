@@ -27,6 +27,12 @@ export * from './studentTests/useGetVocationalTestHook';
 export * from './studentTests/useGetVocationalPartialTestHook';
 export * from './studentTests/useGetPyschometricTestHook';
 
+// Major hooks
+export * from './major/useGetAllMajorsHook';
+export * from './major/useGetMajorByIdHook';
+export * from './major/useGetMajorsByInstitutionHook';
+export * from './major/useFilterMajorsHook';
+
 // Subscription hooks
 export * from './subscription/useGetAllSubscriptionHook';
 export * from './subscription/useUpdateSubscriptionHook';
