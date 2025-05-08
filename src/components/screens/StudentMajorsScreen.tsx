@@ -28,6 +28,8 @@ export default function StudentMajorsScreen() {
   // Usar el hook de filtrado para mantener los majors filtrados
   const { filteredMajors, updateFilters } = useFilterMajors(majors || [], {});
 
+  console.log("Filtered Majors:", filteredMajors);
+
   // Manejador para cerrar notificaciones
   const handleCloseNotification = () => {
     setNotification(null);
