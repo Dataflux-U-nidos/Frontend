@@ -34,7 +34,6 @@ interface NavUserProps {
 export function NavUser({
   user,
   getInitials,
-  settingsItems,
 }: NavUserProps) {
   const { isMobile } = useSidebar();
   const { logout, userType } = useAuthContext();

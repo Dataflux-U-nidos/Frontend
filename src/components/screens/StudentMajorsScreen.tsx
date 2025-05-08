@@ -8,7 +8,7 @@ import type { Major, MajorFilters } from "@/types/majorType";
 
 
 export default function StudentMajorsScreen() {
-  const { data: majors, isLoading, isError, error, refetch } = useGetAllMajors();
+  const { data: majors, refetch } = useGetAllMajors();
   const { filteredMajors, updateFilters } = useFilterMajors(majors || [], {});
 
   /* Estado UI */
