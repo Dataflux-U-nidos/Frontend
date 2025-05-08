@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { useEffect } from "react";
 import { useVocationalTest } from "@/hooks/studentTests/useGetVocationalTestHook";
+import { LoadingFallback } from "../molecules/LoadingFallback";
 
 export default function TestVocationalScreen() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function TestVocationalScreen() {
 
     }, [answers, navigate]);
   
-    if (loading) return <div>Cargando test...</div>;
+    if (loading) return <LoadingFallback />;
     if (error) return <div>{error}</div>;
     if (!data) return <div>No se pudo cargar el test.</div>;
     console.log("Info:", data);
