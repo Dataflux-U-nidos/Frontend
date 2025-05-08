@@ -12,6 +12,10 @@ import { cn } from "@/lib/utils";
 
 const HEADER_OFFSET = 320; // px: título + margen superior
 
+interface LikertSurveyProps {
+    data: any;
+    onSubmit: () => void;      
+  }
 const flattenItems = (data: any) =>
     Object.values(data.tests).flatMap((domain: any) =>
         Object.entries(domain).map(([k, v]: any) => ({
@@ -21,7 +25,7 @@ const flattenItems = (data: any) =>
         }))
     );
 
-export const LikertSurvey = ({ data }: { data: any }) => {
+export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     const flatItems = useMemo(() => flattenItems(data), [data]);
 
     // validación opcional
@@ -84,6 +88,7 @@ export const LikertSurvey = ({ data }: { data: any }) => {
                             answers={answers}
                             onAnswer={setAnswer}
                             active={idx === currentPage}
+                            onSubmit={onSubmit} 
                         />
                     </div>
                 ))}
