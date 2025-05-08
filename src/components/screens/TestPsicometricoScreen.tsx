@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { useEffect } from "react";
 import { usePsychometricTest } from "@/hooks/studentTests/useGetPyschometricTestHook";
+import { LoadingFallback } from "../molecules/LoadingFallback";
 
 export default function TestPsicometricoScreen() {
     const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function TestPsicometricoScreen() {
     
     }, [answers, navigate]);
   
-    if (loading) return <div>Cargando test...</div>;
+    if (loading) return <LoadingFallback />;
     if (error) return <div>{error}</div>;
     if (!data) return <div>No se pudo cargar el test.</div>;
     console.log("Data:", data);

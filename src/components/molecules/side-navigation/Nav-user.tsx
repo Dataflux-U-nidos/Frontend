@@ -1,11 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import {
   CircleUserRound,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../atoms/ui/avatar";
 import {
@@ -25,16 +22,18 @@ import {
 } from "../../atoms/ui/sidebar";
 import { useAuthContext } from "@/context/AuthContext";
 import { User } from "@/types";
+import { NavItem } from "@/types/sideBar";
 
 
 interface NavUserProps {
   user: User | null
   getInitials: () => string
+  settingsItems: NavItem[]
 }
 
 export function NavUser({
   user,
-  getInitials
+  getInitials,
 }: NavUserProps) {
   const { isMobile } = useSidebar();
   const { logout, userType } = useAuthContext();
@@ -111,32 +110,18 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleAccount}>
                 <CircleUserRound />
                 Mi Cuenta
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              Log out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
