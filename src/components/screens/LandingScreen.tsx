@@ -109,7 +109,7 @@ export default function LandingScreen() {
   };
 
   const handlePartialTest = () => {
-    navigate("/student-vocationalTest-partial");
+    navigate("/auth");
   };
 
   const pricingList = isLoading || error ? [] : plans;

@@ -22,7 +22,7 @@ export const Hero = ({ onPartialTest }: HeroProps) => {
           Encuentra la carrera adecuada para ti.
         </p>
         <div className="flex justify-center">
-          <Button variant="default" size="lg" onClick={onPartialTest}>¡Haz tu test de prueba!</Button>
+          <Button variant="default" size="lg" onClick={onPartialTest}>¡Comencemos!</Button>
         </div>
       </div>
 

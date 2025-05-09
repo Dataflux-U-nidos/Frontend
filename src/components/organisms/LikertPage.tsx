@@ -25,7 +25,7 @@ export const LikertPage = ({
   answers,
   onAnswer,
   active,
-  onSubmit,          // 👈  nuevo prop
+  onSubmit,         
 }: LikertPageProps) => (
   <div className={active ? "block" : "hidden"}>
     {items.map(({ key, description, options }) => (
@@ -40,8 +40,10 @@ export const LikertPage = ({
     ))}
 
     {/* Puedes ocultarlo hasta la última página si lo prefieres */}
+    <div className="flex justify-center mt-6">
     <Button onClick={onSubmit} className="mt-6">
       Submit
     </Button>
+    </div>
   </div>
 );

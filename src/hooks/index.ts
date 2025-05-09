@@ -24,8 +24,6 @@ export * from './campaign/useGetTotalInvestmentHook';
 
 //fot studentTests
 export * from './studentTests/useGetVocationalTestHook';
-export * from './studentTests/useGetVocationalPartialTestHook';
-export * from './studentTests/useGetPyschometricTestHook';
 
 // Major hooks
 export * from './major/useGetAllMajorsHook';

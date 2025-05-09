@@ -14,8 +14,8 @@ const HEADER_OFFSET = 320; // px: título + margen superior
 
 interface LikertSurveyProps {
     data: any;
-    onSubmit: () => void;      
-  }
+    onSubmit: () => void;
+}
 const flattenItems = (data: any) =>
     Object.values(data.tests).flatMap((domain: any) =>
         Object.entries(domain).map(([k, v]: any) => ({
@@ -88,7 +88,7 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
                             answers={answers}
                             onAnswer={setAnswer}
                             active={idx === currentPage}
-                            onSubmit={onSubmit} 
+                            onSubmit={onSubmit}
                         />
                     </div>
                 ))}
@@ -116,31 +116,7 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
                             </PaginationLink>
                         </PaginationItem>
 
-                        {/* BOTONES DE PÁGINA CON ELLIPSIS */}
-                        {windowPages(pages.length, currentPage, 5).map((p, i) =>
-                            p === "left" ? (
-                                <PaginationItem key={`l${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : p === "right" ? (
-                                <PaginationItem key={`r${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : (
-                                <PaginationItem key={p}>
-                                    <PaginationLink
-                                        href="#"
-                                        isActive={p === currentPage}
-                                        onClick={() => {
-                                            if (p < currentPage) prevPage()
-                                            else if (p > currentPage && canNext) nextPage()
-                                        }}
-                                    >
-                                        {p + 1}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            )
-                        )}
+                        
 
                         {/* FLECHA SIGUIENTE */}
                         <PaginationItem>

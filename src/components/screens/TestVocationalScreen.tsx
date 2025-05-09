@@ -5,13 +5,14 @@ import { useCallback, useEffect } from "react";
 import { useVocationalTest } from "@/hooks/studentTests/useGetVocationalTestHook";
 import { usePatchTestResult } from "@/hooks/studentTests/useUpdateTestResultsHook";
 import type { CompetencyAverages } from "@/types/testResultType";
+import { useNotify } from "@/hooks/useNotify";
 
 export default function TestVocationalScreen() {
     const navigate = useNavigate();
     const { answers } = useSurveyStore();
     const { data, loading, error } = useVocationalTest();
     const { submit, loading: submitting, error: submitError } = usePatchTestResult();
-
+    const { notifyError } = useNotify();
   
     const calculateAverages = (): CompetencyAverages => {
         type SumCount = { sum: number; count: number };
@@ -43,14 +44,19 @@ export default function TestVocationalScreen() {
         const answeredItems = Object.values(answers).filter((v) => v != null).length;
         console.log("Answered items:", answeredItems, "Total items:", totalItems);
         if (answeredItems < totalItems) {
-          alert(`Debes responder todas las preguntas antes de enviar. Te faltan ${totalItems - answeredItems}.`);
+          notifyError({
+            title: "Completa el test",
+            description:  "No has respondido todas las preguntas.",
+            icon: "🚫",
+            closeButton: true,
+        });
           return;
         }
     
         const results = calculateAverages();
         try {
           await submit(results);
-          navigate("/tests/vocational/result");
+          navigate("/student-profile");
         } catch {
         }
       }, [answers, navigate, submit]);
