@@ -6,7 +6,7 @@ import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
-import InfoManagerRoutes from "./InfoManagerRoutes"; 
+import InfoManagerRoutes from "./InfoManagerRoutes";
 import MarketingRoutes from "./MarketingRoutes";
 import FinancesRoutes from "./FinancesRoutes";
 
@@ -34,6 +34,7 @@ const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMa
 const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 const StudentMajorsScreen = lazy(() => import("../components/screens/StudentMajorsScreen"));
+const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
 const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
 
 export const AppRoutes = () => {
@@ -54,14 +55,16 @@ export const AppRoutes = () => {
             </Route>
           </Route>
 
-          <Route element={<StudentRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/account-student" element={<AccountScreen />} />
-              <Route path="/student-profile" element={<StudentProfileScreen />} />
-              <Route path="/student-vocationalTest" element={<TestVocational />} />
-              <Route path="/student-programs" element={<StudentMajorsScreen />} />
+
+            <Route element={<StudentRoutes />}>
+              <Route element={<LayoutScreen />}>
+                <Route path="/account-student" element={<AccountScreen />} />
+                <Route path="/student-profile" element={<StudentProfileScreen />} />
+                <Route path="/student-vocationalTest" element={<TestVocational />} />
+                <Route path="/student-programs" element={<StudentMajorsScreen />} />
+                <Route path="/student-grades" element={<StudentGradesScreen />} />
+              </Route>
             </Route>
-          </Route>
 
           <Route element={<TutorRoutes />}>
             <Route element={<LayoutScreen />}>
@@ -106,7 +109,7 @@ export const AppRoutes = () => {
               <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
             </Route>
           </Route>
-          
+
         </Routes>
       </Suspense>
     </BrowserRouter>

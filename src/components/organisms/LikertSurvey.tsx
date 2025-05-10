@@ -1,12 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import { Progress } from "@/components/atoms/ui/progress";
 import {
-    Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis,
+    Pagination, PaginationContent, PaginationItem, PaginationLink,
 } from "@/components/atoms/ui/pagination"
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { LikertPage } from "./LikertPage";
 import { itemsSchema } from "@/lib/Likert/surveySchema";
-import { windowPages } from "@/lib/Likert/pagination-window"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { cn } from "@/lib/utils";
 

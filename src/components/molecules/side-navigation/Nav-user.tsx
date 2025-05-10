@@ -1,11 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import {
   CircleUserRound,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../atoms/ui/avatar";
 import {
@@ -61,6 +58,7 @@ export function NavUser({
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem("userData");
       await logout();
     } catch (error) {
       console.error("Error during logout:", error);

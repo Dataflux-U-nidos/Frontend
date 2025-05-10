@@ -24,6 +24,8 @@ export * from './campaign/useGetTotalInvestmentHook';
 
 //fot studentTests
 export * from './studentTests/useGetVocationalTestHook';
+export * from './studentTests/useUpdateGradesHooks';
+export * from './studentTests/useUpdateTestResultsHook';
 
 // Major hooks
 export * from './major/useGetAllMajorsHook';
@@ -34,3 +36,4 @@ export * from './major/useFilterMajorsHook';
 // Subscription hooks
 export * from './subscription/useGetAllSubscriptionHook';
 export * from './subscription/useUpdateSubscriptionHook';
+
