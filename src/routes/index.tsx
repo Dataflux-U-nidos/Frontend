@@ -1,15 +1,24 @@
-import { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React, { lazy } from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
 import StudentRoutes from "./StudentRoutes";
 import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
-import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
 import InfoManagerRoutes from "./InfoManagerRoutes";
 import MarketingRoutes from "./MarketingRoutes";
 import FinancesRoutes from "./FinancesRoutes";
 
+// Screens que no animamos
+import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
@@ -37,23 +46,57 @@ const StudentMajorsScreen = lazy(() => import("../components/screens/StudentMajo
 const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
 const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
 
-export const AppRoutes = () => {
-  return (
-    <BrowserRouter>
-      <Suspense fallback={<div>Cargando...</div>}>
-        <Routes>
-          <Route path="/" element={<Navigate to="/landing" />} />
-          <Route path="/landing" element={<Landing />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+// Nuestras pantallas con animación
+const StudentMajorsScreen = lazy(() =>
+  import("@/components/screens/StudentMajorsScreen")
+);
+const UniversityDetailMockScreen = lazy(() =>
+  import("@/components/screens/UniversityDetailMockScreen")
+);
 
-          <Route element={<ViewerRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/account-viewer" element={<AccountViewerScreen />} />
-              <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
-            </Route>
+// Wrapper que aplica la animación de entrada/salida
+const MotionWrapper = ({ children }: { children: React.ReactNode }) => (
+  <motion.div
+    initial={{ opacity: 0, x: 50 }}
+    animate={{ opacity: 1, x: 0 }}
+    exit={{ opacity: 0, x: -50 }}
+    transition={{ duration: 0.4, ease: "easeInOut" }}
+  >
+    {children}
+  </motion.div>
+);
+
+// Componente interno que usa useLocation() dentro del BrowserRouter
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        {/* Rutas públicas */}
+        <Route path="/" element={<Navigate to="/landing" />} />
+        <Route path="/landing" element={<Landing />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/student-vocationalTest-partial"
+          element={<TestVocationalPartial />}
+        />
+
+        {/* Viewer */}
+        <Route element={<ViewerRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/account-viewer"
+              element={<AccountViewerScreen />}
+            />
+            <Route
+              path="/viewer-dashboard"
+              element={<ViewerDashboard />}
+            />
           </Route>
+        </Route>
 
 
             <Route element={<StudentRoutes />}>
@@ -66,52 +109,141 @@ export const AppRoutes = () => {
               </Route>
             </Route>
 
-          <Route element={<TutorRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/account-tutor" element={<AccountTutorScreen />} />
-              <Route path="/tutor-students" element={<TutorStudentsScreen />} />
-            </Route>
-          </Route>
+            {/* Aquí aplicamos MotionWrapper */}
+            <Route
+              path="/student-programs"
+              element={
+                <MotionWrapper>
+                  <StudentMajorsScreen />
+                </MotionWrapper>
+              }
+            />
 
-          <Route element={<UniversityRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/account-university" element={<AccountUniversityScreen />} />
-              <Route path="/university-viewers" element={<UniversityViewersScreen />} />
-              <Route path="/university-managers" element={<UniversityManagersScreen />} />
-            </Route>
+            {/* Nueva ruta con animación */}
+            <Route
+              path="/universidad/:id"
+              element={
+                <MotionWrapper>
+                  <UniversityDetailMockScreen />
+                </MotionWrapper>
+              }
+            />
           </Route>
+        </Route>
 
-          <Route element={<InfoManagerRoutes />}>
-            <Route path="/infomanager-main" element={<InfoManagerMainScreen />} />
+        {/* Tutor */}
+        <Route element={<TutorRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/account-tutor"
+              element={<AccountTutorScreen />}
+            />
+            <Route
+              path="/tutor-students"
+              element={<TutorStudentsScreen />}
+            />
           </Route>
+        </Route>
 
-          <Route element={<AdminRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/account-admin" element={<AccountAdminScreen />} />
-              <Route path="/admin-support" element={<AdminSupportScreen />} />
-              <Route path="/admin-finances" element={<AdminFinancesScreen />} />
-              <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
-            </Route>
+        {/* University */}
+        <Route element={<UniversityRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/account-university"
+              element={<AccountUniversityScreen />}
+            />
+            <Route
+              path="/university-viewers"
+              element={<UniversityViewersScreen />}
+            />
+            <Route
+              path="/university-managers"
+              element={<UniversityManagersScreen />}
+            />
           </Route>
+        </Route>
 
-          <Route element={<MarketingRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
-              <Route path="/marketing-university" element={<MarketingMainScreen />} />
-              <Route path="/marketing-scholar" element={<MarketingMainScreen />} />
-            </Route>
+        {/* InfoManager */}
+        <Route element={<InfoManagerRoutes />}>
+          <Route
+            path="/infomanager-main"
+            element={<InfoManagerMainScreen />}
+          />
+        </Route>
+
+        {/* Admin */}
+        <Route element={<AdminRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/account-admin"
+              element={<AccountAdminScreen />}
+            />
+            <Route
+              path="/admin-support"
+              element={<AdminSupportScreen />}
+            />
+            <Route
+              path="/admin-finances"
+              element={<AdminFinancesScreen />}
+            />
+            <Route
+              path="/admin-marketing"
+              element={<AdminMarketingScreen />}
+            />
           </Route>
+        </Route>
 
-          <Route element={<FinancesRoutes />}>
-            <Route element={<LayoutScreen />}>
-              <Route path="/finances-income" element={<FinancesIncomeScreen />} />
-              <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
-              <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
-            </Route>
+        {/* Marketing */}
+        <Route element={<MarketingRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/marketing-main"
+              element={
+                <Navigate
+                  to="/marketing-university"
+                  replace
+                />
+              }
+            />
+            <Route
+              path="/marketing-university"
+              element={<MarketingMainScreen />}
+            />
+            <Route
+              path="/marketing-scholar"
+              element={<MarketingMainScreen />}
+            />
           </Route>
+        </Route>
 
-        </Routes>
-      </Suspense>
-    </BrowserRouter>
+        {/* Finances */}
+        <Route element={<FinancesRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route
+              path="/finances-income"
+              element={<FinancesIncomeScreen />}
+            />
+            <Route
+              path="/finances-campaings"
+              element={
+                <FinancesCampaingsScreen />
+              }
+            />
+            <Route
+              path="/finances-subscriptions"
+              element={
+                <FinancesSubscriptionScreen />
+              }
+            />
+          </Route>
+      </Routes>
+    </AnimatePresence>
+        </Route>
   );
-};
+}
+
+export const AppRoutes = () => (
+  <BrowserRouter>
+      <AnimatedRoutes />
+  </BrowserRouter>
+);

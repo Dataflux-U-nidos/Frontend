@@ -22,16 +22,18 @@ import {
 } from "../../atoms/ui/sidebar";
 import { useAuthContext } from "@/context/AuthContext";
 import { User } from "@/types";
+import { NavItem } from "@/types/sideBar";
 
 
 interface NavUserProps {
   user: User | null
   getInitials: () => string
+  settingsItems: NavItem[]
 }
 
 export function NavUser({
   user,
-  getInitials
+  getInitials,
 }: NavUserProps) {
   const { isMobile } = useSidebar();
   const { logout, userType } = useAuthContext();
@@ -109,20 +111,18 @@ export function NavUser({
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleAccount}>
                 <CircleUserRound />
                 Mi Cuenta
               </DropdownMenuItem>
+
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              Log out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
