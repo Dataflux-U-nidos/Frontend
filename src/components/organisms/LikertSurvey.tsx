@@ -1,17 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
 import { Progress } from "@/components/atoms/ui/progress";
 import {
-    Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis,
+    Pagination, PaginationContent, PaginationItem, PaginationLink,
 } from "@/components/atoms/ui/pagination"
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { LikertPage } from "./LikertPage";
 import { itemsSchema } from "@/lib/Likert/surveySchema";
-import { windowPages } from "@/lib/Likert/pagination-window"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const HEADER_OFFSET = 320; // px: título + margen superior
 
+interface LikertSurveyProps {
+    data: any;
+    onSubmit: () => void;
+}
 const flattenItems = (data: any) =>
     Object.values(data.tests).flatMap((domain: any) =>
         Object.entries(domain).map(([k, v]: any) => ({
@@ -21,7 +24,7 @@ const flattenItems = (data: any) =>
         }))
     );
 
-export const LikertSurvey = ({ data }: { data: any }) => {
+export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     const flatItems = useMemo(() => flattenItems(data), [data]);
 
     // validación opcional
@@ -84,6 +87,7 @@ export const LikertSurvey = ({ data }: { data: any }) => {
                             answers={answers}
                             onAnswer={setAnswer}
                             active={idx === currentPage}
+                            onSubmit={onSubmit}
                         />
                     </div>
                 ))}
@@ -111,31 +115,7 @@ export const LikertSurvey = ({ data }: { data: any }) => {
                             </PaginationLink>
                         </PaginationItem>
 
-                        {/* BOTONES DE PÁGINA CON ELLIPSIS */}
-                        {windowPages(pages.length, currentPage, 5).map((p, i) =>
-                            p === "left" ? (
-                                <PaginationItem key={`l${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : p === "right" ? (
-                                <PaginationItem key={`r${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : (
-                                <PaginationItem key={p}>
-                                    <PaginationLink
-                                        href="#"
-                                        isActive={p === currentPage}
-                                        onClick={() => {
-                                            if (p < currentPage) prevPage()
-                                            else if (p > currentPage && canNext) nextPage()
-                                        }}
-                                    >
-                                        {p + 1}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            )
-                        )}
+                        
 
                         {/* FLECHA SIGUIENTE */}
                         <PaginationItem>

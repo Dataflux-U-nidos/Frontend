@@ -54,6 +54,9 @@ function baseValidationForType(type: FieldType): z.ZodString {
         case "number":
             schema = schema.regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos")
             break
+        case "grade":
+            schema = schema.regex(/^(?:[0-4](?:\.\d{1,2})?|5(?:\.0{1,2})?)$/, "El valor debe estar entre 0 y 5")
+            break
         default:
             break
     }
@@ -187,25 +190,25 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
                             }
                             if (field.type !== "create-password") {
                                 return (
-                                  <Input
-                                    inputType={field.type}
-                                    placeholder={field.placeholder}
-                                    autoComplete={
-                                      field.type === "email"
-                                        ? "email"
-                                        : field.type === "password"
-                                          ? "current-password"
-                                          : field.type === "user"
-                                            ? "username"
-                                            : "off"
-                                    }
-                                    value={controllerField.value || ""}
-                                    onChange={controllerField.onChange}
-                                  />
+                                    <Input
+                                        inputType={field.type}
+                                        placeholder={field.placeholder}
+                                        autoComplete={
+                                            field.type === "email"
+                                                ? "email"
+                                                : field.type === "password"
+                                                    ? "current-password"
+                                                    : field.type === "user"
+                                                        ? "username"
+                                                        : "off"
+                                        }
+                                        value={controllerField.value || ""}
+                                        onChange={controllerField.onChange}
+                                    />
                                 )
-                              } else {
+                            } else {
                                 // Render a different component or handle the "create-password" case differently
-                              }
+                            }
                         })()}
                     </FormControl>
                     <FormMessage className="min-h-[1.25rem]">

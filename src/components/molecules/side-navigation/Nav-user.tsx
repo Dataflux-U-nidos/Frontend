@@ -60,6 +60,7 @@ export function NavUser({
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem("userData");
       await logout();
     } catch (error) {
       console.error("Error during logout:", error);

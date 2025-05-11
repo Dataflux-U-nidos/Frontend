@@ -24,70 +24,26 @@ import AccountUniversityScreen from "@/components/screens/AccountUniversityScree
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
 
-// Lazy-loaded screens
-const Landing = lazy(() =>
-  import("@/components/screens/LandingScreen")
-);
-const Auth = lazy(() =>
-  import("@/components/screens/AuthScreen")
-);
-const ForgotPassword = lazy(() =>
-  import("@/components/screens/ForgotPasswordScreen")
-);
-const ResetPassword = lazy(() =>
-  import("@/components/screens/ResetPasswordScreen")
-);
-const TestVocationalPartial = lazy(() =>
-  import("@/components/screens/TestVocationalPartialScreen")
-);
-const TestPsicometrico = lazy(() =>
-  import("@/components/screens/TestPsicometricoScreen")
-);
-const TestVocational = lazy(() =>
-  import("@/components/screens/TestVocationalScreen")
-);
-const ViewerDashboard = lazy(() =>
-  import("@/components/screens/ViewerDashboardScreen")
-);
-const StudentProfileScreen = lazy(() =>
-  import("@/components/screens/StudentProfileScreen")
-);
-const AccountScreen = lazy(() =>
-  import("@/components/screens/AccountScreen")
-);
-const TutorStudentsScreen = lazy(() =>
-  import("@/components/screens/TutorStudentsScreen")
-);
-const UniversityViewersScreen = lazy(() =>
-  import("@/components/screens/UniversityViewersScreen")
-);
-const UniversityManagersScreen = lazy(() =>
-  import("@/components/screens/UniversityManagersScreen")
-);
-const AdminSupportScreen = lazy(() =>
-  import("@/components/screens/AdminSupportScreen")
-);
-const AdminFinancesScreen = lazy(() =>
-  import("@/components/screens/AdminFinancesScreen")
-);
-const AdminMarketingScreen = lazy(() =>
-  import("@/components/screens/AdminMarketingScreen")
-);
-const InfoManagerMainScreen = lazy(() =>
-  import("@/components/screens/InfoManagerMainScreen")
-);
-const MarketingMainScreen = lazy(() =>
-  import("@/components/screens/MarketingMainScreen")
-);
-const FinancesIncomeScreen = lazy(() =>
-  import("@/components/screens/FinancesIncomeScreen")
-);
-const FinancesCampaingsScreen = lazy(() =>
-  import("@/components/screens/FinancesCampaingsScreen")
-);
-const FinancesSubscriptionScreen = lazy(() =>
-  import("@/components/screens/FinancesSubscriptionScreen")
-);
+const TestVocational = lazy(() => import("@/components/screens/TestVocationalScreen"));
+const Landing = lazy(() => import('../components/screens/LandingScreen'))
+const Auth = lazy(() => import("../components/screens/AuthScreen"));
+const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
+const ResetPassword = lazy(() => import("../components/screens/ResetPasswordScreen"));
+const ViewerDashboard = lazy(() => import("../components/screens/ViewerDashboardScreen"));
+const StudentProfileScreen = lazy(() => import("../components/screens/StudentProfileScreen"));
+const AccountScreen = lazy(() => import("../components/screens/AccountScreen"));
+const TutorStudentsScreen = lazy(() => import("../components/screens/TutorStudentsScreen"));
+const UniversityViewersScreen = lazy(() => import("@/components/screens/UniversityViewersScreen"));
+const UniversityManagersScreen = lazy(() => import("@/components/screens/UniversityManagersScreen"));
+const AdminSupportScreen = lazy(() => import("@/components/screens/AdminSupportScreen"));
+const AdminFinancesScreen = lazy(() => import("@/components/screens/AdminFinancesScreen"));
+const AdminMarketingScreen = lazy(() => import("@/components/screens/AdminMarketingScreen"));
+const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManagerMainScreen"));
+const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
+const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
+const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
+const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
+const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
 
 // Nuestras pantallas con animación
 const StudentMajorsScreen = lazy(() =>
@@ -122,10 +78,7 @@ function AnimatedRoutes() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/student-vocationalTest-partial"
-          element={<TestVocationalPartial />}
-        />
+
 
         {/* Viewer */}
         <Route element={<ViewerRoutes />}>
@@ -141,47 +94,37 @@ function AnimatedRoutes() {
           </Route>
         </Route>
 
-        {/* Student */}
+
         <Route element={<StudentRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route
-              path="/account-student"
-              element={<AccountScreen />}
-            />
-            <Route
-              path="/student-profile"
-              element={<StudentProfileScreen />}
-            />
-            <Route
-              path="/student-psychometricTest"
-              element={<TestPsicometrico />}
-            />
-            <Route
-              path="/student-vocationalTest"
-              element={<TestVocational />}
-            />
-
-            {/* Aquí aplicamos MotionWrapper */}
-            <Route
-              path="/student-programs"
-              element={
-                <MotionWrapper>
-                  <StudentMajorsScreen />
-                </MotionWrapper>
-              }
-            />
-
-            {/* Nueva ruta con animación */}
-            <Route
-              path="/universidad/:id"
-              element={
-                <MotionWrapper>
-                  <UniversityDetailMockScreen />
-                </MotionWrapper>
-              }
-            />
+            <Route path="/account-student" element={<AccountScreen />} />
+            <Route path="/student-profile" element={<StudentProfileScreen />} />
+            <Route path="/student-vocationalTest" element={<TestVocational />} />
+            <Route path="/student-programs" element={<StudentMajorsScreen />} />
+            <Route path="/student-grades" element={<StudentGradesScreen />} />
           </Route>
         </Route>
+
+        {/* Aquí aplicamos MotionWrapper */}
+        <Route
+          path="/student-programs"
+          element={
+            <MotionWrapper>
+              <StudentMajorsScreen />
+            </MotionWrapper>
+          }
+        />
+
+        {/* Nueva ruta con animación */}
+        <Route
+          path="/universidad/:id"
+          element={
+            <MotionWrapper>
+              <UniversityDetailMockScreen />
+            </MotionWrapper>
+          }
+        />
+
 
         {/* Tutor */}
         <Route element={<TutorRoutes />}>
@@ -290,12 +233,12 @@ function AnimatedRoutes() {
           </Route>
         </Route>
       </Routes>
-    </AnimatePresence>
+    </AnimatePresence >
   );
 }
 
 export const AppRoutes = () => (
   <BrowserRouter>
-      <AnimatedRoutes />
+    <AnimatedRoutes />
   </BrowserRouter>
 );

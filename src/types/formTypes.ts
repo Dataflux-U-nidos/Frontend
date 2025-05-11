@@ -15,6 +15,7 @@ export type InputType =
     | "search"
     | "number"
     | "create-password"
+    | "grade"  
     | undefined;
 
 export type FieldType =
@@ -59,6 +60,7 @@ export interface SelectFormField extends BaseFormField {
     options: { value: string; label: string }[]
     /** Placeholder que se verá en <SelectValue>. */
     selectPlaceholder?: string
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 /**
