@@ -42,7 +42,6 @@ const InfoManagerMainScreen = lazy(() => import("../components/screens/InfoManag
 const MarketingMainScreen = lazy(() => import("../components/screens/MarketingMainScreen"));
 const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIncomeScreen"));
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
-const StudentMajorsScreen = lazy(() => import("../components/screens/StudentMajorsScreen"));
 const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
 const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
 
@@ -79,10 +78,7 @@ function AnimatedRoutes() {
         <Route path="/auth" element={<Auth />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route
-          path="/student-vocationalTest-partial"
-          element={<TestVocationalPartial />}
-        />
+
 
         {/* Viewer */}
         <Route element={<ViewerRoutes />}>
@@ -99,37 +95,36 @@ function AnimatedRoutes() {
         </Route>
 
 
-            <Route element={<StudentRoutes />}>
-              <Route element={<LayoutScreen />}>
-                <Route path="/account-student" element={<AccountScreen />} />
-                <Route path="/student-profile" element={<StudentProfileScreen />} />
-                <Route path="/student-vocationalTest" element={<TestVocational />} />
-                <Route path="/student-programs" element={<StudentMajorsScreen />} />
-                <Route path="/student-grades" element={<StudentGradesScreen />} />
-              </Route>
-            </Route>
-
-            {/* Aquí aplicamos MotionWrapper */}
-            <Route
-              path="/student-programs"
-              element={
-                <MotionWrapper>
-                  <StudentMajorsScreen />
-                </MotionWrapper>
-              }
-            />
-
-            {/* Nueva ruta con animación */}
-            <Route
-              path="/universidad/:id"
-              element={
-                <MotionWrapper>
-                  <UniversityDetailMockScreen />
-                </MotionWrapper>
-              }
-            />
+        <Route element={<StudentRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route path="/account-student" element={<AccountScreen />} />
+            <Route path="/student-profile" element={<StudentProfileScreen />} />
+            <Route path="/student-vocationalTest" element={<TestVocational />} />
+            <Route path="/student-programs" element={<StudentMajorsScreen />} />
+            <Route path="/student-grades" element={<StudentGradesScreen />} />
           </Route>
         </Route>
+
+        {/* Aquí aplicamos MotionWrapper */}
+        <Route
+          path="/student-programs"
+          element={
+            <MotionWrapper>
+              <StudentMajorsScreen />
+            </MotionWrapper>
+          }
+        />
+
+        {/* Nueva ruta con animación */}
+        <Route
+          path="/universidad/:id"
+          element={
+            <MotionWrapper>
+              <UniversityDetailMockScreen />
+            </MotionWrapper>
+          }
+        />
+
 
         {/* Tutor */}
         <Route element={<TutorRoutes />}>
@@ -236,14 +231,14 @@ function AnimatedRoutes() {
               }
             />
           </Route>
-      </Routes>
-    </AnimatePresence>
         </Route>
+      </Routes>
+    </AnimatePresence >
   );
 }
 
 export const AppRoutes = () => (
   <BrowserRouter>
-      <AnimatedRoutes />
+    <AnimatedRoutes />
   </BrowserRouter>
 );
