@@ -1,21 +1,21 @@
-// pages/student-grades.tsx
 import { useRef } from "react";
-import type { NextPage } from "next";
 import { Button } from "@/components/atoms/ui/button";
 import { GradesFormTemplate } from "@/components/templates/GradesFormTemplate";
 import type { DynamicFormHandles } from "@/components/molecules/Dynamic-form";
-import { usePatchGradesResult } from "@/hooks/";
+import { useUpdateMyUser, usePatchGradesResult } from "@/hooks/";
 import type { GradeFormType } from "@/types/gradeFormType";
 import { useNavigate } from "react-router-dom";
 import { notifySuccess } from "@/lib/utils/notify";
+import { useAuthContext } from "@/context/AuthContext";
 
-
-const StudentGradesScreen: NextPage = () => {
+export default function StudentGradesScreen() {
   const navigate = useNavigate(); const formRef = useRef<DynamicFormHandles>(null);
-    const { submit, loading, error } = usePatchGradesResult();
+  const { submit, loading, error } = usePatchGradesResult();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
+  const { refreshUser } = useAuthContext();
+
 
   const handleFormSubmit = async (values: Record<string, any>) => {
-    // Mapear al DTO que espera tu backend
     const payload: GradeFormType = {
       zone: values.zone,
       locality: values.locality,
@@ -29,13 +29,20 @@ const StudentGradesScreen: NextPage = () => {
 
     try {
       await submit(payload);
-      navigate("/student-vocationalTest");
       notifySuccess({
         title: "Perfecto!",
         description: "Tus notas se han guardado.",
         icon: "✅",
         closeButton: true,
       });
+      const updateTestCompleted = {
+      testCompleted: true,
+    };
+
+      await updateUser(updateTestCompleted);
+
+      await refreshUser();
+      navigate("/student-vocationalTest");
     } catch (err) {
       console.error("Error al enviar el formulario:", err);
     }
@@ -70,5 +77,3 @@ const StudentGradesScreen: NextPage = () => {
     </div>
   );
 };
-
-export default StudentGradesScreen;
