@@ -12,6 +12,8 @@ export * from './user/useGetManagersByUniversityHook';
 export * from './user/useGetSupportByAdminHook';
 export * from './user/useGetFinanceByAdminHook';
 export * from './user/useGetMarketingByAdminHook';
+export * from './user/useGetMyUserHook';
+export * from './user/useUpdateMyUserHook';
 
 // Campaign hooks
 export * from './campaign/useCreateCampaignHook';

@@ -18,6 +18,7 @@ interface IAuthContext {
   logout: () => Promise<void>;
   createAccount: (userData: unknown) => Promise<void>;
   registryAccount: (userData: unknown) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -91,6 +92,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await registerMutation.mutateAsync({ ...userData });
   };
 
+   const refreshUser = async () => {
+    try {
+      const u = await fetchUser();
+      setUser(u);
+    } catch (err) {
+      console.error("Error al refrescar user:", err);
+    }
+  };
+
   const value: IAuthContext = {
     user,
     userType,
@@ -99,6 +109,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     createAccount,
     registryAccount,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
