@@ -1,5 +1,5 @@
 // pages/student-grades.tsx
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import type { NextPage } from "next";
 import { Button } from "@/components/atoms/ui/button";
 import { GradesFormTemplate } from "@/components/templates/GradesFormTemplate";
@@ -12,8 +12,7 @@ import { notifySuccess } from "@/lib/utils/notify";
 
 const StudentGradesScreen: NextPage = () => {
   const navigate = useNavigate(); const formRef = useRef<DynamicFormHandles>(null);
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  const { submit, loading, error } = usePatchGradesResult();
+    const { submit, loading, error } = usePatchGradesResult();
 
   const handleFormSubmit = async (values: Record<string, any>) => {
     // Mapear al DTO que espera tu backend
@@ -59,7 +58,6 @@ const StudentGradesScreen: NextPage = () => {
         )}
         <GradesFormTemplate
           ref={formRef}
-          onChange={setFormData}
         />
         <Button
           className="mt-4 w-full"
