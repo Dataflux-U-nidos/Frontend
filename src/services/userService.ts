@@ -45,7 +45,13 @@ export const getMarketingUsersByAdmin = async (): Promise<User[]> => {
   return data;
 };
 
-export const deleteUser = async (id: string): Promise<void> => {
+export const deleteUser = async (cascade: boolean = false): Promise<void> => {
+  await userApi.delete(`/user?cascade=${cascade}`);
+};
+
+// Y agregar un nuevo método para eliminar otros usuarios por ID si es necesario
+export const deleteUserById = async (id: string): Promise<void> => {
+  if (!id) throw new Error("ID is required");
   await userApi.delete(`/user/${id}`);
 };
 
