@@ -56,7 +56,6 @@ export default function TestVocationalScreen() {
 
     const results = calculateAverages();
     try {
-      console.log("Submitting results:", results);
       await submit(results);
       navigate("/student-profile");
             notifySuccess({
@@ -73,7 +72,6 @@ export default function TestVocationalScreen() {
   if (loading) return <div>Cargando test...</div>;
   if (error) return <div>{error}</div>;
   if (!data) return <div>No se pudo cargar el test.</div>;
-  console.log("Info:", data);
 
   return (
     <>

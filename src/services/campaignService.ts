@@ -4,7 +4,6 @@ import { Campaign, CreateCampaignInput, UpdateCampaignInput } from "../types/cam
 
 export const createCampaign = async (newCampaign: CreateCampaignInput): Promise<Campaign> => {
     const response = await campaignApi.post<Campaign>("/campaign", newCampaign);
-    console.log("Response Headers:", response.headers);
     return response.data;
 };
 

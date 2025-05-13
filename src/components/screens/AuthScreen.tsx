@@ -166,7 +166,6 @@ export default function AuthScreen() {
       locality: data.locality,
     };
 
-    console.log("userData", userData);
     await registryAccount(userData);
     await login(userData.email, userData.password);
     if (selectedType === "STUDENT") {

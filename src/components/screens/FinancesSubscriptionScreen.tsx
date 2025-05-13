@@ -135,15 +135,24 @@ export default function SubscriptionPlansScreen() {
 
   // Display config for entity details
   const entityDisplayConfig = {
-    fields: ['cost', 'benefits'] as (keyof Subscription)[],
-    labels: {
-      cost: 'Precio',
-      benefits: 'Características',
-    },
-    formatters: {
-      cost: (value: number) => `$${value.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD`,
-    },
-  };
+  fields: ['cost', 'benefits'] as (keyof Subscription)[],
+  labels: {
+    cost: 'Precio',
+    benefits: 'Características',
+  },
+  formatters: {
+    cost: (value: number) =>
+      `$${value.toLocaleString(undefined, { minimumFractionDigits: 2 })} USD`,
+    benefits: (list: string[]) => (
+      <ul className="list-disc list-inside space-y-1 ml-4">
+        {list.map((b, i) => (
+          <li key={i}>{b}</li>
+        ))}
+      </ul>
+    ),
+  },
+};
+
 
   // Table actions: only edit
   const tableActions = [

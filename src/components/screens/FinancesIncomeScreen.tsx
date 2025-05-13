@@ -80,7 +80,7 @@ export default function FinancesMainScreen() {
       columnHeaders: {
         university: "Universidad",
         suscription: "Suscripción",
-        cost: "Ingresos Totales (COP)",
+        cost: "Ingresos Totales (USD)",
       },
     }));
   };
