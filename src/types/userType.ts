@@ -10,6 +10,7 @@ export interface User {
     school?: string;
     preferences?: Record<string, unknown>;
     avatar?: string;
+    testCompleted?: boolean;
   }
   
   //excludes id when creating a new user
