@@ -181,7 +181,6 @@ export default function MarketingMainScreen() {
   };
 
   const handleInitiateEdit = (campaign: Campaign) => {
-    console.log("Campaign recibida para editar:", JSON.stringify(campaign));
     
     // Verificación adaptada para manejar tanto _id como id
     if (!campaign || (!campaign._id && !campaign.id)) {
@@ -221,7 +220,6 @@ const handleEditCampaign = async (formData: any) => {
   }
 
   setIsEditing(true);
-  console.log("Editando campaña con ID:", campaignId);
 
   try {
     const updates = {
@@ -232,7 +230,6 @@ const handleEditCampaign = async (formData: any) => {
       type: formData.type
     };
 
-    console.log("Enviando actualizaciones:", updates);
 
     await updateCampaign({
       id: campaignId,
@@ -404,7 +401,6 @@ const handleEditCampaign = async (formData: any) => {
     {
       label: "Editar",
       onClick: (campaign: Campaign) => {
-        console.log("Botón editar clickeado para campaña:", campaign);
         handleInitiateEdit(campaign);
       },
       variant: "outline",
@@ -417,7 +413,6 @@ const handleEditCampaign = async (formData: any) => {
     {
       label: "Eliminar",
       onClick: (campaign: Campaign) => {
-        console.log("Botón eliminar clickeado para campaña:", campaign);
         handleInitiateDelete(campaign);
       },
       variant: "danger",

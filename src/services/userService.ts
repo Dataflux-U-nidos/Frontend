@@ -6,7 +6,7 @@ export const createUser = async (newUser: CreateUserInput): Promise<User> => {
   const response = await userApi.post<User>("/user", newUser);
 
   // Print headers for debugging
-  console.log("Response Headers:", response.headers);
+
   return response.data;
 };
 

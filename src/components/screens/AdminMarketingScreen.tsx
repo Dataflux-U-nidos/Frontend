@@ -33,18 +33,38 @@ const marketingUserFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
   {
     name: "password",
@@ -53,12 +73,11 @@ const marketingUserFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*[0-9])(?=.{8,})/,
-        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
-    placeholder: "Mínimo 8 caracteres y al menos un número",
-    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
+    placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
+    helpText: "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial"
   },
 ];
 
@@ -69,18 +88,38 @@ const marketingUserEditFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
 ];
 
@@ -298,8 +337,7 @@ export default function UniversityMarketingUsersScreen() {
       password: formData.password,
       userType: "MARKETING",
     };
-    console.log("Enviando:", userData);
-    
+
     try {
       await createUser(userData);
       handleCloseAddModal();

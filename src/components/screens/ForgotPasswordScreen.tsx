@@ -15,7 +15,6 @@ const forgotPasswordFields: BaseFormField[] = [
 
 export default function ForgotPasswordScreen(){
   const handleForgotPassword = async (data: any) => {
-    console.log("Iniciando recuperación para:", data);
 
     try {
       await sendPasswordRecoveryEmail(data.email);
