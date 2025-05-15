@@ -4,6 +4,7 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { deleteUserById } from '@/services/userService';
 import {
   useCreateUser,
   useGetMarketingByAdmin,

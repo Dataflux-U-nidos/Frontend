@@ -333,46 +333,47 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for confirming and executing delete
-  const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+  // En TutorStudentsScreen.tsx
+const handleConfirmDelete = async () => {
+  if (!studentToDelete || !studentToDelete.id) return;
+  
+  setIsDeleting(true);
+  
+  try {
+    await deleteUser(studentToDelete.id); // Asegurarse de que esta función esté usando la ruta correcta
     
-    setIsDeleting(true);
+    // Cerrar el modal de confirmación
+    setShowDeleteModal(false);
+    setStudentToDelete(null);
     
-    try {
-      await deleteUser(studentToDelete.id);
-      
-      // Cerrar el modal de confirmación
-      setShowDeleteModal(false);
-      setStudentToDelete(null);
-      
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
-      );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
-      
-      // Mostrar notificación de éxito
-      setNotification({
-        type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
-      });
-    } catch (error) {
-      console.error("Error eliminando estudiante:", error);
-      
-      // Mostrar notificación de error
-      setNotification({
-        type: 'error',
-        title: 'Error al eliminar estudiante',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+    // Actualizar la lista de estudiantes filtrando el eliminado
+    const updatedStudents = studentsData.filter(
+      student => student.id !== studentToDelete.id
+    );
+    setStudentsData(updatedStudents);
+    setFilteredData(updatedStudents);
+    
+    // Mostrar notificación de éxito
+    setNotification({
+      type: 'success',
+      title: 'Estudiante eliminado',
+      message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+    });
+  } catch (error) {
+    console.error("Error eliminando estudiante:", error);
+    
+    // Mostrar notificación de error
+    setNotification({
+      type: 'error',
+      title: 'Error al eliminar estudiante',
+      message: error instanceof Error 
+        ? error.message 
+        : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+    });
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   // Manager for adding a new student
   const handleAddStudent = async (formData: any) => {

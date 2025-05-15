@@ -51,7 +51,6 @@ export const deleteUser = async (cascade: boolean = false): Promise<void> => {
 
 // Y agregar un nuevo método para eliminar otros usuarios por ID si es necesario
 export const deleteUserById = async (id: string): Promise<void> => {
-  if (!id) throw new Error("ID is required");
   await userApi.delete(`/user/${id}`);
 };
 
