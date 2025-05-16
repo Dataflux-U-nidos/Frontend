@@ -13,6 +13,7 @@ import AdminRoutes from "./AdminRoutes";
 import ViewerRoutes from "./ViewerRoutes";
 import TutorRoutes from "./TutorRoutes";
 import UniversityRoutes from "./UniversityRoutes";
+import JobOpportunityRoutes from "./JobOppotunityRoutes";
 import InfoManagerRoutes from "./InfoManagerRoutes";
 import MarketingRoutes from "./MarketingRoutes";
 import FinancesRoutes from "./FinancesRoutes";
@@ -44,6 +45,7 @@ const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIn
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
 const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
+const StudentJobOpportunitiesScreen = lazy(() => import("../components/screens/StudentJobOpportunitiesScreen"));
 
 // Nuestras pantallas con animación
 const StudentMajorsScreen = lazy(() =>
@@ -102,6 +104,20 @@ function AnimatedRoutes() {
             <Route path="/student-vocationalTest" element={<TestVocational />} />
             <Route path="/student-programs" element={<StudentMajorsScreen />} />
             <Route path="/student-grades" element={<StudentGradesScreen />} />
+          </Route>
+        </Route>
+
+        {/* Usando JobOpportunityRoutes para proteger la ruta de salidas laborales */}
+        <Route element={<JobOpportunityRoutes />}>
+          <Route element={<LayoutScreen />}>
+            <Route 
+              path="/student-carrerProspects" 
+              element={
+                <MotionWrapper>
+                  <StudentJobOpportunitiesScreen />
+                </MotionWrapper>
+              } 
+            />
           </Route>
         </Route>
 
