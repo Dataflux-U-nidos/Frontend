@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/atoms/ui/button";
 import { Slider } from "@/components/atoms/ui/slider";
 import { JobOpportunityFilters } from "@/types/jobOpportunityType";
+import { useGetAllMajors } from "@/hooks/major/useGetAllMajorsHook";
 
 interface JobOpportunityFilterModalProps {
   isOpen: boolean;
@@ -23,6 +24,9 @@ export function JobOpportunityFilterModal({
     currentFilters.salaryMax || 100000000
   ]);
 
+  // Obtener todas las carreras para el filtro
+  const { data: majors, isLoading: majorsLoading } = useGetAllMajors();
+
   // Actualizar el estado local cuando cambian los filtros actuales
   React.useEffect(() => {
     setFilters(currentFilters);
@@ -36,6 +40,14 @@ export function JobOpportunityFilterModal({
     const [min, max] = values;
     setSalaryRange([min, max]);
     setFilters({ ...filters, salaryMin: min, salaryMax: max });
+  };
+
+  const handleMajorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const majorId = event.target.value;
+    setFilters({ 
+      ...filters, 
+      majorId: majorId || undefined 
+    });
   };
 
   const handleApplyFilters = () => {
@@ -70,6 +82,30 @@ export function JobOpportunityFilterModal({
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          {/* Filtro por carrera */}
+          <div>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">
+              Filtrar por carrera
+            </h3>
+            <select
+              id="major"
+              value={filters.majorId || ''}
+              onChange={handleMajorChange}
+              disabled={majorsLoading}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-100 disabled:cursor-not-allowed"
+            >
+              <option value="">Todas las carreras</option>
+              {majors?.map((major) => (
+                <option key={major._id || major.id} value={major._id || major.id}>
+                  {major.name}
+                </option>
+              ))}
+            </select>
+            {majorsLoading && (
+              <p className="text-xs text-gray-500 mt-1">Cargando carreras...</p>
+            )}
+          </div>
+
           {/* Filtro por rango de salario */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-4">

@@ -5,7 +5,7 @@ import { filterJobOpportunities } from '@/services/jobOpportunityService';
 /**
  * Hook para filtrar salidas laborales en el cliente
  * @param {JobOpportunity[]} jobOpportunities - Lista de salidas laborales a filtrar
- * @param {JobOpportunityFilters} initialFilters - Filtros iniciales
+ * @param {JobOpportunityFilters} initialFilters - Filtros iniciales (opcional)
  * @returns {Object} - Objeto con salidas laborales filtradas y funciones para actualizar filtros
  */
 export const useFilterJobOpportunities = (

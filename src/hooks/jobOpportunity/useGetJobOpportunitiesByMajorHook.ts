@@ -1,4 +1,3 @@
-// src/hooks/jobOpportunity/useGetJobOpportunitiesByMajorHook.ts
 import { useQuery } from '@tanstack/react-query';
 import { getJobOpportunitiesByMajor } from '@/services/jobOpportunityService';
 
@@ -13,5 +12,7 @@ export const useGetJobOpportunitiesByMajor = (majorId: string) => {
     queryFn: () => getJobOpportunitiesByMajor(majorId),
     staleTime: 1000 * 60 * 5, // 5 minutos
     enabled: !!majorId, // Solo ejecuta la consulta si hay un ID de carrera
+    retry: 2, // Reintentar 2 veces en caso de error
+    retryDelay: 1000, // Esperar 1 segundo entre reintentos
   });
 };

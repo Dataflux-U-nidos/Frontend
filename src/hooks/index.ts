@@ -48,5 +48,6 @@ export * from './jobOpportunity/useGetAllJobOpportunitiesHook';
 export * from './jobOpportunity/useGetJobOpportunityByIdHook';
 export * from './jobOpportunity/useGetJobOpportunitiesByMajorHook';
 export * from './jobOpportunity/useFilterJobOpportunitiesHook';
+export * from './jobOpportunity/useJobOpportunitiesWithMajorFilterHook';
 
 

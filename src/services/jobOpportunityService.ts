@@ -20,7 +20,7 @@ export const getJobOpportunitiesByMajor = async (majorId: string): Promise<JobOp
   return data;
 };
 
-// Función para filtrar salidas laborales en el cliente (útil mientras se implementa la API)
+// Función para filtrar salidas laborales en el cliente
 export const filterJobOpportunities = (
   jobOpportunities: JobOpportunity[],
   filters: JobOpportunityFilters
@@ -40,7 +40,6 @@ export const filterJobOpportunities = (
     if (filters.salaryMax !== undefined && job.salary > filters.salaryMax) {
       return false;
     }
-    
     
     return true;
   });
