@@ -71,7 +71,6 @@ export default function StudentJobOpportunitiesScreen() {
 
   // Manejador para aplicar filtros
   const handleApplyFilters = (newFilters: JobOpportunityFilters) => {
-    console.log('🎯 Screen aplicando filtros:', newFilters);
     updateFilters(newFilters);
     setShowFilterModal(false);
   };

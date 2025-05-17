@@ -1,16 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { useGetAllJobOpportunities } from './useGetAllJobOpportunitiesHook';
 import { useGetJobOpportunitiesByMajor } from './useGetJobOpportunitiesByMajorHook';
-import { filterJobOpportunities } from '@/services/jobOpportunityService';
+import { useFilterJobOpportunities } from './useFilterJobOpportunitiesHook';
 import { JobOpportunity, JobOpportunityFilters } from '@/types/jobOpportunityType';
 
 /**
- * Hook personalizado para manejar salidas laborales con filtrado completo
+ * Hook personalizado para manejar salidas laborales con filtrado por carrera
  * @param {JobOpportunityFilters} initialFilters - Filtros iniciales
  * @returns {Object} - Objeto con salidas laborales filtradas y funciones de control
  */
 export const useJobOpportunitiesWithMajorFilter = (initialFilters: JobOpportunityFilters = {}) => {
   const [filters, setFilters] = useState<JobOpportunityFilters>(initialFilters);
+  const [allJobOpportunities, setAllJobOpportunities] = useState<JobOpportunity[]>([]);
   
   // Hook para obtener todas las salidas laborales
   const { 
@@ -26,66 +27,56 @@ export const useJobOpportunitiesWithMajorFilter = (initialFilters: JobOpportunit
     isLoading: loadingByMajor, 
     isError: errorByMajor, 
     error: errorByMajorMessage 
-  } = useGetJobOpportunitiesByMajor(filters.majorId);
+  } = useGetJobOpportunitiesByMajor(filters.majorId || '');
   
-  // Determinar qué datos usar como base
-  const baseJobOpportunities = useMemo(() => {
-    if (filters.majorId && filters.majorId.length > 0) {
-      console.log('🎯 Usando jobs filtradas por carrera:', jobsByMajor?.length || 0);
-      return jobsByMajor || [];
+  // Hook para filtrado de otras propiedades (nombre, salario)
+  // Solo se pasa los datos base y los filtros sin majorId
+  const filtersWithoutMajor = { ...filters };
+  delete filtersWithoutMajor.majorId;
+  
+  const { filteredJobOpportunities, updateFilters: updateLocalFilters } = useFilterJobOpportunities(
+    allJobOpportunities,
+    filtersWithoutMajor
+  );
+  
+  // Efecto para actualizar las salidas laborales base según si hay filtro de carrera
+  useEffect(() => {
+    if (filters.majorId) {
+      // Si hay filtro de carrera, usar las salidas específicas de esa carrera
+      setAllJobOpportunities(jobsByMajor || []);
     } else {
-      console.log('📋 Usando todas las jobs:', allJobs?.length || 0);
-      return allJobs || [];
+      // Si no hay filtro de carrera, usar todas las salidas laborales
+      setAllJobOpportunities(allJobs || []);
     }
   }, [filters.majorId, allJobs, jobsByMajor]);
   
-  // Aplicar filtros adicionales (nombre, salario) sobre los datos base
-  const filteredJobOpportunities = useMemo(() => {
-    const filtersWithoutMajor = { ...filters };
-    delete filtersWithoutMajor.majorId;
-    
-    // Si no hay otros filtros, retornar los datos base
-    const hasOtherFilters = Object.keys(filtersWithoutMajor).some(
-      key => filtersWithoutMajor[key as keyof JobOpportunityFilters] !== undefined && 
-             filtersWithoutMajor[key as keyof JobOpportunityFilters] !== ''
-    );
-    
-    if (!hasOtherFilters) {
-      return baseJobOpportunities;
-    }
-    
-    // Aplicar filtros adicionales
-    return filterJobOpportunities(baseJobOpportunities, filtersWithoutMajor);
-  }, [baseJobOpportunities, filters]);
-  
   // Función para actualizar filtros
   const updateFilters = (newFilters: JobOpportunityFilters) => {
-    console.log('🔄 Actualizando filtros en hook:', newFilters);
     setFilters(newFilters);
+    
+    // Si no hay filtro de carrera, aplicar filtros locales
+    if (!newFilters.majorId) {
+      const localFilters = { ...newFilters };
+      delete localFilters.majorId;
+      updateLocalFilters(localFilters);
+    }
   };
   
   // Función para resetear filtros
   const resetFilters = () => {
     const resetFilters = {};
     setFilters(resetFilters);
+    updateLocalFilters(resetFilters);
   };
   
-  // Determinar el estado de carga y error
+  // Determinar datos finales y estado de carga
+  const finalJobOpportunities = filters.majorId ? (jobsByMajor || []) : filteredJobOpportunities;
   const isLoading = filters.majorId ? loadingByMajor : loadingAll;
   const isError = filters.majorId ? errorByMajor : errorAll;
   const error = filters.majorId ? errorByMajorMessage : errorAllMessage;
   
-  console.log('📊 Hook final result:', {
-    hasMajorFilter: !!filters.majorId,
-    baseJobsCount: baseJobOpportunities.length,
-    filteredCount: filteredJobOpportunities.length,
-    isLoading,
-    isError,
-    filters
-  });
-  
   return {
-    jobOpportunities: filteredJobOpportunities,
+    jobOpportunities: finalJobOpportunities,
     filters,
     updateFilters,
     resetFilters,

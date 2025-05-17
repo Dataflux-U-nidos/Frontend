@@ -5,7 +5,6 @@ import { JobOpportunity, JobOpportunityFilters } from "../types/jobOpportunityTy
 // Obtener todas las salidas laborales
 export const getAllJobOpportunities = async (): Promise<JobOpportunity[]> => {
   const { data } = await jobOpportunityApi.get<JobOpportunity[]>("/opportunity");
-  console.log('📡 API - Todas las jobs:', data.length);
   return data;
 };
 
@@ -17,9 +16,7 @@ export const getJobOpportunityById = async (id: string): Promise<JobOpportunity>
 
 // Obtener salidas laborales relacionadas con una carrera específica
 export const getJobOpportunitiesByMajor = async (majorId: string): Promise<JobOpportunity[]> => {
-  console.log('📡 API - Buscando jobs para carrera:', majorId);
   const { data } = await jobOpportunityApi.get<JobOpportunity[]>(`/opportunity/major/${majorId}`);
-  console.log('📡 API - Jobs encontradas para carrera:', data.length);
   return data;
 };
 
