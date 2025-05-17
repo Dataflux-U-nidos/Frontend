@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/atoms/ui/dialog";
 import { JobOpportunity } from "@/types/jobOpportunityType";
 import { DollarSign, Briefcase, MapPin, Building, Calendar, User } from "lucide-react";

@@ -1,4 +1,3 @@
-import React from "react";
 import { JobOpportunity } from "@/types/jobOpportunityType";
 import { JobOpportunityCard } from "./JobOpportunityCard";
 

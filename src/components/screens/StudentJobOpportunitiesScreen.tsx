@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useJobOpportunitiesWithMajorFilter } from '@/hooks/jobOpportunity/useJobOpportunitiesWithMajorFilterHook';
 import { JobOpportunityFilters } from '@/types/jobOpportunityType';
 import { SearchFilterBar } from '@/components/molecules/SearchFilterBar';
