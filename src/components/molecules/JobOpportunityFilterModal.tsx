@@ -25,7 +25,18 @@ export function JobOpportunityFilterModal({
   ]);
 
   // Obtener todas las carreras para el filtro
-  const { data: majors, isLoading: majorsLoading } = useGetAllMajors();
+  const { data: majors, isLoading: majorsLoading, error: majorsError } = useGetAllMajors();
+
+  // Debug log
+  React.useEffect(() => {
+    console.log('🎯 Modal Debug:', {
+      majors: majors?.length || 0,
+      majorsLoading,
+      majorsError: majorsError?.message,
+      currentFilters,
+      filters
+    });
+  }, [majors, majorsLoading, majorsError, currentFilters, filters]);
 
   // Actualizar el estado local cuando cambian los filtros actuales
   React.useEffect(() => {
@@ -44,6 +55,7 @@ export function JobOpportunityFilterModal({
 
   const handleMajorChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const majorId = event.target.value;
+    console.log('🎯 Carrera seleccionada:', majorId);
     setFilters({ 
       ...filters, 
       majorId: majorId || undefined 
@@ -51,6 +63,7 @@ export function JobOpportunityFilterModal({
   };
 
   const handleApplyFilters = () => {
+    console.log('🎯 Aplicando filtros:', filters);
     onApplyFilters(filters);
     onClose();
   };
@@ -82,6 +95,17 @@ export function JobOpportunityFilterModal({
         </DialogHeader>
         
         <div className="space-y-6 py-4">
+          {/* Debug info - Temporal */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="p-2 bg-gray-100 rounded text-xs">
+              <strong>Debug:</strong><br/>
+              Carreras: {majors?.length || 0}<br/>
+              Cargando: {majorsLoading ? 'Sí' : 'No'}<br/>
+              Error: {majorsError?.message || 'No'}<br/>
+              Filtro actual: {filters.majorId || 'Ninguno'}
+            </div>
+          )}
+
           {/* Filtro por carrera */}
           <div>
             <h3 className="text-sm font-medium text-gray-700 mb-2">
@@ -103,6 +127,12 @@ export function JobOpportunityFilterModal({
             </select>
             {majorsLoading && (
               <p className="text-xs text-gray-500 mt-1">Cargando carreras...</p>
+            )}
+            {majorsError && (
+              <p className="text-xs text-red-500 mt-1">Error al cargar carreras: {majorsError.message}</p>
+            )}
+            {!majorsLoading && !majorsError && (!majors || majors.length === 0) && (
+              <p className="text-xs text-yellow-600 mt-1">No se encontraron carreras disponibles</p>
             )}
           </div>
 
