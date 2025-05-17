@@ -1,4 +1,4 @@
-import AuthTemplate from "@/components/templates/AuthTemplate"
+import AuthTemplate from "@/components/templates/AuthTemplate";
 import { FormField } from "@/types/formTypes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -7,30 +7,104 @@ import { Slide } from "../molecules/Carousel";
 
 // LOGIN
 const loginFields: FormField[] = [
-  { type: "email", key: "email", placeholder: "Ingresa tu correo", required: true },
-  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  {
+    type: "email",
+    key: "email",
+    placeholder: "Ingresa tu correo",
+    required: true,
+  },
+  {
+    type: "password",
+    key: "password",
+    placeholder: "Ingresa tu contraseña",
+    required: true,
+  },
 ];
 
 const tutorFields: FormField[] = [
-  { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
-  { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
-  { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
-  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  {
+    type: "user",
+    key: "name",
+    placeholder: "Ingresa tu nombre",
+    required: true,
+  },
+  {
+    type: "user",
+    key: "last_name",
+    placeholder: "Ingresa tu apellido",
+    required: true,
+  },
+  {
+    type: "email",
+    key: "email",
+    placeholder: "Ingresa tu correo electrónico",
+    required: true,
+  },
+  {
+    type: "password",
+    key: "password",
+    placeholder: "Ingresa tu contraseña",
+    required: true,
+  },
 ];
 const studentFields: FormField[] = [
-  { type: "user", key: "name", placeholder: "Ingresa tu nombre", required: true },
-  { type: "user", key: "last_name", placeholder: "Ingresa tu apellido", required: true },
-  { type: "number", key: "age", placeholder: "Ingresa tu edad", required: true },
-  { type: "email", key: "email", placeholder: "Ingresa tu correo electrónico", required: true },
-  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
-
+  {
+    type: "user",
+    key: "name",
+    placeholder: "Ingresa tu nombre",
+    required: true,
+  },
+  {
+    type: "user",
+    key: "last_name",
+    placeholder: "Ingresa tu apellido",
+    required: true,
+  },
+  {
+    type: "number",
+    key: "age",
+    placeholder: "Ingresa tu edad",
+    required: true,
+  },
+  {
+    type: "email",
+    key: "email",
+    placeholder: "Ingresa tu correo electrónico",
+    required: true,
+  },
+  {
+    type: "password",
+    key: "password",
+    placeholder: "Ingresa tu contraseña",
+    required: true,
+  },
 ];
 
 const universityFields: FormField[] = [
-  { type: "user", key: "name", placeholder: "Ingresa nombre de la institución", required: true },
-  { type: "address", key: "address", placeholder: "Ingresa la dirección", required: true },
-  { type: "email", key: "email", placeholder: "Ingresa correo institucional", required: true },
-  { type: "password", key: "password", placeholder: "Ingresa tu contraseña", required: true },
+  {
+    type: "user",
+    key: "name",
+    placeholder: "Ingresa nombre de la institución",
+    required: true,
+  },
+  {
+    type: "address",
+    key: "address",
+    placeholder: "Ingresa la dirección",
+    required: true,
+  },
+  {
+    type: "email",
+    key: "email",
+    placeholder: "Ingresa correo institucional",
+    required: true,
+  },
+  {
+    type: "password",
+    key: "password",
+    placeholder: "Ingresa tu contraseña",
+    required: true,
+  },
 ];
 
 // Registry fields definitions for each userType
@@ -48,7 +122,8 @@ const slides: Slide[] = [
     description: "A U-nidos",
   },
   {
-    imageUrl: "https://facartes.uniandes.edu.co/wp-content/uploads/2020/04/campus-2.jpg",
+    imageUrl:
+      "https://facartes.uniandes.edu.co/wp-content/uploads/2020/04/campus-2.jpg",
     title: "Conectándote con la universidad de tus sueños",
     description: "Información relevante para el usuario",
   },
@@ -69,29 +144,50 @@ export default function AuthScreen() {
   useEffect(() => {
     if (userType === "STUDENT" && location.pathname !== "/student-profile") {
       navigate("/student-profile");
-    } else if (userType === "VIEWER" && location.pathname !== "/viewer-dashboard") {
+    } else if (
+      userType === "VIEWER" &&
+      location.pathname !== "/viewer-dashboard"
+    ) {
       navigate("/viewer-dashboard");
-    } else if (userType === "ADMIN" && location.pathname !== "/admin-dashboard") {
+    } else if (
+      userType === "ADMIN" &&
+      location.pathname !== "/admin-dashboard"
+    ) {
       navigate("/admin-finances");
-    } else if (userType === "TUTOR" && location.pathname !== "/tutor-students") {
+    } else if (
+      userType === "TUTOR" &&
+      location.pathname !== "/tutor-students"
+    ) {
       navigate("/tutor-students");
-    }
-    else if (userType === "UNIVERSITY" && location.pathname !== "/university-viewers") {
+    } else if (
+      userType === "UNIVERSITY" &&
+      location.pathname !== "/university-viewers"
+    ) {
       navigate("/university-viewers");
-    }
-    else if (userType === "INFOMANAGER" && location.pathname !== "/infomanager-main") {
+    } else if (
+      userType === "INFOMANAGER" &&
+      location.pathname !== "/infomanager-main"
+    ) {
       navigate("/infomanager-main");
-    }
-    else if (userType === "MARKETING" && location.pathname !== "/marketing-main") {
+    } else if (
+      userType === "MARKETING" &&
+      location.pathname !== "/marketing-main"
+    ) {
       navigate("/marketing-main");
-    } 
-    else if (userType === "FINANCES" && location.pathname !== "/finances-partialIncome") {
+    } else if (
+      userType === "FINANCES" &&
+      location.pathname !== "/finances-partialIncome"
+    ) {
       navigate("/finances-income");
+    } else if (userType === "SUPPORT" && location.pathname !== "/support") {
+      navigate("/support");
     }
-    
   }, [userType, location.pathname, navigate]);
 
-  const handleLogin = async (credentials: { email: string; password: string }) => {
+  const handleLogin = async (credentials: {
+    email: string;
+    password: string;
+  }) => {
     await login(credentials.email, credentials.password);
   };
 
@@ -143,21 +239,21 @@ export default function AuthScreen() {
             value: "STUDENT",
             label: "Estudiante",
             icon: "UserCircle",
-            description: "Para estudiantes que buscan oportunidades académicas"
+            description: "Para estudiantes que buscan oportunidades académicas",
           },
           {
             value: "TUTOR",
             label: "Tutor",
             icon: "School",
-            description: "Para docentes y orientadores académicos"
+            description: "Para docentes y orientadores académicos",
           },
           {
             value: "UNIVERSITY",
             label: "Universidad",
             icon: "Building2",
-            description: "Para instituciones educativas"
-          }
-        ]
+            description: "Para instituciones educativas",
+          },
+        ],
       }}
     />
   );

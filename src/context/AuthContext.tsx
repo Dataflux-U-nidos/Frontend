@@ -7,7 +7,7 @@ import {
 } from "@/services/authService";
 import { useCreateUser } from "@/hooks/user/useCreateUserHook";
 import { useRegisterUser } from "@/hooks/user/useRegisterUserHook";
-import {User } from "@/types/userType";
+import { User } from "@/types/userType";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 
 interface IAuthContext {
@@ -29,8 +29,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { mutateAsync: fetchUser } = useGetMyUser();
-  
-
 
   useEffect(() => {
     checkSession();
@@ -40,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const data = await getSession();
       setUserType(data.userType);
-      
+
       const loadUser = async () => {
         try {
           const user = await fetchUser();
@@ -48,9 +46,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
-      }
-      loadUser();;
-
+      };
+      loadUser();
     } catch {
       setUserType(null);
       setUser(null);

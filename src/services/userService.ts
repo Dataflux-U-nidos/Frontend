@@ -35,6 +35,11 @@ export const getSupportUsersByAdmin = async (): Promise<User[]> => {
   return data;
 };
 
+export const getUsersBySupport = async (): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>(`/user/support-users`);
+  return data;
+};
+
 export const getFinanceUsersByAdmin = async (): Promise<User[]> => {
   const { data } = await userApi.get<User[]>(`/user/finances`);
   return data;
