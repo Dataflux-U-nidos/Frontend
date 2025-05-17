@@ -15,63 +15,54 @@ const mockJobOpportunities: JobOpportunity[] = [
     _id: "1",
     name: "Desarrollador de Software Senior",
     description: "Buscamos un desarrollador experimentado para liderar proyectos de software. El candidato ideal tiene experiencia en arquitectura de software, desarrollo de APIs RESTful, y dominio de tecnologías como React, Node.js y bases de datos NoSQL.",
-    jobId: "abcdef012345678961234567",
     salary: 80000000
   },
   {
     _id: "2",
     name: "Ingeniero DevOps",
     description: "Responsable de implementar y mantener infraestructura cloud, automatizar procesos de CI/CD, y optimizar el rendimiento de aplicaciones. Se requiere experiencia con Docker, Kubernetes, AWS/Azure y herramientas de monitoreo.",
-    jobId: "abcdef012345678961234568",
     salary: 75000000
   },
   {
     _id: "3",
     name: "Científico de Datos",
     description: "Analizar grandes volúmenes de datos para extraer insights de negocio. Implementar modelos predictivos y algoritmos de machine learning. Conocimientos de Python, R, SQL y visualización de datos son esenciales.",
-    jobId: "abcdef012345678961234569",
     salary: 85000000
   },
   {
     _id: "4",
     name: "UX/UI Designer",
     description: "Diseñar interfaces intuitivas y atractivas para aplicaciones web y móviles. Realizar investigación de usuarios, crear wireframes, prototipos y diseños finales. Dominio de Figma, Adobe XD y principios de usabilidad.",
-    jobId: "abcdef012345678961234570",
     salary: 65000000
   },
   {
     _id: "5",
     name: "Product Manager",
     description: "Liderar el desarrollo de productos digitales desde la concepción hasta el lanzamiento. Definir roadmaps, priorizar features y coordinar equipos multidisciplinarios. Experiencia en metodologías ágiles y análisis de mercado.",
-    jobId: "abcdef012345678961234571",
     salary: 90000000
   },
   {
     _id: "6",
     name: "Especialista en Ciberseguridad",
     description: "Proteger sistemas e infraestructura contra amenazas digitales. Implementar políticas de seguridad, realizar pruebas de penetración y responder a incidentes. Certificaciones en seguridad informática y conocimientos de ethical hacking.",
-    jobId: "abcdef012345678961234572",
     salary: 88000000
   },
   {
     _id: "7",
     name: "Arquitecto de Software",
     description: "Diseñar la estructura y los componentes de sistemas de software complejos. Definir estándares técnicos, evaluar tecnologías y asegurar la escalabilidad. Amplia experiencia en patrones de diseño y arquitecturas distribuidas.",
-    jobId: "abcdef012345678961234573",
     salary: 95000000
   },
   {
     _id: "8",
     name: "Ingeniero de Machine Learning",
     description: "Desarrollar e implementar modelos de machine learning y deep learning. Optimizar algoritmos, procesar grandes volúmenes de datos y crear pipelines de ML. Conocimientos avanzados de TensorFlow, PyTorch y procesamiento de datos.",
-    jobId: "abcdef012345678961234574",
     salary: 92000000
   },
   {
     _id: "9",
     name: "Analista de Business Intelligence",
     description: "Transformar datos en insights accionables para la toma de decisiones. Crear dashboards, reportes y análisis de tendencias. Dominio de herramientas como Tableau, Power BI y técnicas de ETL.",
-    jobId: "abcdef012345678961234575",
     salary: 70000000
   }
 ];
@@ -84,20 +75,22 @@ export default function StudentJobOpportunitiesScreen() {
   const [notification, setNotification] = useState<NotificationData | null>(null);
   const [filters, setFilters] = useState<JobOpportunityFilters>({});
   
-  // Estado para datos locales (quemados)
+  // Estado para datos locales (quemados) - empezamos con datos de prueba por defecto
   const [isUsingMockData, setIsUsingMockData] = useState(true);
-  const [localData, setLocalData] = useState<JobOpportunity[]>(mockJobOpportunities);
+  const [filteredMockData, setFilteredMockData] = useState<JobOpportunity[]>(mockJobOpportunities);
+  
+  // Obtener datos del backend - deshabilitado por defecto para evitar errores 404
+  const { 
+    data: jobOpportunities, 
+    isLoading: isBackendLoading, 
+    isError, 
+    error, 
+    refetch 
+  } = useGetAllJobOpportunities();
 
-  // Obtener datos del backend (comentado para usar datos quemados por ahora)
-  const { data: jobOpportunities, isLoading: isBackendLoading, isError, error } = useGetAllJobOpportunities();
-  
-  // Decidir qué datos usar
-  const dataToUse = isUsingMockData ? localData : (jobOpportunities || []);
-  const isLoading = isUsingMockData ? false : isBackendLoading;
-  
-  // Usar el hook de filtrado
+  // Usar el hook de filtrado SOLO para datos del backend
   const { filteredJobOpportunities, updateFilters } = useFilterJobOpportunities(
-    dataToUse, 
+    jobOpportunities || [], 
     {}
   );
 
@@ -116,6 +109,35 @@ export default function StudentJobOpportunitiesScreen() {
     }
   }, [notification]);
 
+  // Manejar errores de la API sin crear bucles infinitos
+  useEffect(() => {
+    if (!isUsingMockData && isError && error) {
+      console.log('Error detectado desde el backend:', error);
+      
+      // Solo mostrar notificación si no estamos ya usando datos de prueba
+      setNotification({
+        type: 'error',
+        title: 'Error al cargar salidas laborales',
+        message: 'No se pudo conectar con el servidor. Usando datos de prueba.'
+      });
+      
+      // Cambiar a datos de prueba automáticamente
+      setIsUsingMockData(true);
+      setFilteredMockData(mockJobOpportunities);
+    }
+  }, [isError, error, isUsingMockData]); // Dependencias específicas para evitar bucles
+
+  // Mostrar notificación de éxito al cargar datos del backend exitosamente
+  useEffect(() => {
+    if (!isUsingMockData && !isBackendLoading && !isError && jobOpportunities && jobOpportunities.length > 0) {
+      setNotification({
+        type: 'success',
+        title: 'Datos cargados exitosamente',
+        message: `Se cargaron ${jobOpportunities.length} salidas laborales desde el servidor`
+      });
+    }
+  }, [jobOpportunities, isBackendLoading, isError, isUsingMockData]);
+
   // Manejador para ver detalles de una salida laboral
   const handleSelectJobOpportunity = (jobOpportunity: JobOpportunity) => {
     setSelectedJobOpportunity(jobOpportunity);
@@ -133,34 +155,38 @@ export default function StudentJobOpportunitiesScreen() {
     setShowFilterModal(true);
   };
 
+  // Función para filtrar datos locales
+  const filterMockData = (data: JobOpportunity[], newFilters: JobOpportunityFilters): JobOpportunity[] => {
+    return data.filter(job => {
+      // Filtro por nombre
+      if (newFilters.name && !job.name.toLowerCase().includes(newFilters.name.toLowerCase())) {
+        return false;
+      }
+      
+      // Filtro por salario mínimo
+      if (newFilters.salaryMin !== undefined && job.salary < newFilters.salaryMin) {
+        return false;
+      }
+      
+      // Filtro por salario máximo
+      if (newFilters.salaryMax !== undefined && job.salary > newFilters.salaryMax) {
+        return false;
+      }
+      
+      return true;
+    });
+  };
+
   // Manejador para aplicar filtros
   const handleApplyFilters = (newFilters: JobOpportunityFilters) => {
     setFilters(newFilters);
     
-    // Si estamos usando datos locales, filtramos directamente aquí
     if (isUsingMockData) {
-      const filtered = mockJobOpportunities.filter(job => {
-        // Filtro por nombre
-        if (newFilters.name && !job.name.toLowerCase().includes(newFilters.name.toLowerCase())) {
-          return false;
-        }
-        
-        // Filtro por salario mínimo
-        if (newFilters.salaryMin !== undefined && job.salary < newFilters.salaryMin) {
-          return false;
-        }
-        
-        // Filtro por salario máximo
-        if (newFilters.salaryMax !== undefined && job.salary > newFilters.salaryMax) {
-          return false;
-        }
-        
-        return true;
-      });
-      
-      setLocalData(filtered);
+      // Para datos locales, filtramos directamente
+      const filtered = filterMockData(mockJobOpportunities, newFilters);
+      setFilteredMockData(filtered);
     } else {
-      // Si estamos usando el backend, usamos el hook de filtrado
+      // Para datos del backend, usamos el hook de filtrado
       updateFilters(newFilters);
     }
     
@@ -169,57 +195,63 @@ export default function StudentJobOpportunitiesScreen() {
 
   // Manejador para la búsqueda por nombre
   const handleSearch = (searchTerm: string) => {
-    // Actualizar filtros con el término de búsqueda
     const newFilters = { ...filters, name: searchTerm };
     
-    // Si estamos usando datos locales, filtramos directamente
     if (isUsingMockData) {
       if (!searchTerm.trim()) {
-        setLocalData(mockJobOpportunities);
+        setFilteredMockData(mockJobOpportunities);
+        setFilters({});
       } else {
-        const filtered = mockJobOpportunities.filter(job => 
-          job.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-        setLocalData(filtered);
+        const filtered = filterMockData(mockJobOpportunities, newFilters);
+        setFilteredMockData(filtered);
+        setFilters(newFilters);
       }
     } else {
-      // Si estamos usando el backend, aplicamos los filtros
       handleApplyFilters(newFilters);
     }
   };
 
   // Botón para alternar entre datos de prueba y backend
-  const toggleDataSource = () => {
-    setIsUsingMockData(!isUsingMockData);
+  const toggleDataSource = async () => {
+    const newIsUsingMockData = !isUsingMockData;
     
-    // Resetear filtros y datos cuando cambiamos la fuente
-    setFilters({});
-    if (!isUsingMockData) { // Cambiando a datos de prueba
-      setLocalData(mockJobOpportunities);
+    if (newIsUsingMockData) {
+      // Cambiando a datos de prueba
+      setIsUsingMockData(true);
+      setFilteredMockData(mockJobOpportunities);
+      setFilters({});
+      
+      setNotification({
+        type: 'success',
+        title: 'Usando datos de prueba',
+        message: 'Ahora estás visualizando datos de prueba locales'
+      });
+    } else {
+      // Cambiando a backend - intentar cargar datos
+      setIsUsingMockData(false);
+      setFilters({});
+      
+      try {
+        setNotification({
+          type: 'success',
+          title: 'Conectando con el servidor',
+          message: 'Intentando cargar datos desde el backend...'
+        });
+        
+        // Si ya tenemos datos del backend, no necesitamos refetch
+        if (!jobOpportunities) {
+          await refetch();
+        }
+      } catch (err) {
+        console.error('Error al intentar conectar con el backend:', err);
+        // El useEffect de arriba manejará el error y volverá a datos de prueba
+      }
     }
-    
-    // Mostrar notificación
-    setNotification({
-      type: 'success',
-      title: `Usando ${!isUsingMockData ? 'datos de prueba' : 'datos del backend'}`,
-      message: `Ahora estás visualizando ${!isUsingMockData ? 'datos de prueba locales' : 'datos desde el servidor'}`
-    });
   };
 
-  // Manejar errores de la API
-  useEffect(() => {
-    if (!isUsingMockData && isError && error) {
-      setNotification({
-        type: 'error',
-        title: 'Error al cargar salidas laborales',
-        message: error instanceof Error ? error.message : 'Ocurrió un error al obtener las salidas laborales'
-      });
-      
-      // Volver a datos de prueba si hay error
-      setIsUsingMockData(true);
-      setLocalData(mockJobOpportunities);
-    }
-  }, [isError, error, isUsingMockData]);
+  // Determinar qué datos mostrar y si está cargando
+  const jobOpportunitiesToShow = isUsingMockData ? filteredMockData : filteredJobOpportunities;
+  const isLoading = isUsingMockData ? false : isBackendLoading;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -257,13 +289,56 @@ export default function StudentJobOpportunitiesScreen() {
         </p>
       </div>
 
-      {/* Botón para alternar fuente de datos (solo para desarrollo) */}
-      <button
-        onClick={toggleDataSource}
-        className="mb-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md text-sm hover:bg-gray-300"
-      >
-        Usando: {isUsingMockData ? 'Datos locales (prueba)' : 'API Backend'}
-      </button>
+      {/* Panel de control de fuente de datos */}
+      <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={toggleDataSource}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50 ${
+                isUsingMockData 
+                  ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200' 
+                  : 'bg-green-100 text-green-800 hover:bg-green-200'
+              }`}
+            >
+              {isLoading ? '🔄 Conectando...' : (isUsingMockData ? '🧪 Datos de prueba' : '🌐 API Backend')}
+            </button>
+            
+            {!isUsingMockData && (
+              <button
+                onClick={() => refetch()}
+                disabled={isLoading}
+                className="px-4 py-2 bg-blue-100 text-blue-800 rounded-md text-sm hover:bg-blue-200 disabled:opacity-50"
+              >
+                {isLoading ? '🔄 Cargando...' : '🔄 Refrescar'}
+              </button>
+            )}
+          </div>
+          
+          {/* Indicador de estado */}
+          <div className="text-sm text-gray-600">
+            {isUsingMockData ? (
+              <span className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                {filteredMockData.length} oportunidades (locales)
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${isLoading ? 'bg-yellow-400' : isError ? 'bg-red-400' : 'bg-green-400'}`}></div>
+                {isLoading ? 'Cargando...' : isError ? 'Error de conexión' : `${jobOpportunitiesToShow.length} oportunidades (servidor)`}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Información adicional */}
+        {!isUsingMockData && isError && (
+          <div className="mt-2 text-sm text-red-600">
+            ⚠️ No se pudo conectar con el servidor. Verifica que el backend esté ejecutándose en la URL correcta.
+          </div>
+        )}
+      </div>
 
       {/* Barra de búsqueda y filtros */}
       <div className="mb-6">
@@ -278,10 +353,41 @@ export default function StudentJobOpportunitiesScreen() {
 
       {/* Grid de salidas laborales */}
       <JobOpportunityGrid
-        jobOpportunities={isUsingMockData ? localData : filteredJobOpportunities}
+        jobOpportunities={jobOpportunitiesToShow}
         onSelectJobOpportunity={handleSelectJobOpportunity}
         isLoading={isLoading}
       />
+
+      {/* Mensaje cuando no hay resultados */}
+      {!isLoading && jobOpportunitiesToShow.length === 0 && (
+        <div className="text-center py-12">
+          <Briefcase className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-2">
+            No se encontraron salidas laborales
+          </h3>
+          <p className="text-gray-500 mb-4">
+            {Object.keys(filters).some(key => filters[key as keyof JobOpportunityFilters] !== undefined && filters[key as keyof JobOpportunityFilters] !== '')
+              ? 'Intenta ajustar tus filtros de búsqueda'
+              : 'No hay salidas laborales disponibles en este momento'
+            }
+          </p>
+          {Object.keys(filters).some(key => filters[key as keyof JobOpportunityFilters] !== undefined && filters[key as keyof JobOpportunityFilters] !== '') && (
+            <button
+              onClick={() => {
+                setFilters({});
+                if (isUsingMockData) {
+                  setFilteredMockData(mockJobOpportunities);
+                } else {
+                  updateFilters({});
+                }
+              }}
+              className="px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
+            >
+              Limpiar filtros
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

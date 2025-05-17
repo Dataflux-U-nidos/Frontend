@@ -4,7 +4,6 @@ export interface JobOpportunity {
   id?: string;
   name: string;
   description: string;
-  jobId?: string;
   salary: number;
   createdAt?: string;
   updatedAt?: string;

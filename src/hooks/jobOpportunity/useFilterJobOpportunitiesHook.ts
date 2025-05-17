@@ -1,5 +1,4 @@
-// src/hooks/jobOpportunity/useFilterJobOpportunitiesHook.ts
-import { useState, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { JobOpportunity, JobOpportunityFilters } from '@/types/jobOpportunityType';
 import { filterJobOpportunities } from '@/services/jobOpportunityService';
 
@@ -14,11 +13,13 @@ export const useFilterJobOpportunities = (
   initialFilters: JobOpportunityFilters = {}
 ) => {
   const [filters, setFilters] = useState<JobOpportunityFilters>(initialFilters);
-  const [filteredJobOpportunities, setFilteredJobOpportunities] = useState<JobOpportunity[]>(jobOpportunities);
 
-  // Actualizar salidas laborales filtradas cuando cambian las salidas laborales o filtros
-  useEffect(() => {
-    setFilteredJobOpportunities(filterJobOpportunities(jobOpportunities, filters));
+  // Usar useMemo para evitar re-renders innecesarios
+  const filteredJobOpportunities = useMemo(() => {
+    if (!jobOpportunities || jobOpportunities.length === 0) {
+      return [];
+    }
+    return filterJobOpportunities(jobOpportunities, filters);
   }, [jobOpportunities, filters]);
 
   // Función para actualizar filtros
