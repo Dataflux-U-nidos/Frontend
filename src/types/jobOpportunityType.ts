@@ -16,4 +16,5 @@ export interface JobOpportunityFilters {
   name?: string;
   salaryMin?: number;
   salaryMax?: number;
+  majorId?: string; // Nuevo filtro por carrera
 }
