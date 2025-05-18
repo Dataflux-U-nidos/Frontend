@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
@@ -19,16 +19,15 @@ interface Viewer {
   lastName?: string;
 }
 
-
 interface Notification {
-  type: 'success' | 'error';
+  type: "success" | "error";
   title: string;
   message: string;
 }
 
 // Form fields for adding a new viewer with password validation
 const viewerFormFields: FormField[] = [
- {
+  {
     name: "firstName",
     label: "Nombre",
     type: "text",
@@ -36,10 +35,10 @@ const viewerFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
-        message: "El nombre sólo puede contener letras"
-      }
+        message: "El nombre sólo puede contener letras",
+      },
     },
-    placeholder: "Nombre"
+    placeholder: "Nombre",
   },
   {
     name: "lastName",
@@ -49,10 +48,10 @@ const viewerFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
-        message: "El apellido sólo puede contener letras"
-      }
+        message: "El apellido sólo puede contener letras",
+      },
     },
-    placeholder: "Apellido"
+    placeholder: "Apellido",
   },
   {
     name: "email",
@@ -62,9 +61,10 @@ const viewerFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
-      }
-    }
+        message:
+          "Ingresa un correo con formato válido (ej. usuario@dominio.com)",
+      },
+    },
   },
   {
     name: "password",
@@ -73,11 +73,14 @@ const viewerFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
-      }
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/,
+        message:
+          "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial",
+      },
     },
     placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
-    helpText: "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial"
+    helpText:
+      "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial",
   },
 ];
 
@@ -91,10 +94,10 @@ const viewerEditFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
-        message: "El nombre sólo puede contener letras"
-      }
+        message: "El nombre sólo puede contener letras",
+      },
     },
-    placeholder: "Nombre"
+    placeholder: "Nombre",
   },
   {
     name: "lastName",
@@ -104,10 +107,10 @@ const viewerEditFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
-        message: "El apellido sólo puede contener letras"
-      }
+        message: "El apellido sólo puede contener letras",
+      },
     },
-    placeholder: "Apellido"
+    placeholder: "Apellido",
   },
   {
     name: "email",
@@ -117,9 +120,10 @@ const viewerEditFormFields: FormField[] = [
     validation: {
       pattern: {
         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
-      }
-    }
+        message:
+          "Ingresa un correo con formato válido (ej. usuario@dominio.com)",
+      },
+    },
   },
 ];
 
@@ -151,11 +155,11 @@ export default function UniversityViewersScreen() {
         const viewers = await getViewers();
         const mappedViewers = viewers.map((user) => {
           // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
-          
+          const fullName = `${user.name || ""} ${user.last_name || ""}`.trim();
+          const nameParts = fullName.split(" ");
+          const firstName = nameParts[0] || "";
+          const lastName = nameParts.slice(1).join(" ") || "";
+
           return {
             id: user.id,
             email: user.email,
@@ -209,25 +213,25 @@ export default function UniversityViewersScreen() {
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
-  
+
   // Manager for initiating edit process
   const handleInitiateEdit = (viewer: Viewer) => {
     setViewerToEdit(viewer);
     setShowEditModal(true);
   };
-  
+
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
     setViewerToEdit(null);
   };
-  
+
   // Manager for confirming and executing edit
   const handleEditViewer = async (formData: any) => {
     if (!viewerToEdit || !viewerToEdit.id) return;
-    
+
     setIsEditing(true);
-    
+
     try {
       const userData = {
         id: viewerToEdit.id,
@@ -235,13 +239,13 @@ export default function UniversityViewersScreen() {
         last_name: formData.lastName,
         email: formData.email,
       };
-      
+
       await updateUser(userData);
-      
+
       // Cerrar el modal de edición
       setShowEditModal(false);
       setViewerToEdit(null);
-      
+
       // Actualizar la lista de visualizadores
       const updatedViewer = {
         ...viewerToEdit,
@@ -250,84 +254,86 @@ export default function UniversityViewersScreen() {
         lastName: formData.lastName,
         email: formData.email,
       };
-      
-      const updatedViewers = viewersData.map(viewer => 
+
+      const updatedViewers = viewersData.map((viewer) =>
         viewer.id === updatedViewer.id ? updatedViewer : viewer
       );
-      
+
       setViewersData(updatedViewers);
       setFilteredData(updatedViewers);
-      
+
       // Mostrar notificación de éxito
       setNotification({
-        type: 'success',
-        title: 'Visualizador actualizado',
-        message: `El visualizador ${updatedViewer.name} ha sido actualizado exitosamente.`
+        type: "success",
+        title: "Visualizador actualizado",
+        message: `El visualizador ${updatedViewer.name} ha sido actualizado exitosamente.`,
       });
     } catch (error) {
       console.error("Error actualizando visualizador:", error);
-      
+
       // Mostrar notificación de error
       setNotification({
-        type: 'error',
-        title: 'Error al actualizar visualizador',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar el visualizador.'
+        type: "error",
+        title: "Error al actualizar visualizador",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Ha ocurrido un error al intentar actualizar el visualizador.",
       });
     } finally {
       setIsEditing(false);
     }
   };
-  
+
   // Manager for initiating delete process
   const handleInitiateDelete = (viewer: Viewer) => {
     setViewerToDelete(viewer);
     setShowDeleteModal(true);
   };
-  
+
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setViewerToDelete(null);
   };
-  
+
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
     if (!viewerToDelete || !viewerToDelete.id) return;
-    
+
     setIsDeleting(true);
-    
+
     try {
       await deleteUser(viewerToDelete.id);
-      
+
       // Cerrar el modal de confirmación
       setShowDeleteModal(false);
       setViewerToDelete(null);
-      
+
       // Actualizar la lista de visualizadores filtrando el eliminado
       const updatedViewers = viewersData.filter(
-        viewer => viewer.id !== viewerToDelete.id
+        (viewer) => viewer.id !== viewerToDelete.id
       );
       setViewersData(updatedViewers);
       setFilteredData(updatedViewers);
-      
+
       // Mostrar notificación de éxito
       setNotification({
-        type: 'success',
-        title: 'Visualizador eliminado',
-        message: `El visualizador ${viewerToDelete.name} ha sido eliminado exitosamente.`
+        type: "success",
+        title: "Visualizador eliminado",
+        message: `El visualizador ${viewerToDelete.name} ha sido eliminado exitosamente.`,
       });
     } catch (error) {
       console.error("Error eliminando visualizador:", error);
-      
+
       // Mostrar notificación de error
       setNotification({
-        type: 'error',
-        title: 'Error al eliminar visualizador',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el visualizador.'
+        type: "error",
+        title: "Error al eliminar visualizador",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Ha ocurrido un error al intentar eliminar el visualizador.",
       });
     } finally {
       setIsDeleting(false);
@@ -344,25 +350,24 @@ export default function UniversityViewersScreen() {
       userType: "VIEWER",
     };
 
-    
     try {
       await createUser(userData);
       handleCloseAddModal();
-      
+
       setNotification({
-        type: 'success',
-        title: 'Visualizador creado!',
-        message: `El visualizador ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
+        type: "success",
+        title: "Visualizador creado!",
+        message: `El visualizador ${userData.name} ${userData.last_name} ha sido creado exitosamente.`,
       });
-      
+
       // Actualizar la lista de visualizadores
       const viewers = await getViewers();
       const mappedViewers = viewers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
-        
+        const fullName = `${user.name || ""} ${user.last_name || ""}`.trim();
+        const nameParts = fullName.split(" ");
+        const firstName = nameParts[0] || "";
+        const lastName = nameParts.slice(1).join(" ") || "";
+
         return {
           id: user.id,
           email: user.email,
@@ -373,17 +378,17 @@ export default function UniversityViewersScreen() {
       }) as Viewer[];
       setViewersData(mappedViewers);
       setFilteredData(mappedViewers);
-      
     } catch (error) {
       console.error("Error creando visualizador:", error);
-      
+
       // Mostrar notificación de error
       setNotification({
-        type: 'error',
-        title: 'Error al crear visualizador',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar crear el visualizador.'
+        type: "error",
+        title: "Error al crear visualizador",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Ha ocurrido un error al intentar crear el visualizador.",
       });
     }
   };
@@ -426,21 +431,41 @@ export default function UniversityViewersScreen() {
       onClick: handleInitiateEdit,
       variant: "outline",
       icon: (
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+          />
         </svg>
-      )
+      ),
     },
     {
       label: "Eliminar",
       onClick: handleInitiateDelete,
       variant: "danger",
       icon: (
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        <svg
+          className="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+          />
         </svg>
-      )
-    }
+      ),
+    },
   ];
 
   const tableConfig = {
@@ -453,7 +478,7 @@ export default function UniversityViewersScreen() {
       name: "Nombre",
     },
     actionButtonText: "Ver detalles",
-    actions: tableActions
+    actions: tableActions,
   };
 
   const searchBarConfig = {
@@ -461,7 +486,7 @@ export default function UniversityViewersScreen() {
     onAddEntity: handleOpenAddModal,
     searchPlaceholder: "Buscar visualizador",
     addButtonLabel: "Agregar visualizador",
-    showFilterButton: false 
+    showFilterButton: false,
   };
 
   const addFormConfig = {
@@ -474,7 +499,7 @@ export default function UniversityViewersScreen() {
     submitButtonText: "Agregar Visualizador",
     cancelButtonText: "Cancelar",
   };
-  
+
   // Fixed defaultValues to use ternary operator instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
@@ -486,13 +511,18 @@ export default function UniversityViewersScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    defaultValues: viewerToEdit ? {
-      firstName: viewerToEdit.firstName ?? viewerToEdit.name.split(' ')[0] ?? '',
-      lastName: viewerToEdit.lastName ?? viewerToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: viewerToEdit.email,
-    } : undefined
+    defaultValues: viewerToEdit
+      ? {
+          firstName:
+            viewerToEdit.firstName ?? viewerToEdit.name.split(" ")[0] ?? "",
+          lastName:
+            viewerToEdit.lastName ??
+            viewerToEdit.name.split(" ").slice(1).join(" ") ??
+            "",
+          email: viewerToEdit.email,
+        }
+      : undefined,
   };
-
 
   return (
     <>
@@ -507,10 +537,10 @@ export default function UniversityViewersScreen() {
         variant="danger"
         isLoading={isDeleting}
       />
-      
+
       <EntityForm {...addFormConfig} />
       <EntityForm {...editFormConfig} />
-      
+
       <ListPageTemplate
         // Data and entity type
         data={filteredData}
