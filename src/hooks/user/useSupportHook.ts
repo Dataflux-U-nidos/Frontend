@@ -17,7 +17,7 @@ export function useGetSupportHook() {
         { page: vars.page, limit: vars.limit }
       ),
     onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.USERS]);
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
     },
   });
 }

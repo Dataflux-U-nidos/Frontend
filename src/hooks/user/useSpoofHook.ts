@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { impersonateUser } from "@/services/userService";
-import { ImpersonateResponse } from "@/types/impersonate";
+import { ImpersonateResponse } from "@/types/Impersonate";
 
 export function useSpoofHook() {
   return useMutation<ImpersonateResponse, Error, string>({
