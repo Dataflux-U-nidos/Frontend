@@ -4,6 +4,7 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetViewersByUniversity,
@@ -154,12 +155,10 @@ export default function UniversityViewersScreen() {
       try {
         const viewers = await getViewers();
         const mappedViewers = viewers.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ""} ${user.last_name || ""}`.trim();
-          const nameParts = fullName.split(" ");
-          const firstName = nameParts[0] || "";
-          const lastName = nameParts.slice(1).join(" ") || "";
-
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
+          
           return {
             id: user.id,
             email: user.email,
@@ -249,7 +248,7 @@ export default function UniversityViewersScreen() {
       // Actualizar la lista de visualizadores
       const updatedViewer = {
         ...viewerToEdit,
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        name: combineNames(formData.firstName, formData.lastName),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -360,14 +359,12 @@ export default function UniversityViewersScreen() {
         message: `El visualizador ${userData.name} ${userData.last_name} ha sido creado exitosamente.`,
       });
 
-      // Actualizar la lista de visualizadores
+      // Actualizar la lista de visualizadores con mapeo correcto
       const viewers = await getViewers();
       const mappedViewers = viewers.map((user) => {
-        const fullName = `${user.name || ""} ${user.last_name || ""}`.trim();
-        const nameParts = fullName.split(" ");
-        const firstName = nameParts[0] || "";
-        const lastName = nameParts.slice(1).join(" ") || "";
-
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
+        
         return {
           id: user.id,
           email: user.email,
@@ -500,7 +497,7 @@ export default function UniversityViewersScreen() {
     cancelButtonText: "Cancelar",
   };
 
-  // Fixed defaultValues to use ternary operator instead of && to avoid type error
+  // Configuración actualizada para el formulario de edición
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -513,13 +510,9 @@ export default function UniversityViewersScreen() {
     isLoading: isEditing,
     defaultValues: viewerToEdit
       ? {
-          firstName:
-            viewerToEdit.firstName ?? viewerToEdit.name.split(" ")[0] ?? "",
-          lastName:
-            viewerToEdit.lastName ??
-            viewerToEdit.name.split(" ").slice(1).join(" ") ??
-            "",
-          email: viewerToEdit.email,
+          firstName: viewerToEdit.firstName || '',
+          lastName: viewerToEdit.lastName || '',
+          email: viewerToEdit.email || '',
         }
       : undefined,
   };
