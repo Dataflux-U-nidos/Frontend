@@ -130,14 +130,9 @@ export default function AdminManageJobOpScreen() {
 
     setTimeout(() => {
       try {
-        const completeJobData = {
-          ...editedJobData,
-          id: jobToEdit?._id || jobToEdit?.id,
-        };
+        
 
-        console.log("Saving edited job:", completeJobData);
 
-        // Show success notification
         setNotification({
           type: 'success',
           title: 'Salida laboral actualizada',
@@ -151,7 +146,6 @@ export default function AdminManageJobOpScreen() {
         setIsEditing(false);
         setEditError("Error al guardar los cambios. Inténtelo de nuevo.");
         
-        // Show error notification
         setNotification({
           type: 'error',
           title: 'Error al actualizar',
