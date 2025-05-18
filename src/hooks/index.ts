@@ -39,3 +39,15 @@ export * from './major/useFilterMajorsHook';
 export * from './subscription/useGetAllSubscriptionHook';
 export * from './subscription/useUpdateSubscriptionHook';
 
+// Job Opportunity hooks
+export * from './jobOpportunity/useGetAllJobOpportunitiesHook';
+export * from './jobOpportunity/useGetJobOpportunityByIdHook';
+export * from './jobOpportunity/useGetJobOpportunitiesByMajorHook';
+export * from './jobOpportunity/useFilterJobOpportunitiesHook';
+export * from './jobOpportunity/useGetAllJobOpportunitiesHook';
+export * from './jobOpportunity/useGetJobOpportunityByIdHook';
+export * from './jobOpportunity/useGetJobOpportunitiesByMajorHook';
+export * from './jobOpportunity/useFilterJobOpportunitiesHook';
+export * from './jobOpportunity/useJobOpportunitiesWithMajorFilterHook';
+
+
