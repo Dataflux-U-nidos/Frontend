@@ -73,12 +73,11 @@ export default function AdminManageJobOpScreen() {
     },
   ];
 
-  // Use the hook to fetch job opportunities
   const {
-    data: jobOpportunities = [], // Default to empty array to avoid undefined
-    isLoading, // Loading state
-    isError, // Error state
-    error, // Error object
+    data: jobOpportunities = [], 
+    isLoading,
+    isError,
+    error, 
   } = useGetAllJobOpportunities();
 
   const maxDescriptionLength = 100;
@@ -105,7 +104,6 @@ export default function AdminManageJobOpScreen() {
     setNotification(null);
   };
     
-  // Auto-close notification after 5 seconds
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -130,7 +128,6 @@ export default function AdminManageJobOpScreen() {
     setIsEditing(true);
     setEditError(null);
 
-    // Simulate API call with a timeout
     setTimeout(() => {
       try {
         const completeJobData = {
@@ -163,7 +160,7 @@ export default function AdminManageJobOpScreen() {
         
         console.error("Error saving job:", error);
       }
-    }, 1000); // Simulate a 1 second API call
+    }, 1000);
   };
 
   const confirmDelete = () => {
