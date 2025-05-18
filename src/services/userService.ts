@@ -6,6 +6,7 @@ import {
   User,
   ImpersonateResponse,
   ImpersonateUserDto,
+  PaginatedUsers,
 } from "../types";
 
 export const createUser = async (newUser: CreateUserInput): Promise<User> => {
@@ -41,12 +42,12 @@ export const getSupportUsersByAdmin = async (): Promise<User[]> => {
   return data;
 };
 
-export const getUsersBySupport = async (filters?: {
-  search?: string;
-  userType?: string;
-}): Promise<User[]> => {
-  const { data } = await userApi.get<User[]>("/user/support-users", {
-    params: filters,
+export const getUsersBySupport = async (
+  filters: { search?: string; userType?: string },
+  pagination: { page: number; limit: number }
+): Promise<PaginatedUsers> => {
+  const { data } = await userApi.get<PaginatedUsers>("/user/support-users", {
+    params: { ...filters, page: pagination.page, limit: pagination.limit },
   });
   return data;
 };
