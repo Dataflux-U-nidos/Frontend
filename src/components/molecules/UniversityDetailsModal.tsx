@@ -1,7 +1,7 @@
 // src/components/molecules/UniversityDetailsModal.tsx
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/atoms/ui/dialog";
 import { University } from "@/types/universityType";
-import { MapPin, Mail, Building, GraduationCap, Users, Settings, Phone, Globe } from "lucide-react";
+import { MapPin, Mail, Building, GraduationCap, Settings, Phone, Globe } from "lucide-react";
 
 // Imágenes genéricas de universidades (mismo array que en UniversityCard)
 const universityImages = [
