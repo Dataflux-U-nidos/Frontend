@@ -10,18 +10,18 @@ import {
 } from "@/components/atoms/ui/card";
 import { MapPin, Building, GraduationCap } from "lucide-react";
 
-// Imágenes predefinidas para las universidades
+// Imágenes genéricas de universidades
 const universityImages = [
-  "https://www.javeriana.edu.co/recursosdb/2299859/2364811/padre-munera-500.jpg/93bef083-3877-fdac-8dc3-862978b4ceeb?t=1678772459442",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Universidad_Nacional_de_Colombia_-_Bogot%C3%A1.jpg/1200px-Universidad_Nacional_de_Colombia_-_Bogot%C3%A1.jpg",
-  "https://www.uniandes.edu.co/sites/default/files/styles/large/public/2021-05/campus-2.jpg",
-  "https://www.ucatolica.edu.co/portal/wp-content/uploads/2019/08/edificio-principal.jpg",
-  "https://www.usergioarboleda.edu.co/wp-content/uploads/2020/01/campus-bogota-sede-norte.jpg",
-  "https://www.ucentral.edu.co/sites/default/files/2020-02/IMG_20200211_113053.jpg",
-  "https://www.ean.edu.co/sites/default/files/noticias/EAN-Virtual.jpg",
-  "https://www.udistrital.edu.co/sites/default/files/imagenes/noticias/2019/mayo/IMG_5851.JPG",
-  "https://www.unisabana.edu.co/fileadmin/_processed_/0/3/csm_campus-puente-del-comun_1920x846_4b9b45e8b3.jpg",
-  "https://www.unbosque.edu.co/sites/default/files/2020-03/campus.jpg"
+  "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1580537659466-0a9bfa916a54?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1574437465443-8fb6e66b7af7?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1496418435643-cf8529eca65e?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&h=600&fit=crop"
 ];
 
 // Función para obtener una imagen basada en el ID de la universidad

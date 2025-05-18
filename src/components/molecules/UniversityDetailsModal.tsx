@@ -3,18 +3,18 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { University } from "@/types/universityType";
 import { MapPin, Mail, Building, GraduationCap, Users, Settings, Phone, Globe } from "lucide-react";
 
-// Imágenes predefinidas para las universidades (mismo array que en UniversityCard)
+// Imágenes genéricas de universidades (mismo array que en UniversityCard)
 const universityImages = [
-  "https://www.javeriana.edu.co/recursosdb/2299859/2364811/padre-munera-500.jpg/93bef083-3877-fdac-8dc3-862978b4ceeb?t=1678772459442",
-  "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Universidad_Nacional_de_Colombia_-_Bogot%C3%A1.jpg/1200px-Universidad_Nacional_de_Colombia_-_Bogot%C3%A1.jpg",
-  "https://www.uniandes.edu.co/sites/default/files/styles/large/public/2021-05/campus-2.jpg",
-  "https://www.ucatolica.edu.co/portal/wp-content/uploads/2019/08/edificio-principal.jpg",
-  "https://www.usergioarboleda.edu.co/wp-content/uploads/2020/01/campus-bogota-sede-norte.jpg",
-  "https://www.ucentral.edu.co/sites/default/files/2020-02/IMG_20200211_113053.jpg",
-  "https://www.ean.edu.co/sites/default/files/noticias/EAN-Virtual.jpg",
-  "https://www.udistrital.edu.co/sites/default/files/imagenes/noticias/2019/mayo/IMG_5851.JPG",
-  "https://www.unisabana.edu.co/fileadmin/_processed_/0/3/csm_campus-puente-del-comun_1920x846_4b9b45e8b3.jpg",
-  "https://www.unbosque.edu.co/sites/default/files/2020-03/campus.jpg"
+  "https://images.unsplash.com/photo-1562774053-701939374585?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1498243691581-b145c3f54a5a?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1564981797816-1043664bf78d?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1580537659466-0a9bfa916a54?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1574437465443-8fb6e66b7af7?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1496418435643-cf8529eca65e?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1592280771190-3e2e4d571952?w=800&h=600&fit=crop"
 ];
 
 // Función para obtener una imagen basada en ID
@@ -49,8 +49,6 @@ export function UniversityDetailsModal({
     founded: "1623",
     website: "www.universidad.edu.co",
     phone: "+57 1 320 8320",
-    studentCount: "15,000",
-    facultyCount: "1,200",
     campuses: 3,
     accreditation: "Acreditación de Alta Calidad",
     ranking: "#2 en Colombia",
@@ -88,7 +86,7 @@ export function UniversityDetailsModal({
           </div>
           
           {/* Información principal en cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="w-full">
             <div className="bg-orange-50 p-4 rounded-lg">
               <div className="flex items-center mb-2">
                 <Building className="h-5 w-5 text-orange-500 mr-2" />
@@ -106,27 +104,6 @@ export function UniversityDetailsModal({
                 <div className="flex justify-between">
                   <span className="text-gray-600">Campus:</span>
                   <span className="font-medium">{universityDetails.campuses} sedes</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center mb-2">
-                <Users className="h-5 w-5 text-blue-500 mr-2" />
-                <h3 className="font-semibold text-gray-800">Comunidad Académica</h3>
-              </div>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Estudiantes:</span>
-                  <span className="font-medium">{universityDetails.studentCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Profesores:</span>
-                  <span className="font-medium">{universityDetails.facultyCount}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Acreditación:</span>
-                  <span className="font-medium text-green-600">Vigente</span>
                 </div>
               </div>
             </div>
@@ -187,18 +164,6 @@ export function UniversityDetailsModal({
             <p className="text-gray-700 text-sm leading-relaxed">
               {universityDetails.description}
             </p>
-            
-            {/* Estadísticas adicionales */}
-            <div className="mt-4 grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-white rounded-lg">
-                <p className="text-2xl font-bold text-orange-500">{universityDetails.studentCount}</p>
-                <p className="text-xs text-gray-500">Estudiantes activos</p>
-              </div>
-              <div className="text-center p-3 bg-white rounded-lg">
-                <p className="text-2xl font-bold text-blue-500">{universityDetails.facultyCount}</p>
-                <p className="text-xs text-gray-500">Docentes</p>
-              </div>
-            </div>
           </div>
 
           {/* Áreas de estudio */}
@@ -220,21 +185,6 @@ export function UniversityDetailsModal({
             <p className="text-xs text-gray-600 mt-2">
               Oferta académica amplia con programas de pregrado y posgrado
             </p>
-          </div>
-
-          {/* Call to action */}
-          <div className="bg-gradient-to-r from-orange-50 to-orange-100 p-4 rounded-lg">
-            <div className="text-center">
-              <h4 className="font-semibold text-gray-800 mb-2">
-                ¿Interesado en esta universidad?
-              </h4>
-              <p className="text-sm text-gray-600 mb-3">
-                Obtén más información sobre programas, admisiones y becas disponibles.
-              </p>
-              <button className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors text-sm font-medium">
-                Contactar Universidad
-              </button>
-            </div>
           </div>
         </div>
       </DialogContent>
