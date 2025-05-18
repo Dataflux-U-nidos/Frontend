@@ -16,6 +16,12 @@ const difficultyClasses: Record<Major["difficulty"], string> = {
     HARD: "bg-rose-100 text-rose-800",
 };
 
+const difficultyLabels: Record<Major["difficulty"], string> = {
+    EASY: "FÁCIL",
+    MEDIUM: "MEDIA",
+    HARD: "DIFÍCIL",
+};
+
 const money = new Intl.NumberFormat("es-CO", {
     style: "currency",
     currency: "COP",
@@ -43,7 +49,9 @@ export function CareerCard({ major }: Props) {
 
                 {/* Badges */}
                 <div className="flex flex-wrap gap-2">
-                    <Badge className={difficultyClasses[difficulty]}>{difficulty}</Badge>
+                    <Badge className={difficultyClasses[difficulty]}>
+                        {difficultyLabels[difficulty]}
+                    </Badge>
                     <Badge variant="secondary">{money.format(price)}</Badge>
                     <Badge variant="secondary">{focus}</Badge>
                 </div>

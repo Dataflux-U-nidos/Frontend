@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { GatsbyTemplate } from "@/components/templates/GatsbyTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { FilterModal, FilterField } from "@/components/molecules/FilterModal";
@@ -30,6 +30,12 @@ export default function StudentMajorsScreen() {
     refetch();
   }, [refetch]);
 
+  const focusOptions = useMemo(() => {
+  if (!majors) return [];
+  const uniques = Array.from(new Set(majors.map((m) => m.focus).filter(Boolean)));
+  return uniques.map((f) => ({ value: f, label: f }));
+}, [majors]);
+
   /* Filtros disponibles */
   const filterFields: FilterField[] = [
     {
@@ -59,8 +65,8 @@ export default function StudentMajorsScreen() {
     {
       id: "focus",
       label: "Enfoque",
-      type: "text",
-      placeholder: "Ej: Publicidad",
+      type: "select",
+      options: focusOptions,
     },
   ];
 
