@@ -1,4 +1,4 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
@@ -33,18 +33,38 @@ const financeUserFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
   {
     name: "password",
@@ -53,12 +73,11 @@ const financeUserFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*[0-9])(?=.{8,})/,
-        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
-    placeholder: "Mínimo 8 caracteres y al menos un número",
-    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
+    placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
+    helpText: "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial"
   },
 ];
 
@@ -69,18 +88,38 @@ const financeUserEditFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
 ];
 
@@ -97,10 +136,10 @@ export default function UniversityFinanceUsersScreen() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false); 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedFinanceUser, setSelectedFinanceUser] = useState<FinanceUser | null>(null); 
+  const [selectedFinanceUser, setSelectedFinanceUser] = useState<FinanceUser | null>(null);
   const [financeUserToDelete, setFinanceUserToDelete] = useState<FinanceUser | null>(null);
   const [financeUserToEdit, setFinanceUserToEdit] = useState<FinanceUser | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
@@ -116,7 +155,7 @@ export default function UniversityFinanceUsersScreen() {
           const nameParts = fullName.split(' ');
           const firstName = nameParts[0] || '';
           const lastName = nameParts.slice(1).join(' ') || '';
-          
+
           return {
             id: user.id,
             email: user.email,
@@ -170,25 +209,25 @@ export default function UniversityFinanceUsersScreen() {
   const handleCloseAddModal = () => {
     setShowAddModal(false);
   };
-  
+
   // Manager for initiating edit process
   const handleInitiateEdit = (financeUser: FinanceUser) => {
     setFinanceUserToEdit(financeUser);
     setShowEditModal(true);
   };
-  
+
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
     setFinanceUserToEdit(null);
   };
-  
+
   // Manager for confirming and executing edit
   const handleEditFinanceUser = async (formData: any) => {
     if (!financeUserToEdit || !financeUserToEdit.id) return;
-    
+
     setIsEditing(true);
-    
+
     try {
       const userData = {
         id: financeUserToEdit.id,
@@ -196,12 +235,12 @@ export default function UniversityFinanceUsersScreen() {
         last_name: formData.lastName,
         email: formData.email,
       };
-      
+
       await updateUser(userData);
-      
+
       setShowEditModal(false);
       setFinanceUserToEdit(null);
-      
+
       const updatedFinanceUser = {
         ...financeUserToEdit,
         name: `${formData.firstName} ${formData.lastName}`.trim(),
@@ -209,14 +248,14 @@ export default function UniversityFinanceUsersScreen() {
         lastName: formData.lastName,
         email: formData.email,
       };
-      
-      const updatedFinanceUsers = financeUsersData.map(financeUser => 
+
+      const updatedFinanceUsers = financeUsersData.map(financeUser =>
         financeUser.id === updatedFinanceUser.id ? updatedFinanceUser : financeUser
       );
-      
+
       setFinanceUsersData(updatedFinanceUsers);
       setFilteredData(updatedFinanceUsers);
-      
+
       setNotification({
         type: 'success',
         title: 'Usuario de finanzas actualizado',
@@ -224,49 +263,49 @@ export default function UniversityFinanceUsersScreen() {
       });
     } catch (error) {
       console.error("Error actualizando usuario de finanzas:", error);
-      
+
       setNotification({
         type: 'error',
         title: 'Error al actualizar usuario de finanzas',
-        message: error instanceof Error 
-          ? error.message 
+        message: error instanceof Error
+          ? error.message
           : 'Ha ocurrido un error al intentar actualizar el usuario de finanzas.'
       });
     } finally {
       setIsEditing(false);
     }
   };
-  
+
   // Manager for initiating delete process
   const handleInitiateDelete = (financeUser: FinanceUser) => {
     setFinanceUserToDelete(financeUser);
     setShowDeleteModal(true);
   };
-  
+
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
     setFinanceUserToDelete(null);
   };
-  
+
   // Manager for confirming and executing delete
   const handleConfirmDelete = async () => {
     if (!financeUserToDelete || !financeUserToDelete.id) return;
-    
+
     setIsDeleting(true);
-    
+
     try {
       await deleteUser(financeUserToDelete.id);
-      
+
       setShowDeleteModal(false);
       setFinanceUserToDelete(null);
-      
+
       const updatedFinanceUsers = financeUsersData.filter(
         financeUser => financeUser.id !== financeUserToDelete.id
       );
       setFinanceUsersData(updatedFinanceUsers);
       setFilteredData(updatedFinanceUsers);
-      
+
       setNotification({
         type: 'success',
         title: 'Usuario de finanzas eliminado',
@@ -274,12 +313,12 @@ export default function UniversityFinanceUsersScreen() {
       });
     } catch (error) {
       console.error("Error eliminando usuario de finanzas:", error);
-      
+
       setNotification({
         type: 'error',
         title: 'Error al eliminar usuario de finanzas',
-        message: error instanceof Error 
-          ? error.message 
+        message: error instanceof Error
+          ? error.message
           : 'Ha ocurrido un error al intentar eliminar el usuario de finanzas.'
       });
     } finally {
@@ -297,25 +336,24 @@ export default function UniversityFinanceUsersScreen() {
       userType: "FINANCES",
     };
 
-    console.log("Enviando:", userData);
-    
+
     try {
       await createUser(userData);
       handleCloseAddModal();
-      
+
       setNotification({
         type: 'success',
         title: 'Usuario de finanzas creado!',
         message: `El usuario de finanzas ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
-      
+
       const financeUsers = await getFinanceUsers();
       const mappedFinanceUsers = financeUsers.map((user) => {
         const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
         const nameParts = fullName.split(' ');
         const firstName = nameParts[0] || '';
         const lastName = nameParts.slice(1).join(' ') || '';
-        
+
         return {
           id: user.id,
           email: user.email,
@@ -326,16 +364,16 @@ export default function UniversityFinanceUsersScreen() {
       }) as FinanceUser[];
       setFinanceUsersData(mappedFinanceUsers);
       setFilteredData(mappedFinanceUsers);
-      
+
     } catch (error) {
       console.error("Error creando usuario de finanzas:", error);
-      
+
       // Mostrar notificación de error
       setNotification({
         type: 'error',
         title: 'Error al crear usuario de finanzas',
-        message: error instanceof Error 
-          ? error.message 
+        message: error instanceof Error
+          ? error.message
           : 'Ha ocurrido un error al intentar crear el usuario de finanzas.'
       });
     }
@@ -414,7 +452,7 @@ export default function UniversityFinanceUsersScreen() {
     onAddEntity: handleOpenAddModal,
     searchPlaceholder: "Buscar usuario de finanzas",
     addButtonLabel: "Agregar usuario de finanzas",
-    showFilterButton: false 
+    showFilterButton: false
   };
 
   const addFormConfig = {
@@ -427,7 +465,7 @@ export default function UniversityFinanceUsersScreen() {
     submitButtonText: "Agregar Usuario de finanzas",
     cancelButtonText: "Cancelar",
   };
-  
+
   // Fixed defaultValues to use ternary operator instead of && to avoid type error
   const editFormConfig = {
     isOpen: showEditModal,
@@ -460,10 +498,10 @@ export default function UniversityFinanceUsersScreen() {
         variant="danger"
         isLoading={isDeleting}
       />
-      
+
       <EntityForm {...addFormConfig} />
       <EntityForm {...editFormConfig} />
-      
+
       <ListPageTemplate
         // Data and entity type
         data={filteredData}

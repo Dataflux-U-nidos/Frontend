@@ -31,7 +31,7 @@ interface AuthFormProps {
             description: string;
         }>;
     }
-
+    onRegistryChange?: (values: Record<string, any>) => void
 }
 
 export default function AuthForm({
@@ -41,7 +41,8 @@ export default function AuthForm({
     onRegister,
     onForgotPassword,
     className,
-    userTypeOptions
+    userTypeOptions,
+    onRegistryChange
 }: AuthFormProps) {
     const loginFormRef = useRef<DynamicFormHandles>(null)
     const registryFormRef = useRef<DynamicFormHandles>(null)
@@ -148,6 +149,7 @@ export default function AuthForm({
                             <DynamicForm
                                 ref={registryFormRef}
                                 formDataConfig={registryFields}
+                                onChange={onRegistryChange}
                             />
                         </div>
                         <Button type="submit" className="w-full mb-4">

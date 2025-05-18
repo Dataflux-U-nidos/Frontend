@@ -12,6 +12,8 @@ export * from "./user/useGetManagersByUniversityHook";
 export * from "./user/useGetSupportByAdminHook";
 export * from "./user/useGetFinanceByAdminHook";
 export * from "./user/useGetMarketingByAdminHook";
+export * from "./user/useGetMyUserHook";
+export * from "./user/useUpdateMyUserHook";
 export * from "./user/useSupportHook";
 export * from "./user/useSpoofHook";
 
@@ -26,8 +28,8 @@ export * from "./campaign/useGetTotalInvestmentHook";
 
 //fot studentTests
 export * from "./studentTests/useGetVocationalTestHook";
-export * from "./studentTests/useGetVocationalPartialTestHook";
-export * from "./studentTests/useGetPyschometricTestHook";
+export * from "./studentTests/useUpdateGradesHooks";
+export * from "./studentTests/useUpdateTestResultsHook";
 
 // Major hooks
 export * from "./major/useGetAllMajorsHook";
@@ -38,3 +40,14 @@ export * from "./major/useFilterMajorsHook";
 // Subscription hooks
 export * from "./subscription/useGetAllSubscriptionHook";
 export * from "./subscription/useUpdateSubscriptionHook";
+
+// Job Opportunity hooks
+export * from "./jobOpportunity/useGetAllJobOpportunitiesHook";
+export * from "./jobOpportunity/useGetJobOpportunityByIdHook";
+export * from "./jobOpportunity/useGetJobOpportunitiesByMajorHook";
+export * from "./jobOpportunity/useFilterJobOpportunitiesHook";
+export * from "./jobOpportunity/useGetAllJobOpportunitiesHook";
+export * from "./jobOpportunity/useGetJobOpportunityByIdHook";
+export * from "./jobOpportunity/useGetJobOpportunitiesByMajorHook";
+export * from "./jobOpportunity/useFilterJobOpportunitiesHook";
+export * from "./jobOpportunity/useJobOpportunitiesWithMajorFilterHook";

@@ -20,6 +20,7 @@ interface AuthTemplateProps {
       description: string;
     }>;
   }
+  onRegistryChange?: (values: Record<string, any>) => void
 }
 
 export default function AuthTemplate({
@@ -29,7 +30,8 @@ export default function AuthTemplate({
   onLogin,
   onRegister,
   onForgotPassword,
-  userTypeOptions
+  userTypeOptions,
+  onRegistryChange,
 }: AuthTemplateProps) {
   return (
     <main className="grid h-screen w-screen p-8 gap-8 overflow-x-hidden grid-cols-1 xl:grid-cols-2">
@@ -42,6 +44,7 @@ export default function AuthTemplate({
         <AuthForm
           loginFields={loginFields}
           registryFields={registryFields}
+          onRegistryChange={onRegistryChange}
           onLogin={onLogin}
           onRegister={onRegister}
           onForgotPassword={onForgotPassword}

@@ -1,9 +1,58 @@
 import AuthTemplate from "@/components/templates/AuthTemplate";
-import { FormField } from "@/types/formTypes";
+import { FormField, SelectFormField } from "@/types/formTypes";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/context/AuthContext";
 import { Slide } from "../molecules/Carousel";
+
+const zoneOptions = [
+  { value: "Norte", label: "Norte" },
+  { value: "Sur", label: "Sur" },
+  { value: "Occidente", label: "Occidente" },
+  { value: "Oriente", label: "Oriente" },
+  { value: "Noroccidente", label: "Noroccidente" },
+  { value: "Nororiente", label: "Nororiente" },
+  { value: "Suroccidente", label: "Suroccidente" },
+  { value: "Suroriente", label: "Suroriente" },
+];
+
+const localityMap: Record<string, { value: string; label: string }[]> = {
+  Norte: [
+    { value: "Usaquén", label: "Usaquén" },
+    { value: "Suba", label: "Suba" },
+    { value: "Barrios Unidos", label: "Barrios Unidos" },
+  ],
+  Sur: [
+    { value: "Ciudad Bolívar", label: "Ciudad Bolívar" },
+    { value: "Usme", label: "Usme" },
+    { value: "Tunjuelito", label: "Tunjuelito" },
+    { value: "Sumapaz", label: "Sumapaz" },
+  ],
+  Occidente: [
+    { value: "Engativá", label: "Engativá" },
+    { value: "Fontibón", label: "Fontibón" },
+  ],
+  Oriente: [
+    { value: "Santa Fe", label: "Santa Fe" },
+    { value: "La Candelaria", label: "La Candelaria" },
+  ],
+  Noroccidente: [
+    { value: "Suba", label: "Suba" },
+    { value: "Engativá", label: "Engativá" },
+  ],
+  Nororiente: [
+    { value: "Chapinero", label: "Chapinero" },
+    { value: "Usaquén", label: "Usaquén" },
+  ],
+  Suroccidente: [
+    { value: "Kennedy", label: "Kennedy" },
+    { value: "Bosa", label: "Bosa" },
+  ],
+  Suroriente: [
+    { value: "Rafael Uribe Uribe", label: "Rafael Uribe Uribe" },
+    { value: "Ciudad Bolívar", label: "Ciudad Bolívar" },
+  ],
+};
 
 // LOGIN
 const loginFields: FormField[] = [
@@ -111,7 +160,6 @@ const universityFields: FormField[] = [
 const registryFieldsMap: Record<string, FormField[]> = {
   STUDENT: studentFields,
   TUTOR: tutorFields,
-  UNIVERSITY: universityFields,
 };
 
 const slides: Slide[] = [
@@ -140,6 +188,7 @@ export default function AuthScreen() {
   const navigate = useNavigate();
   const location = useLocation();
   const [selectedType, setSelectedType] = useState<string>("STUDENT");
+  const [regValues, setRegValues] = useState<Record<string, any>>({});
 
   useEffect(() => {
     if (userType === "STUDENT" && location.pathname !== "/student-profile") {
@@ -209,24 +258,54 @@ export default function AuthScreen() {
       last_name: data.last_name,
       age: data.age,
       address: data.address,
+      zone: data.zone,
+      locality: data.locality,
     };
 
-    console.log("Enviando:", userData);
     await registryAccount(userData);
     await login(userData.email, userData.password);
+    if (selectedType === "STUDENT") {
+      navigate("/student-grades");
+    }
   };
 
   const handleForgotPassword = () => {
     navigate("/forgot-password");
   };
 
+  let registryFields: FormField[] = registryFieldsMap[selectedType] || [];
+
+  if (selectedType === "UNIVERSITY") {
+    // anteponemos zona y localidad
+    registryFields = [
+      {
+        key: "zone",
+        type: "select",
+        placeholder: "Zona",
+        required: true,
+        options: zoneOptions,
+        selectPlaceholder: "Selecciona una zona",
+      } as SelectFormField,
+      {
+        key: "locality",
+        type: "select",
+        placeholder: "Localidad",
+        required: true,
+        options: regValues.zone ? localityMap[regValues.zone] || [] : [],
+        selectPlaceholder: regValues.zone
+          ? "Selecciona una localidad"
+          : "Primero selecciona zona",
+      } as SelectFormField,
+      ...universityFields,
+    ];
+  }
   // Determine registry fields based on selection
-  const registryFields = registryFieldsMap[selectedType] || [];
 
   return (
     <AuthTemplate
       loginFields={loginFields}
       registryFields={registryFields}
+      onRegistryChange={setRegValues}
       onLogin={handleLogin}
       onRegister={handleRegister}
       onForgotPassword={handleForgotPassword}

@@ -35,18 +35,38 @@ const studentFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
   {
     name: "age",
@@ -54,15 +74,12 @@ const studentFormFields: FormField[] = [
     type: "number",
     required: true,
     validation: {
-      min: {
-        value: 1,
-        message: "La edad debe ser un número positivo"
-      },
       max: {
-        value: 120,
-        message: "La edad no puede ser mayor a 120 años"
+        value: 17,
+        message: "La edad no puede ser mayor a 18 años"
       }
-    }
+    },
+    placeholder: "Ingresa tu edad"
   },
   {
     name: "password",
@@ -71,34 +88,53 @@ const studentFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*[0-9])(?=.{8,})/,
-        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
-    placeholder: "Mínimo 8 caracteres y al menos un número",
-    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
+    placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
+    helpText: "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial"
   },
 ];
 
 // Form fields for editing a student (sin contraseña)
 const studentEditFormFields: FormField[] = [
-  {
+    {
     name: "firstName",
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
   {
     name: "age",
@@ -106,25 +142,16 @@ const studentEditFormFields: FormField[] = [
     type: "number",
     required: true,
     validation: {
-      min: {
-        value: 1,
-        message: "La edad debe ser un número positivo"
-      },
       max: {
-        value: 120,
-        message: "La edad no puede ser mayor a 120 años"
+        value: 17,
+        message: "La edad no puede ser mayor a 18 años"
       }
-    }
+    },
+    placeholder: "Ingresa tu edad"
   },
   {
     name: "school",
     label: "Colegio",
-    type: "text",
-    required: false,
-  },
-  {
-    name: "location",
-    label: "Localidad",
     type: "text",
     required: false,
   },
@@ -306,46 +333,47 @@ export default function TutorStudentsScreen() {
   };
   
   // Manager for confirming and executing delete
-  const handleConfirmDelete = async () => {
-    if (!studentToDelete || !studentToDelete.id) return;
+  // En TutorStudentsScreen.tsx
+const handleConfirmDelete = async () => {
+  if (!studentToDelete || !studentToDelete.id) return;
+  
+  setIsDeleting(true);
+  
+  try {
+    await deleteUser(studentToDelete.id); // Asegurarse de que esta función esté usando la ruta correcta
     
-    setIsDeleting(true);
+    // Cerrar el modal de confirmación
+    setShowDeleteModal(false);
+    setStudentToDelete(null);
     
-    try {
-      await deleteUser(studentToDelete.id);
-      
-      // Cerrar el modal de confirmación
-      setShowDeleteModal(false);
-      setStudentToDelete(null);
-      
-      // Actualizar la lista de estudiantes filtrando el eliminado
-      const updatedStudents = studentsData.filter(
-        student => student.id !== studentToDelete.id
-      );
-      setStudentsData(updatedStudents);
-      setFilteredData(updatedStudents);
-      
-      // Mostrar notificación de éxito
-      setNotification({
-        type: 'success',
-        title: 'Estudiante eliminado',
-        message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
-      });
-    } catch (error) {
-      console.error("Error eliminando estudiante:", error);
-      
-      // Mostrar notificación de error
-      setNotification({
-        type: 'error',
-        title: 'Error al eliminar estudiante',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar eliminar el estudiante.'
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+    // Actualizar la lista de estudiantes filtrando el eliminado
+    const updatedStudents = studentsData.filter(
+      student => student.id !== studentToDelete.id
+    );
+    setStudentsData(updatedStudents);
+    setFilteredData(updatedStudents);
+    
+    // Mostrar notificación de éxito
+    setNotification({
+      type: 'success',
+      title: 'Estudiante eliminado',
+      message: `El estudiante ${studentToDelete.name} ha sido eliminado exitosamente.`
+    });
+  } catch (error) {
+    console.error("Error eliminando estudiante:", error);
+    
+    // Mostrar notificación de error
+    setNotification({
+      type: 'error',
+      title: 'Error al eliminar estudiante',
+      message: error instanceof Error 
+        ? error.message 
+        : 'Ha ocurrido un error al intentar eliminar el estudiante.'
+    });
+  } finally {
+    setIsDeleting(false);
+  }
+};
 
   // Manager for adding a new student
   const handleAddStudent = async (formData: any) => {
@@ -357,7 +385,6 @@ export default function TutorStudentsScreen() {
       password: formData.password,
       userType: "STUDENT",
     };
-    console.log("Enviando:", userData);
     
     try {
       await createUser(userData);

@@ -18,6 +18,7 @@ interface IAuthContext {
   logout: () => Promise<void>;
   createAccount: (userData: unknown) => Promise<void>;
   registryAccount: (userData: unknown) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -30,31 +31,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
   const { mutateAsync: fetchUser } = useGetMyUser();
 
-  useEffect(() => {
-    checkSession();
-  }, []);
-
   const checkSession = async () => {
+    setIsAuthLoading(true); // marcamos loading al inicio
     try {
-      const data = await getSession();
-      setUserType(data.userType);
+      // 1) verificamos sesión
+      const session = await getSession();
+      setUserType(session.userType);
 
-      const loadUser = async () => {
-        try {
-          const user = await fetchUser();
-          setUser(user);
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        }
-      };
-      loadUser();
+      // 2) esperamos a que llegue el user con testCompleted
+      const me = await fetchUser();
+      setUser(me);
     } catch {
       setUserType(null);
       setUser(null);
     } finally {
-      setIsAuthLoading(false);
+      setIsAuthLoading(false); // sólo aquí, **tras** fetchUser
     }
   };
+
+  useEffect(() => {
+    checkSession();
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
@@ -88,6 +85,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await registerMutation.mutateAsync({ ...userData });
   };
 
+  const refreshUser = async () => {
+    try {
+      const u = await fetchUser();
+      setUser(u);
+    } catch (err) {
+      console.error("Error al refrescar user:", err);
+    }
+  };
+
   const value: IAuthContext = {
     user,
     userType,
@@ -96,6 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     createAccount,
     registryAccount,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
