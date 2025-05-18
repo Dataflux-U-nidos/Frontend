@@ -13,6 +13,7 @@ export * from "./user/useGetSupportByAdminHook";
 export * from "./user/useGetFinanceByAdminHook";
 export * from "./user/useGetMarketingByAdminHook";
 export * from "./user/useSupportHook";
+export * from "./user/useSpoofHook";
 
 // Campaign hooks
 export * from "./campaign/useCreateCampaignHook";

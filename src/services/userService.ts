@@ -1,6 +1,12 @@
 // src/services/userService.ts
 import { userApi } from "../lib/api";
-import { CreateUserInput, UpdateUserInput, User } from "../types";
+import {
+  CreateUserInput,
+  UpdateUserInput,
+  User,
+  ImpersonateResponse,
+  ImpersonateUserDto,
+} from "../types";
 
 export const createUser = async (newUser: CreateUserInput): Promise<User> => {
   const response = await userApi.post<User>("/user", newUser);
@@ -35,8 +41,25 @@ export const getSupportUsersByAdmin = async (): Promise<User[]> => {
   return data;
 };
 
-export const getUsersBySupport = async (): Promise<User[]> => {
-  const { data } = await userApi.get<User[]>(`/user/support-users`);
+export const getUsersBySupport = async (filters?: {
+  search?: string;
+  userType?: string;
+}): Promise<User[]> => {
+  const { data } = await userApi.get<User[]>("/user/support-users", {
+    params: filters,
+  });
+  return data;
+};
+
+export const impersonateUser = async (
+  targetUserId: string
+): Promise<ImpersonateResponse> => {
+  const payload: ImpersonateUserDto = { targetUserId };
+  const { data } = await userApi.post<ImpersonateResponse>(
+    "/auth/impersonate",
+    payload
+  );
+  console.log("Impersonation result:", data);
   return data;
 };
 
