@@ -1,3 +1,4 @@
+// src/routes/index.tsx (updated)
 import React, { lazy } from "react";
 import {
   BrowserRouter,
@@ -87,12 +88,17 @@ const SupportScreen = lazy(
   () => import("../components/screens/SupportMainScreen")
 );
 
-// Nuestras pantallas con animación
+// Pantallas con animación - Existentes
 const StudentMajorsScreen = lazy(
   () => import("@/components/screens/StudentMajorsScreen")
 );
 const UniversityDetailMockScreen = lazy(
   () => import("@/components/screens/UniversityDetailMockScreen")
+);
+
+// *** NUEVA PANTALLA PARA UNIVERSIDADES ***
+const StudentUniversitiesScreen = lazy(
+  () => import("@/components/screens/StudentUniversitiesScreen")
 );
 
 // Wrapper que aplica la animación de entrada/salida
@@ -129,6 +135,7 @@ function AnimatedRoutes() {
           </Route>
         </Route>
 
+        {/* Student Routes */}
         <Route element={<StudentRoutes />}>
           <Route element={<LayoutScreen />}>
             <Route path="/account-student" element={<AccountScreen />} />
@@ -137,8 +144,37 @@ function AnimatedRoutes() {
               path="/student-vocationalTest"
               element={<TestVocational />}
             />
-            <Route path="/student-programs" element={<StudentMajorsScreen />} />
             <Route path="/student-grades" element={<StudentGradesScreen />} />
+            
+            {/* Rutas con animación para estudiantes */}
+            <Route
+              path="/student-programs"
+              element={
+                <MotionWrapper>
+                  <StudentMajorsScreen />
+                </MotionWrapper>
+              }
+            />
+            
+            {/* *** NUEVA RUTA PARA UNIVERSIDADES *** */}
+            <Route
+              path="/student-universities"
+              element={
+                <MotionWrapper>
+                  <StudentUniversitiesScreen />
+                </MotionWrapper>
+              }
+            />
+            
+            {/* Ruta para detalle de universidad con parámetro */}
+            <Route
+              path="/university/:id"
+              element={
+                <MotionWrapper>
+                  <UniversityDetailMockScreen />
+                </MotionWrapper>
+              }
+            />
           </Route>
         </Route>
 
@@ -155,26 +191,6 @@ function AnimatedRoutes() {
             />
           </Route>
         </Route>
-
-        {/* Aquí aplicamos MotionWrapper */}
-        <Route
-          path="/student-programs"
-          element={
-            <MotionWrapper>
-              <StudentMajorsScreen />
-            </MotionWrapper>
-          }
-        />
-
-        {/* Nueva ruta con animación */}
-        <Route
-          path="/universidad/:id"
-          element={
-            <MotionWrapper>
-              <UniversityDetailMockScreen />
-            </MotionWrapper>
-          }
-        />
 
         {/* Tutor */}
         <Route element={<TutorRoutes />}>
@@ -249,6 +265,8 @@ function AnimatedRoutes() {
             />
           </Route>
         </Route>
+        
+        {/* Support */}
         <Route element={<SupportRoutes />}>
           <Route element={<LayoutScreen />}>
             <Route path="/support" element={<SupportScreen />} />

@@ -22,6 +22,5 @@ export default function StudentRoutes() {
     return <Navigate to="/student-grades" replace />;
   }
 
-  // 4. Si todo OK, renderizamos las rutas hijas
   return <Outlet />;
 }
