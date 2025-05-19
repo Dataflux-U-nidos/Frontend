@@ -4,6 +4,7 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetSupportByAdmin,
@@ -122,7 +123,7 @@ const SupportUserEditFormFields: FormField[] = [
   },
 ];
 
-export default function UniversitySupportUsersScreen() {
+export default function AdminSupportScreen() {
   // Hooks for CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getSupportUsers } = useGetSupportByAdmin();
@@ -149,11 +150,9 @@ export default function UniversitySupportUsersScreen() {
       try {
         const SupportUsers = await getSupportUsers();
         const mappedSupportUsers = SupportUsers.map((user) => {
-
-            const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
           
           return {
             id: user.id,
@@ -340,7 +339,6 @@ export default function UniversitySupportUsersScreen() {
       password: formData.password,
       userType: "SUPPORT",
     };
-
     
     try {
       await createUser(userData);
@@ -352,12 +350,11 @@ export default function UniversitySupportUsersScreen() {
         message: `El usuario de soporte ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
+      // Actualizar lista con mapeo correcto
       const SupportUsers = await getSupportUsers();
       const mappedSupportUsers = SupportUsers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
         
         return {
           id: user.id,
@@ -470,7 +467,7 @@ export default function UniversitySupportUsersScreen() {
     cancelButtonText: "Cancelar",
   };
   
-  // Fixed defaultValues to use ternary instead of && to avoid type error
+  // Fixed defaultValues to use values already processed
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -482,9 +479,9 @@ export default function UniversitySupportUsersScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: SupportUserToEdit ? {
-      firstName: SupportUserToEdit.firstName ?? SupportUserToEdit.name.split(' ')[0] ?? '',
-      lastName: SupportUserToEdit.lastName ?? SupportUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: SupportUserToEdit.email,
+      firstName: SupportUserToEdit.firstName || '',
+      lastName: SupportUserToEdit.lastName || '',
+      email: SupportUserToEdit.email || '',
     } : undefined
   };
 

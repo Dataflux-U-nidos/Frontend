@@ -1,9 +1,11 @@
-import  { useState, useEffect } from "react";
+// src/components/screens/TutorStudentsScreen.tsx (Completo y corregido)
+import { useState, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetStudentsByTutor,
@@ -74,8 +76,12 @@ const studentFormFields: FormField[] = [
     type: "number",
     required: true,
     validation: {
+      min: {
+        value: 1,
+        message: "La edad debe ser mayor a 0"
+      },
       max: {
-        value: 17,
+        value: 18,
         message: "La edad no puede ser mayor a 18 años"
       }
     },
@@ -88,7 +94,8 @@ const studentFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/,
+        message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
     placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
@@ -98,7 +105,7 @@ const studentFormFields: FormField[] = [
 
 // Form fields for editing a student (sin contraseña)
 const studentEditFormFields: FormField[] = [
-    {
+  {
     name: "firstName",
     label: "Nombre",
     type: "text",
@@ -142,8 +149,12 @@ const studentEditFormFields: FormField[] = [
     type: "number",
     required: true,
     validation: {
+      min: {
+        value: 1,
+        message: "La edad debe ser mayor a 0"
+      },
       max: {
-        value: 17,
+        value: 18,
         message: "La edad no puede ser mayor a 18 años"
       }
     },
@@ -154,6 +165,14 @@ const studentEditFormFields: FormField[] = [
     label: "Colegio",
     type: "text",
     required: false,
+    placeholder: "Nombre del colegio"
+  },
+  {
+    name: "location",
+    label: "Localidad",
+    type: "text",
+    required: false,
+    placeholder: "Localidad de residencia"
   },
 ];
 
@@ -183,11 +202,9 @@ export default function TutorStudentsScreen() {
       try {
         const students = await getStudents();
         const mappedStudents = students.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
           
           return {
             id: user.id,
@@ -279,16 +296,19 @@ export default function TutorStudentsScreen() {
       setShowEditModal(false);
       setStudentToEdit(null);
       
-      // Actualizar la lista de estudiantes
+      // Actualizar la lista de estudiantes usando las utilidades
+      const { firstName, lastName } = parseFullName(formData.firstName, formData.lastName);
+      const fullName = combineNames(firstName, lastName);
+      
       const updatedStudent = {
         ...studentToEdit,
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
-        firstName: formData.firstName,
-        lastName: formData.lastName,
+        name: fullName,
+        firstName: firstName,
+        lastName: lastName,
         email: formData.email,
         age: formData.age,
-        school: formData.school,
-        location: formData.location
+        school: formData.school || 'No disponible',
+        location: formData.location || 'No disponible'
       };
       
       const updatedStudents = studentsData.map(student => 
@@ -298,7 +318,6 @@ export default function TutorStudentsScreen() {
       setStudentsData(updatedStudents);
       setFilteredData(updatedStudents);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
         title: 'Estudiante actualizado',
@@ -307,7 +326,6 @@ export default function TutorStudentsScreen() {
     } catch (error) {
       console.error("Error actualizando estudiante:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
         title: 'Error al actualizar estudiante',
@@ -341,18 +359,15 @@ export default function TutorStudentsScreen() {
     try {
       await deleteUser(studentToDelete.id);
       
-      // Cerrar el modal de confirmación
       setShowDeleteModal(false);
       setStudentToDelete(null);
       
-      // Actualizar la lista de estudiantes filtrando el eliminado
       const updatedStudents = studentsData.filter(
         student => student.id !== studentToDelete.id
       );
       setStudentsData(updatedStudents);
       setFilteredData(updatedStudents);
       
-      // Mostrar notificación de éxito
       setNotification({
         type: 'success',
         title: 'Estudiante eliminado',
@@ -361,7 +376,6 @@ export default function TutorStudentsScreen() {
     } catch (error) {
       console.error("Error eliminando estudiante:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
         title: 'Error al eliminar estudiante',
@@ -395,13 +409,11 @@ export default function TutorStudentsScreen() {
         message: `El estudiante ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de estudiantes
+      // Actualizar lista con mapeo correcto
       const students = await getStudents();
       const mappedStudents = students.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
         
         return {
           id: user.id,
@@ -420,7 +432,6 @@ export default function TutorStudentsScreen() {
     } catch (error) {
       console.error("Error creando estudiante:", error);
       
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
         title: 'Error al crear estudiante',
@@ -469,7 +480,7 @@ export default function TutorStudentsScreen() {
     },
   };
 
-  // Definir acciones para la tabla - ahora se mostrarán después del botón "Ver detalles"
+  // Table actions
   const tableActions = [
     {
       label: "Editar",
@@ -527,7 +538,7 @@ export default function TutorStudentsScreen() {
     cancelButtonText: "Cancelar",
   };
   
-  // FIX: Usar undefined en lugar de null para defaultValues cuando studentToEdit es null
+  // Usar directamente los valores ya parseados correctamente
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -538,93 +549,18 @@ export default function TutorStudentsScreen() {
     submitButtonText: "Guardar Cambios",
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
-    // Corregido: Usar un operador ternario para asegurar que defaultValues sea undefined en lugar de null
     defaultValues: studentToEdit ? {
-      firstName: studentToEdit.firstName ?? studentToEdit.name.split(' ')[0] ?? '',
-      lastName: studentToEdit.lastName ?? studentToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: studentToEdit.email,
-      age: studentToEdit.age,
+      firstName: studentToEdit.firstName || '',
+      lastName: studentToEdit.lastName || '',
+      email: studentToEdit.email || '',
+      age: studentToEdit.age || 0,
       school: studentToEdit.school !== 'No disponible' ? studentToEdit.school : '',
       location: studentToEdit.location !== 'No disponible' ? studentToEdit.location : ''
     } : undefined
   };
 
-  // Componente de notificación personalizado
-  const CustomNotification = () => {
-    if (!notification) return null;
-
-    const isSuccess = notification.type === 'success';
-    
-    return (
-      <div className="fixed top-4 right-4 z-50 w-80 shadow-lg rounded-md overflow-hidden">
-        <div className={`p-4 ${isSuccess ? 'bg-green-50' : 'bg-red-50'}`}>
-          <div className="flex justify-between items-start">
-            <div className="flex">
-              {/* Ícono de éxito o error */}
-              <div className={`mr-3 flex-shrink-0 flex items-center justify-center h-10 w-10 rounded-full ${isSuccess ? 'bg-green-100' : 'bg-red-100'}`}>
-                {isSuccess ? (
-                  <svg className="h-6 w-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                ) : (
-                  <svg className="h-6 w-6 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                )}
-              </div>
-              
-              {/* Contenido de la notificación */}
-              <div>
-                <h3 className={`text-lg font-medium ${isSuccess ? 'text-green-800' : 'text-red-800'}`}>
-                  {notification.title}
-                </h3>
-                <div className={`mt-1 text-sm ${isSuccess ? 'text-green-700' : 'text-red-700'}`}>
-                  {notification.message}
-                </div>
-              </div>
-            </div>
-            
-            {/* Botón para cerrar */}
-            <button
-              onClick={handleCloseNotification}
-              className={`ml-4 inline-flex text-gray-400 hover:${isSuccess ? 'text-green-600' : 'text-red-600'} focus:outline-none`}
-            >
-              <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-          </div>
-          
-          {/* Barra de progreso para indicar el tiempo restante */}
-          <div className="mt-3 w-full bg-gray-200 rounded-full h-1">
-            <div 
-              className={`h-1 rounded-full ${isSuccess ? 'bg-green-500' : 'bg-red-500'}`}
-              style={{
-                width: '100%',
-                animation: 'progress-bar 5s linear forwards'
-              }}
-            />
-          </div>
-          
-          {/* Estilos para la animación */}
-          <style>
-            {`
-              @keyframes progress-bar {
-                from { width: 100%; }
-                to { width: 0%; }
-              }
-            `}
-          </style>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <>
-      {/* Notificación personalizada */}
-      <CustomNotification />
-      
       {/* Modal de confirmación para eliminar estudiante */}
       <ConfirmationDialog
         isOpen={showDeleteModal}

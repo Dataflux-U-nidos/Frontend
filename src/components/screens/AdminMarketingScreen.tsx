@@ -3,6 +3,7 @@ import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
@@ -145,28 +146,26 @@ export default function UniversityMarketingUsersScreen() {
   // loads marketingUsers when component mounts
   useEffect(() => {
     const fetchMarketingUsers = async () => {
-      try {
-        const marketingUsers = await getMarketingUsers();
-        const mappedMarketingUsers = marketingUsers.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
-          
-          return {
-            id: user.id,
-            email: user.email,
-            name: fullName,
-            firstName: firstName,
-            lastName: lastName,
-          };
-        }) as MarketingUser[];
-        setMarketingUsersData(mappedMarketingUsers);
-        setFilteredData(mappedMarketingUsers);
-      } catch (error) {
-        console.error("Error fetching marketingUsers:", error);
-      }
+  try {
+    const marketingUsers = await getMarketingUsers();
+    const mappedMarketingUsers = marketingUsers.map((user) => {
+      // Usar la función utilitaria para parsear correctamente los nombres
+      const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+      const fullName = combineNames(firstName, lastName);
+      
+      return {
+        id: user.id,
+        email: user.email,
+        name: fullName,
+        firstName: firstName,
+        lastName: lastName,
+      };
+    }) as MarketingUser[];
+    setMarketingUsersData(mappedMarketingUsers);
+    setFilteredData(mappedMarketingUsers);
+  } catch (error) {
+    console.error("Error fetching marketingUsers:", error);
+  }
     };
     fetchMarketingUsers();
   }, [getMarketingUsers]);
@@ -208,14 +207,7 @@ export default function UniversityMarketingUsersScreen() {
   
   // Manager for initiating edit process
   const handleInitiateEdit = (marketingUser: MarketingUser) => {
-    const userToEdit = {
-      ...marketingUser,
-      firstName: marketingUser.firstName || marketingUser.name.split(' ')[0] || '',
-      lastName: marketingUser.lastName || 
-                (marketingUser.name.includes(' ') ? 
-                  marketingUser.name.substring(marketingUser.name.indexOf(' ') + 1).trim() : '')
-    };
-    setMarketingUserToEdit(userToEdit);
+    setMarketingUserToEdit(marketingUser);
     setShowEditModal(true);
   };
   
@@ -348,12 +340,11 @@ export default function UniversityMarketingUsersScreen() {
         message: `El usuario de marketing ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
+      // Actualizar mapeo aquí también
       const marketingUsers = await getMarketingUsers();
       const mappedMarketingUsers = marketingUsers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
         
         return {
           id: user.id,
@@ -378,6 +369,8 @@ export default function UniversityMarketingUsersScreen() {
       });
     }
   };
+
+
   // Manager for searching marketingUsers
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) {
@@ -470,9 +463,9 @@ export default function UniversityMarketingUsersScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: marketingUserToEdit ? {
-      firstName: marketingUserToEdit.firstName ?? marketingUserToEdit.name.split(' ')[0] ?? '',
-      lastName: marketingUserToEdit.lastName ?? marketingUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: marketingUserToEdit.email,
+      firstName: marketingUserToEdit.firstName || '',
+      lastName: marketingUserToEdit.lastName || '',
+      email: marketingUserToEdit.email || '',
     } : undefined
   };
   

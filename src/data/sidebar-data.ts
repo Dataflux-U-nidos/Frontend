@@ -7,6 +7,7 @@ import {
   HandCoins,
   Headset,
   School,
+  FileUser,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -22,7 +23,7 @@ export const sidebarData: SidebarData = {
         // Student
         { title: "Programas", url: "/student-programs", icon: House, roles: ["STUDENT"] },
         { title: "Universidades", url: "/student-universities", icon: University, roles: ["STUDENT"] },
-        { title: "Proyección en el mercado laboral", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
+        { title: "Salidas laborales", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
         { title: "Encuesta de satisfacción", url: "/student-survey", icon: Headset, roles: ["STUDENT"] },
   
         // Tutor
@@ -36,6 +37,8 @@ export const sidebarData: SidebarData = {
         { title: "Soporte", url: "/admin-support", icon: University, roles: ["ADMIN"] },
         { title: "Finanzas", url: "/admin-finances", icon: BookOpenCheck, roles: ["ADMIN"] },
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
+        { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
+        { title: "Salidas laborales", url: "/admin-job-opportunities", icon: FileUser, roles: ["ADMIN"] },
 
         // Financiero
         { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },

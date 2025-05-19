@@ -7,7 +7,7 @@ import {
 } from "@/services/authService";
 import { useCreateUser } from "@/hooks/user/useCreateUserHook";
 import { useRegisterUser } from "@/hooks/user/useRegisterUserHook";
-import {User } from "@/types/userType";
+import { User } from "@/types/userType";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 
 interface IAuthContext {
@@ -30,11 +30,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isAuthLoading, setIsAuthLoading] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const { mutateAsync: fetchUser } = useGetMyUser();
-  
-
 
   const checkSession = async () => {
-    setIsAuthLoading(true);           // marcamos loading al inicio
+    setIsAuthLoading(true); // marcamos loading al inicio
     try {
       // 1) verificamos sesión
       const session = await getSession();
@@ -47,14 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       setUserType(null);
       setUser(null);
     } finally {
-      setIsAuthLoading(false);        // sólo aquí, **tras** fetchUser
+      setIsAuthLoading(false); // sólo aquí, **tras** fetchUser
     }
   };
 
   useEffect(() => {
     checkSession();
   }, []);
-
 
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
@@ -88,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await registerMutation.mutateAsync({ ...userData });
   };
 
-   const refreshUser = async () => {
+  const refreshUser = async () => {
     try {
       const u = await fetchUser();
       setUser(u);

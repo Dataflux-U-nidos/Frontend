@@ -1,7 +1,7 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../atoms/ui/tabs";
-import { BarChartComponent } from "../molecules/graphics/Bar-Chart";
-import { LineChartComponent } from "../molecules/graphics/Line-Chart";
-import { DynamicTable } from "../organisms/DynamicTable";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../atoms/ui/tabs";
+import { BarChartComponent } from "../../molecules/graphics/Bar-Chart";
+import { LineChartComponent } from "../../molecules/graphics/Line-Chart";
+import { DynamicTable } from "../../organisms/DynamicTable";
 
 type DashboardProps = {
   barChartTendenciasUniversidades: {

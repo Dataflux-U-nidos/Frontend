@@ -4,6 +4,7 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetFinanceByAdmin,
@@ -73,7 +74,8 @@ const financeUserFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, 
+        message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
     placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
@@ -123,7 +125,7 @@ const financeUserEditFormFields: FormField[] = [
   },
 ];
 
-export default function UniversityFinanceUsersScreen() {
+export default function AdminFinancesScreen() {
   // Hooks para operaciones CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getFinanceUsers } = useGetFinanceByAdmin();
@@ -150,11 +152,9 @@ export default function UniversityFinanceUsersScreen() {
       try {
         const financeUsers = await getFinanceUsers();
         const mappedFinanceUsers = financeUsers.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
 
           return {
             id: user.id,
@@ -243,7 +243,7 @@ export default function UniversityFinanceUsersScreen() {
 
       const updatedFinanceUser = {
         ...financeUserToEdit,
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        name: combineNames(formData.firstName, formData.lastName),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -336,7 +336,6 @@ export default function UniversityFinanceUsersScreen() {
       userType: "FINANCES",
     };
 
-
     try {
       await createUser(userData);
       handleCloseAddModal();
@@ -347,12 +346,11 @@ export default function UniversityFinanceUsersScreen() {
         message: `El usuario de finanzas ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
 
+      // Actualizar lista con mapeo correcto
       const financeUsers = await getFinanceUsers();
       const mappedFinanceUsers = financeUsers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
 
         return {
           id: user.id,
@@ -368,7 +366,6 @@ export default function UniversityFinanceUsersScreen() {
     } catch (error) {
       console.error("Error creando usuario de finanzas:", error);
 
-      // Mostrar notificación de error
       setNotification({
         type: 'error',
         title: 'Error al crear usuario de finanzas',
@@ -466,7 +463,7 @@ export default function UniversityFinanceUsersScreen() {
     cancelButtonText: "Cancelar",
   };
 
-  // Fixed defaultValues to use ternary operator instead of && to avoid type error
+  // Actualizar editFormConfig para usar los valores correctos
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -478,12 +475,11 @@ export default function UniversityFinanceUsersScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: financeUserToEdit ? {
-      firstName: financeUserToEdit.firstName ?? financeUserToEdit.name.split(' ')[0] ?? '',
-      lastName: financeUserToEdit.lastName ?? financeUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: financeUserToEdit.email,
+      firstName: financeUserToEdit.firstName || '',
+      lastName: financeUserToEdit.lastName || '',
+      email: financeUserToEdit.email || '',
     } : undefined
   };
-
 
   return (
     <>
