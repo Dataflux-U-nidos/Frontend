@@ -78,7 +78,7 @@ import {
     return (
       <Card className="bg-blue-200 shadow-md border-0 rounded-2xl overflow-hidden">
         <CardHeader className="pb-4">
-          <CardTitle className="text-2xl font-bold">TOP carreras</CardTitle>
+          <CardTitle className="text-2xl font-bold">TOP 3 carreras</CardTitle>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6">
           {careers.map((career) => {
