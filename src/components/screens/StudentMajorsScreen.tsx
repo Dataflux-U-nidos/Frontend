@@ -1,5 +1,5 @@
 // src/components/screens/StudentMajorsScreen.tsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useFilterMajors } from '@/hooks/major/useFilterMajorsHook';
 import { useGetAllMajors } from '@/hooks/major/useGetAllMajorsHook';
 import { MajorFilters } from '@/types/majorType';
@@ -89,6 +89,12 @@ export default function StudentMajorsScreen() {
     updateFilters(newFilters);
   };
 
+  const focusOptions = useMemo(() => {
+    if (!allMajors) return [];
+      const uniques = Array.from(new Set(allMajors.map((m) => m.focus).filter(Boolean)));
+    return uniques.map((f) => ({ value: f, label: f }));
+  }, [allMajors]);
+
   // Campos para el filtro de carreras
   const filterFields: FilterField[] = [
     {
@@ -118,8 +124,8 @@ export default function StudentMajorsScreen() {
     {
       id: 'focus',
       label: 'Enfoque',
-      type: 'text',
-      placeholder: 'Ej: Comunicación, Tecnología, etc.'
+      type: "select",
+      options: focusOptions,
     }
   ];
 

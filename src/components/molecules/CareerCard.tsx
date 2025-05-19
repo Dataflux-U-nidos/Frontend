@@ -59,9 +59,9 @@ export function CareerCard({ major, onClick }: Props) {
   
   // Formatear la dificultad para mostrar
   const difficultyText = {
-    EASY: "Fácil",
-    MEDIUM: "Media", 
-    HARD: "Difícil"
+    EASY: "FÁCIL",
+    MEDIUM: "MEDIA", 
+    HARD: "DIFÍCIL"
   }[difficulty];
 
   return (
