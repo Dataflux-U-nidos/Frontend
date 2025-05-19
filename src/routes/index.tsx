@@ -25,6 +25,7 @@ import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
 
 const TestVocational = lazy(() => import("@/components/screens/TestVocationalScreen"));
+const TestSatisfaction = lazy(() => import("@/components/screens/TestSatisfactionScreen"));
 const Landing = lazy(() => import('../components/screens/LandingScreen'))
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const ForgotPassword = lazy(() => import("../components/screens/ForgotPasswordScreen"));
@@ -44,6 +45,7 @@ const FinancesIncomeScreen = lazy(() => import("../components/screens/FinancesIn
 const FinancesCampaingsScreen = lazy(() => import("../components/screens/FinancesCampaingsScreen"));
 const StudentGradesScreen = lazy(() => import("../components/screens/StudentGradesScreen"));
 const FinancesSubscriptionScreen = lazy(() => import("../components/screens/FinancesSubscriptionScreen"));
+const CuestionaryScreen = lazy(() => import("../components/screens/CuestionaryScreen"));
 
 // Nuestras pantallas con animación
 const StudentMajorsScreen = lazy(() =>
@@ -102,6 +104,8 @@ function AnimatedRoutes() {
             <Route path="/student-vocationalTest" element={<TestVocational />} />
             <Route path="/student-programs" element={<StudentMajorsScreen />} />
             <Route path="/student-grades" element={<StudentGradesScreen />} />
+            <Route path="/student-survey" element={<CuestionaryScreen />} />
+            <Route path="/student-satisfaction" element={<TestSatisfaction />} />
           </Route>
         </Route>
 

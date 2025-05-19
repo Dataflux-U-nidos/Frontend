@@ -23,6 +23,7 @@ export const sidebarData: SidebarData = {
         { title: "Programas", url: "/student-programs", icon: House, roles: ["STUDENT"] },
         { title: "Universidades", url: "/student-universities", icon: University, roles: ["STUDENT"] },
         { title: "Proyección en el mercado laboral", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
+        { title: "Encuesta de satisfacción", url: "/student-survey", icon: Headset, roles: ["STUDENT"] },
   
         // Tutor
         { title: "Estudiantes", url: "/tutor-students", icon: University, roles: ["TUTOR"] },
