@@ -8,6 +8,7 @@ import {
   Headset,
   School,
   FileUser,
+  BookCopy,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -21,7 +22,8 @@ export const sidebarData: SidebarData = {
         { title: "Dashboard", url: "/viewer-dashboard", icon: Presentation, roles: ["VIEWER"] },
 
         // Student
-        { title: "Programas", url: "/student-programs", icon: House, roles: ["STUDENT"] },
+        { title: "Mi perfil", url: "/student-profile", icon: House, roles: ["STUDENT"] },
+        { title: "Programas", url: "/student-programs", icon: BookCopy, roles: ["STUDENT"] },
         { title: "Universidades", url: "/student-universities", icon: University, roles: ["STUDENT"] },
         { title: "Salidas laborales", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
         { title: "Encuesta de satisfacción", url: "/student-survey", icon: Headset, roles: ["STUDENT"] },

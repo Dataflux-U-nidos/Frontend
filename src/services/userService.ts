@@ -1,4 +1,5 @@
 // src/services/userService.ts
+import { Major } from "@/types/majorType";
 import { userApi } from "../lib/api";
 import {
   CreateUserInput,
@@ -19,6 +20,12 @@ export const createUser = async (newUser: CreateUserInput): Promise<User> => {
 
 export const getAllUsers = async (): Promise<User[]> => {
   const { data } = await userApi.get<User[]>("/user");
+  return data;
+};
+
+// Obtener recomendaciones de carreras
+export const getAllRecomendations = async (): Promise<Major[]> => {
+  const { data } = await userApi.get<Major[]>("/user/recommendations");
   return data;
 };
 
