@@ -63,6 +63,9 @@ const AdminFinancesScreen = lazy(
 const AdminMarketingScreen = lazy(
   () => import("@/components/screens/AdminMarketingScreen")
 );
+const AdminDashboardScreen = lazy(
+  () => import("@/components/screens/AdminDashboardScreen")
+);
 const InfoManagerMainScreen = lazy(
   () => import("../components/screens/InfoManagerMainScreen")
 );
@@ -145,7 +148,7 @@ function AnimatedRoutes() {
               element={<TestVocational />}
             />
             <Route path="/student-grades" element={<StudentGradesScreen />} />
-            
+
             {/* Rutas con animación para estudiantes */}
             <Route
               path="/student-programs"
@@ -155,7 +158,7 @@ function AnimatedRoutes() {
                 </MotionWrapper>
               }
             />
-            
+
             {/* *** NUEVA RUTA PARA UNIVERSIDADES *** */}
             <Route
               path="/student-universities"
@@ -165,7 +168,7 @@ function AnimatedRoutes() {
                 </MotionWrapper>
               }
             />
-            
+
             {/* Ruta para detalle de universidad con parámetro */}
             <Route
               path="/university/:id"
@@ -230,6 +233,7 @@ function AnimatedRoutes() {
             <Route path="/admin-support" element={<AdminSupportScreen />} />
             <Route path="/admin-finances" element={<AdminFinancesScreen />} />
             <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
+            <Route path="/admin-dashboard" element={<AdminDashboardScreen />} />
           </Route>
         </Route>
 
@@ -265,7 +269,7 @@ function AnimatedRoutes() {
             />
           </Route>
         </Route>
-        
+
         {/* Support */}
         <Route element={<SupportRoutes />}>
           <Route element={<LayoutScreen />}>

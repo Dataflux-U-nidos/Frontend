@@ -35,6 +35,7 @@ export const sidebarData: SidebarData = {
         { title: "Soporte", url: "/admin-support", icon: University, roles: ["ADMIN"] },
         { title: "Finanzas", url: "/admin-finances", icon: BookOpenCheck, roles: ["ADMIN"] },
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
+        { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
 
         // Financiero
         { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
