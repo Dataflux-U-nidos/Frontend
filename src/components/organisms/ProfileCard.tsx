@@ -1,12 +1,10 @@
 import { Avatar, AvatarImage } from "../atoms/ui/avatar"
 import { 
-  Camera, 
   Mail, 
   Calendar, 
   GraduationCap, 
   MapPin,
-  User,
-  Edit3
+  User
 } from "lucide-react"
 import {
   Card,

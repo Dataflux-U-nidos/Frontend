@@ -2,6 +2,7 @@ import { StudentProfileTemplate } from "../templates/ProfileTemplate";
 import { useEffect, useState } from "react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 import { getAllRecomendations } from "@/services/userService";
+import { RecommendationWithUniversity } from "@/types/recomendationType";
 import LoadingTemplate from "../templates/LoadingTemplate";
 
 const studentProfileExtras = {
@@ -29,7 +30,7 @@ const mapUserCompetenciesToPersonality = (userData: any) => {
     { trait: "Idiomas", value: userData.idi, color: "red" },
     { trait: "Arte", value: userData.ar, color: "pink" },
   ];
-
+  
   // Filtrar y mapear solo las competencias que tienen un valor válido
   return competencies
     .filter(competency => 
@@ -47,7 +48,7 @@ const mapUserCompetenciesToPersonality = (userData: any) => {
 
 export default function StudentProfileScreen() {
   const [userData, setUserData] = useState<any | null>(null);
-  const [recommendations, setRecommendations] = useState<any[] | null>(null);
+  const [recommendations, setRecommendations] = useState<RecommendationWithUniversity[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [, setHasRecommendationsError] = useState(false);
   const { mutateAsync: fetchUser } = useGetMyUser();
@@ -102,13 +103,11 @@ export default function StudentProfileScreen() {
   }, []);
 
   // Procesar las recomendaciones para el formato esperado - MANTENER DATOS COMPLETOS
-  const processedRecommendations = recommendations?.map((recommendation: any, index: number) => ({
+  const processedRecommendations = recommendations?.map((recommendation: RecommendationWithUniversity, index: number) => ({
     // Mantener todos los datos originales del backend
     ...recommendation,
     // Solo agregar el color para la UI
     color: careerColors[index % careerColors.length],
-    // Asegurar que tenga un campo name para la UI
-    name: recommendation.name || recommendation.career || recommendation.title
   })) || [];
 
   // Usar recomendaciones reales si están disponibles, sino array vacío
