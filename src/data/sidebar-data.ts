@@ -19,7 +19,7 @@ export const sidebarData: SidebarData = {
       
       items: [
         // Viewer
-        { title: "Dashboard", url: "/viewer-dashboard", icon: Presentation, roles: ["VIEWER"] },
+        { title: "Dashboard", url: "/viewer-dashboard", icon: ChartSpline, roles: ["VIEWER", "UNIVERSITY"] },
 
         // Student
         { title: "Mi perfil", url: "/student-profile", icon: House, roles: ["STUDENT"] },
