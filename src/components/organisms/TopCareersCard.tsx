@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -276,8 +275,6 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
                   </div>
                 </div>
               </div>
-            </div>
-          )}
             </div>
           )}
         </CardContent>
