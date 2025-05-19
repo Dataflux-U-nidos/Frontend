@@ -1,6 +1,5 @@
 import { ProfileCard } from "../organisms/ProfileCard"
 import { PersonalityCard } from "../organisms/PersonalityCard"
-import { PreferencesCard } from "../organisms/PreferencesCard"
 import { TopCareersCard } from "../organisms/TopCareersCard"
 import Nacional from "../../assets/nacional.jpg"
 
@@ -36,7 +35,6 @@ export const StudentProfileTemplate = ({
   location,
   avatar,
   personality,
-  preferences,
   topCareers,
 }: StudentProfileTemplateProps) => {
   return (

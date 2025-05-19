@@ -34,7 +34,6 @@ import {
 } from "lucide-react"
 import { MajorDetailsModal } from "@/components/molecules/MajorDetailsModal";
 import type { Major } from "@/types/majorType";
-import { ca } from "date-fns/locale";
 
 // Imágenes genéricas de carreras
 const careerImages = [

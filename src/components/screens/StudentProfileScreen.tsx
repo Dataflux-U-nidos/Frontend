@@ -1,5 +1,4 @@
 import { StudentProfileTemplate } from "../templates/ProfileTemplate";
-import collegeStudentImg from "../../assets/college-student.jpg";
 import { useEffect, useState } from "react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 import { getAllRecomendations } from "@/services/userService";
@@ -50,7 +49,7 @@ export default function StudentProfileScreen() {
   const [userData, setUserData] = useState<any | null>(null);
   const [recommendations, setRecommendations] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [hasRecommendationsError, setHasRecommendationsError] = useState(false);
+  const [, setHasRecommendationsError] = useState(false);
   const { mutateAsync: fetchUser } = useGetMyUser();
 
   useEffect(() => {
