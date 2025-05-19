@@ -56,6 +56,9 @@ const UniversityViewersScreen = lazy(
 const UniversityManagersScreen = lazy(
   () => import("@/components/screens/UniversityManagersScreen")
 );
+const UniversityRegistryScreen = lazy(
+  () => import("@/components/screens/UniversityRegistryScreen")
+);
 const AdminSupportScreen = lazy(
   () => import("@/components/screens/AdminSupportScreen")
 );
@@ -131,6 +134,7 @@ function AnimatedRoutes() {
         <Route path="/" element={<Navigate to="/landing" />} />
         <Route path="/landing" element={<Landing />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/university-registry" element={<MotionWrapper><UniversityRegistryScreen /></MotionWrapper>} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 

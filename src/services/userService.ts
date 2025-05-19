@@ -1,4 +1,5 @@
 // src/services/userService.ts
+import { Major } from "@/types/majorType";
 import { userApi } from "../lib/api";
 import {
  CreateUserInput,

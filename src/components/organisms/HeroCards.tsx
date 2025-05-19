@@ -148,7 +148,7 @@ export const HeroCards = () => {
           </div>
         </CardHeader>
         <CardFooter className="px-6 pb-6">
-          <Button variant="default" className="w-full" onClick={() => alert("Redirigir a registro institución…")}>
+          <Button variant="default" className="w-full" onClick={() => window.location.href = "#pricing"}>
             Regístrate aquí
           </Button>
         </CardFooter>
