@@ -15,14 +15,47 @@ interface LikertSurveyProps {
     data: any;
     onSubmit: () => void;
 }
-const flattenItems = (data: any) =>
-    Object.values(data.tests).flatMap((domain: any) =>
-        Object.entries(domain).map(([k, v]: any) => ({
-            key: k,
-            description: v.description,
-            options: v.options.map((o: any) => o.text),
-        }))
+const flattenItems = (data: any) => {
+  // Aseguramos que data.tests exista (puedes adaptar según tu estructura)
+  const tests = data.tests;
+
+  if (!tests) return [];
+
+  // Detectar si tests es plano (satisfaction) o anidado (vocational)
+  // Ejemplo: si tests tiene keys que apuntan a objetos con descripción => plano
+  // o si tests tiene keys que apuntan a objetos que a su vez tienen keys con descripción => anidado
+
+  // Tomamos un valor cualquiera de tests
+  const firstValue = Object.values(tests)[0];
+
+  // Si firstValue es objeto y tiene keys que a su vez son objetos con 'description', es anidado
+  if (
+    firstValue &&
+    typeof firstValue === "object" &&
+    !Array.isArray(firstValue) &&
+    Object.values(firstValue).every(
+      (item) =>
+        item && typeof item === "object" && "description" in item && "options" in item
+    )
+  ) {
+    // Vocational: aplanar todos los dominios y sus preguntas
+    return Object.values(tests).flatMap((domain: any) =>
+      Object.entries(domain).map(([k, v]: any) => ({
+        key: k,
+        description: v.description,
+        options: v.options.map((o: any) => o.text),
+      }))
     );
+  }
+
+  // Si no es anidado, asumir que es plano (satisfaction)
+  // Cada key apunta directamente a una pregunta con description y options
+  return Object.entries(tests).map(([k, v]: any) => ({
+    key: k,
+    description: v.description,
+    options: v.options.map((o: any) => o.text),
+  }));
+};
 
 export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     const flatItems = useMemo(() => flattenItems(data), [data]);
