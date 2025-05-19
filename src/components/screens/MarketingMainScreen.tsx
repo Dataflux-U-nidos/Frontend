@@ -374,19 +374,25 @@ const handleEditCampaign = async (formData: any) => {
       name: "Nombre de la campaña",
       type: "Tipo",
       date: "Fecha",
-      cost: "Costo",
+      cost: "Costo (USD)",
       description: "Descripción",
     },
     formatters: {
       cost: (value: number) => `$${value.toLocaleString()} USD`,
       type: (value: string) => value === "scholar" ? "Escolar" : "Universitaria",
-      date: (value: string) => new Date(value).toLocaleDateString('es-CO', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      }),
+      date: (value: string) => {
+        try {
+          const date = new Date(value);
+          // Formato año/mes/día
+          return date.toLocaleDateString('es-CO', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          });
+        } catch (error) {
+          return value;
+        }
+      },
     },
     avatar: {
       field: "name" as keyof Campaign,
@@ -433,7 +439,7 @@ const handleEditCampaign = async (formData: any) => {
     columnHeaders: {
       name: "Campaña",
       date: "Fecha",
-      cost: "Costo",
+      cost: "Costo (USD)",
       type: "Tipo",
     },
     actionButtonText: "Ver detalles",

@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/atoms/ui/card";
@@ -90,14 +89,6 @@ export function UniversityCard({ university, onClick }: UniversityCardProps) {
           {university.email}
         </CardDescription>
       </CardContent>
-
-      <CardFooter className="bg-gray-50 pt-3 pb-3 border-t border-gray-100">
-        <div className="w-full">
-          <button className="w-full px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors text-sm font-medium">
-            Ver más detalles
-          </button>
-        </div>
-      </CardFooter>
     </Card>
   );
 }

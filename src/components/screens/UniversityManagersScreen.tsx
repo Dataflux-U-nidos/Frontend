@@ -1,9 +1,10 @@
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetManagersByUniversity,
@@ -72,7 +73,8 @@ const managerFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, 
+        message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
     placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
@@ -129,7 +131,7 @@ export default function UniversityManagersScreen() {
   const { mutateAsync: deleteUser } = useDeleteUser();
   const { mutateAsync: updateUser } = useUpdateUser();
 
-// state variables
+  // state variables
   const [managersData, setManagersData] = useState<Manager[]>([]);
   const [filteredData, setFilteredData] = useState<Manager[]>([]);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -138,9 +140,9 @@ export default function UniversityManagersScreen() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [selectedmanager, setSelectedmanager] = useState<Manager | null>(null);
-  const [managerToDelete, setmanagerToDelete] = useState<Manager | null>(null);
-  const [managerToEdit, setmanagerToEdit] = useState<Manager | null>(null);
+  const [selectedManager, setSelectedManager] = useState<Manager | null>(null);
+  const [managerToDelete, setManagerToDelete] = useState<Manager | null>(null);
+  const [managerToEdit, setManagerToEdit] = useState<Manager | null>(null);
   const [notification, setNotification] = useState<Notification | null>(null);
 
   // loads managers when component mounts
@@ -149,11 +151,9 @@ export default function UniversityManagersScreen() {
       try {
         const managers = await getManagers();
         const mappedManagers = managers.map((user) => {
-          // Extraer el nombre y apellido
-          const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
           
           return {
             id: user.id,
@@ -189,14 +189,14 @@ export default function UniversityManagersScreen() {
 
   // Manager for viewing manager details
   const handleViewDetails = (manager: Manager) => {
-    setSelectedmanager(manager);
+    setSelectedManager(manager);
     setShowDetailsModal(true);
   };
 
   // Manager for closing the details modal
   const handleCloseDetailsModal = () => {
     setShowDetailsModal(false);
-    setSelectedmanager(null);
+    setSelectedManager(null);
   };
 
   // Manager for opening the add manager modal
@@ -211,18 +211,18 @@ export default function UniversityManagersScreen() {
   
   // Manager for initiating edit process
   const handleInitiateEdit = (manager: Manager) => {
-    setmanagerToEdit(manager);
+    setManagerToEdit(manager);
     setShowEditModal(true);
   };
   
   // Manager for canceling edit process
   const handleCancelEdit = () => {
     setShowEditModal(false);
-    setmanagerToEdit(null);
+    setManagerToEdit(null);
   };
   
   // Manager for confirming and executing edit
-  const handleEditmanager = async (formData: any) => {
+  const handleEditManager = async (formData: any) => {
     if (!managerToEdit || !managerToEdit.id) return;
     
     setIsEditing(true);
@@ -239,19 +239,19 @@ export default function UniversityManagersScreen() {
       
       // Cerrar el modal de edición
       setShowEditModal(false);
-      setmanagerToEdit(null);
+      setManagerToEdit(null);
       
       // Actualizar la lista de gestores de información
-      const updatedmanager = {
+      const updatedManager = {
         ...managerToEdit,
-        name: `${formData.firstName} ${formData.lastName}`.trim(),
+        name: combineNames(formData.firstName, formData.lastName),
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
       };
       
       const updatedManagers = managersData.map(manager => 
-        manager.id === updatedmanager.id ? updatedmanager : manager
+        manager.id === updatedManager.id ? updatedManager : manager
       );
       
       setManagersData(updatedManagers);
@@ -261,7 +261,7 @@ export default function UniversityManagersScreen() {
       setNotification({
         type: 'success',
         title: 'Gestor de Información actualizado',
-        message: `El gestor de información ${updatedmanager.name} ha sido actualizado exitosamente.`
+        message: `El gestor de información ${updatedManager.name} ha sido actualizado exitosamente.`
       });
     } catch (error) {
       console.error("Error actualizando gestor de información:", error);
@@ -281,14 +281,14 @@ export default function UniversityManagersScreen() {
   
   // Manager for initiating delete process
   const handleInitiateDelete = (manager: Manager) => {
-    setmanagerToDelete(manager);
+    setManagerToDelete(manager);
     setShowDeleteModal(true);
   };
   
   // Manager for canceling delete process
   const handleCancelDelete = () => {
     setShowDeleteModal(false);
-    setmanagerToDelete(null);
+    setManagerToDelete(null);
   };
   
   // Manager for confirming and executing delete
@@ -302,7 +302,7 @@ export default function UniversityManagersScreen() {
       
       // Cerrar el modal de confirmación
       setShowDeleteModal(false);
-      setmanagerToDelete(null);
+      setManagerToDelete(null);
       
       // Actualizar la lista de gestores de información filtrando el eliminado
       const updatedManagers = managersData.filter(
@@ -334,7 +334,7 @@ export default function UniversityManagersScreen() {
   };
 
   // Manager for adding a new manager
-  const handleAddmanager = async (formData: any) => {
+  const handleAddManager = async (formData: any) => {
     const userData = {
       name: formData.firstName,
       last_name: formData.lastName,
@@ -343,7 +343,6 @@ export default function UniversityManagersScreen() {
       userType: "INFOMANAGER",
     };
 
-    
     try {
       await createUser(userData);
       handleCloseAddModal();
@@ -354,13 +353,11 @@ export default function UniversityManagersScreen() {
         message: `El gestor de información ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
-      // Actualizar la lista de gestores de información
+      // Actualizar la lista de gestores de información usando las funciones utilitarias
       const managers = await getManagers();
       const mappedManagers = managers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
         
         return {
           id: user.id,
@@ -466,7 +463,7 @@ export default function UniversityManagersScreen() {
   const addFormConfig = {
     isOpen: showAddModal,
     onClose: handleCloseAddModal,
-    onSubmit: handleAddmanager,
+    onSubmit: handleAddManager,
     fields: managerFormFields,
     title: "Agregar Nuevo Gestor de Información",
     description: "Completa el formulario para agregar un nuevo gestor de información.",
@@ -474,11 +471,11 @@ export default function UniversityManagersScreen() {
     cancelButtonText: "Cancelar",
   };
   
-  // Fixed defaultValues to use ternary operator instead of && to avoid type error
+  // Usar los valores correctos ya procesados por las funciones utilitarias
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
-    onSubmit: handleEditmanager,
+    onSubmit: handleEditManager,
     fields: managerEditFormFields,
     title: "Editar Gestor de Información",
     description: "Modifica la información del gestor de información.",
@@ -486,12 +483,11 @@ export default function UniversityManagersScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: managerToEdit ? {
-      firstName: managerToEdit.firstName ?? managerToEdit.name.split(' ')[0] ?? '',
-      lastName: managerToEdit.lastName ?? managerToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: managerToEdit.email,
+      firstName: managerToEdit.firstName || '',
+      lastName: managerToEdit.lastName || '',
+      email: managerToEdit.email || '',
     } : undefined
   };
-
 
   return (
     <>
@@ -524,7 +520,7 @@ export default function UniversityManagersScreen() {
         tableProps={tableConfig}
         formProps={addFormConfig}
         // State and handlers for modals
-        selectedEntity={selectedmanager}
+        selectedEntity={selectedManager}
         showDetailsModal={showDetailsModal}
         onCloseDetailsModal={handleCloseDetailsModal}
         pageTitle="Tus Gestores de Información"

@@ -7,6 +7,7 @@ import {
   HandCoins,
   Headset,
   School,
+  FileUser,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -36,6 +37,7 @@ export const sidebarData: SidebarData = {
         { title: "Finanzas", url: "/admin-finances", icon: BookOpenCheck, roles: ["ADMIN"] },
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
         { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
+        { title: "Salidas laborales", url: "/admin-job-opportunities", icon: FileUser, roles: ["ADMIN"] },
 
         // Financiero
         { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },

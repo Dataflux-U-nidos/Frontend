@@ -21,7 +21,7 @@ export function JobOpportunityFilterModal({
   const [filters, setFilters] = React.useState<JobOpportunityFilters>(currentFilters);
   const [salaryRange, setSalaryRange] = React.useState<number[]>([
     currentFilters.salaryMin || 0,
-    currentFilters.salaryMax || 100000000
+    currentFilters.salaryMax || 500000
   ]);
 
   // Obtener todas las carreras para el filtro
@@ -58,7 +58,7 @@ export function JobOpportunityFilterModal({
   const handleResetFilters = () => {
     const resetFilters: JobOpportunityFilters = {};
     setFilters(resetFilters);
-    setSalaryRange([0, 100000000]);
+    setSalaryRange([0, 500000]);
     onApplyFilters(resetFilters);
     onClose();
   };
@@ -120,8 +120,8 @@ export function JobOpportunityFilterModal({
             <div className="px-4">
               <Slider
                 min={0}
-                max={100000000}
-                step={1000000}
+                max={1000000}
+                step={10000}
                 value={salaryRange}
                 onValueChange={handleSalaryChange}
                 className="mb-6"

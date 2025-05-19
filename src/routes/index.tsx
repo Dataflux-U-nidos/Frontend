@@ -90,7 +90,9 @@ const StudentJobOpportunitiesScreen = lazy(
 const SupportScreen = lazy(
   () => import("../components/screens/SupportMainScreen")
 );
-
+const AdminJobOpportunities = lazy(
+  () => import("../components/screens/AdminManageJobOpScreen")
+);
 // Pantallas con animación - Existentes
 const StudentMajorsScreen = lazy(
   () => import("@/components/screens/StudentMajorsScreen")
@@ -233,6 +235,7 @@ function AnimatedRoutes() {
             <Route path="/admin-support" element={<AdminSupportScreen />} />
             <Route path="/admin-finances" element={<AdminFinancesScreen />} />
             <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
+            <Route path="/admin-job-opportunities" element={<AdminJobOpportunities />} />
             <Route path="/admin-dashboard" element={<AdminDashboardScreen />} />
           </Route>
         </Route>
