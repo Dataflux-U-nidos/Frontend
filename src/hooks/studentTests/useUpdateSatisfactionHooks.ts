@@ -1,19 +1,18 @@
 // src/hooks/studentTests/usePatchTestResultHook.ts
 import { useCallback, useState } from "react";
-import { patchGradesResult } from "@/services/studentTestService";
-import type { GradeFormType } from "@/types/gradeFormType";
+import { patchSatisfactionTest } from "@/services/studentTestService";
+import type { satisfactionType } from "@/types/satisfactionType";
 
-export function usePatchGradesResult() {
+export function usePatchTestResult() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const submit = useCallback(
-    async (payload: GradeFormType) => {
+    async (results: satisfactionType) => {
       setLoading(true);
       setError(null);
       try {
-        console.log("Update Grades Result Payload:");
-        await patchGradesResult(payload);
+        await patchSatisfactionTest(results);
       } catch (err: any) {
         setError(err?.message ?? "Error al enviar resultados");
         throw err;

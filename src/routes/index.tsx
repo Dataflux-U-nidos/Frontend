@@ -26,10 +26,12 @@ import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
 import LayoutScreen from "@/components/screens/LayoutScreen";
+import CuestionaryScreen from "@/components/screens/CuestionaryScreen";
 
 const TestVocational = lazy(
   () => import("@/components/screens/TestVocationalScreen")
 );
+const TestSatisfaction = lazy(() => import("@/components/screens/TestSatisfactionScreen"));
 const Landing = lazy(() => import("../components/screens/LandingScreen"));
 const Auth = lazy(() => import("../components/screens/AuthScreen"));
 const ForgotPassword = lazy(
@@ -147,6 +149,8 @@ function AnimatedRoutes() {
             <Route path="/student-profile" element={<MotionWrapper><StudentProfileScreen /></MotionWrapper>} />
             <Route path="/student-vocationalTest" element={<MotionWrapper><TestVocational /></MotionWrapper>} />
             <Route path="/student-grades" element={<MotionWrapper><StudentGradesScreen /></MotionWrapper>} />
+            <Route path="/student-survey" element={<CuestionaryScreen />} />
+            <Route path="/student-satisfaction" element={<TestSatisfaction />} />
 
             {/* Rutas con animación para estudiantes */}
             <Route path="/student-programs" element={<MotionWrapper><StudentMajorsScreen /></MotionWrapper>} />

@@ -30,6 +30,7 @@ export * from "./campaign/useGetTotalInvestmentHook";
 export * from "./studentTests/useGetVocationalTestHook";
 export * from "./studentTests/useUpdateGradesHooks";
 export * from "./studentTests/useUpdateTestResultsHook";
+export * from './studentTests/useGetSatisfactionTestHook';
 
 // Major hooks
 export * from "./major/useGetAllMajorsHook";
