@@ -135,126 +135,77 @@ function AnimatedRoutes() {
         {/* Viewer */}
         <Route element={<ViewerRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/account-viewer" element={<AccountViewerScreen />} />
-            <Route path="/viewer-dashboard" element={<ViewerDashboard />} />
+            <Route path="/account-viewer" element={<MotionWrapper><AccountViewerScreen /></MotionWrapper>} />
+            <Route path="/viewer-dashboard" element={<MotionWrapper><ViewerDashboard /></MotionWrapper>} />
           </Route>
         </Route>
 
         {/* Student Routes */}
         <Route element={<StudentRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/account-student" element={<AccountScreen />} />
-            <Route path="/student-profile" element={<StudentProfileScreen />} />
-            <Route
-              path="/student-vocationalTest"
-              element={<TestVocational />}
-            />
-            <Route path="/student-grades" element={<StudentGradesScreen />} />
+            <Route path="/account-student" element={<MotionWrapper><AccountScreen /></MotionWrapper>} />
+            <Route path="/student-profile" element={<MotionWrapper><StudentProfileScreen /></MotionWrapper>} />
+            <Route path="/student-vocationalTest" element={<MotionWrapper><TestVocational /></MotionWrapper>} />
+            <Route path="/student-grades" element={<MotionWrapper><StudentGradesScreen /></MotionWrapper>} />
 
             {/* Rutas con animación para estudiantes */}
-            <Route
-              path="/student-programs"
-              element={
-                <MotionWrapper>
-                  <StudentMajorsScreen />
-                </MotionWrapper>
-              }
-            />
+            <Route path="/student-programs" element={<MotionWrapper><StudentMajorsScreen /></MotionWrapper>} />
 
-            {/* *** NUEVA RUTA PARA UNIVERSIDADES *** */}
-            <Route
-              path="/student-universities"
-              element={
-                <MotionWrapper>
-                  <StudentUniversitiesScreen />
-                </MotionWrapper>
-              }
-            />
+            {/* NUEVA RUTA PARA UNIVERSIDADES */}
+            <Route path="/student-universities" element={<MotionWrapper><StudentUniversitiesScreen /></MotionWrapper>} />
 
-            {/* Ruta para detalle de universidad con parámetro */}
-            <Route
-              path="/university/:id"
-              element={
-                <MotionWrapper>
-                  <UniversityDetailMockScreen />
-                </MotionWrapper>
-              }
-            />
+            {/* Detalle universidad */}
+            <Route path="/university/:id" element={<MotionWrapper><UniversityDetailMockScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
-        {/* Usando JobOpportunityRoutes para proteger la ruta de salidas laborales */}
+        {/* Job Opportunities */}
         <Route element={<JobOpportunityRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route
-              path="/student-carrerProspects"
-              element={
-                <MotionWrapper>
-                  <StudentJobOpportunitiesScreen />
-                </MotionWrapper>
-              }
-            />
+            <Route path="/student-carrerProspects" element={<MotionWrapper><StudentJobOpportunitiesScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
         {/* Tutor */}
         <Route element={<TutorRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/account-tutor" element={<AccountTutorScreen />} />
-            <Route path="/tutor-students" element={<TutorStudentsScreen />} />
+            <Route path="/account-tutor" element={<MotionWrapper><AccountTutorScreen /></MotionWrapper>} />
+            <Route path="/tutor-students" element={<MotionWrapper><TutorStudentsScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
         {/* University */}
         <Route element={<UniversityRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route
-              path="/account-university"
-              element={<AccountUniversityScreen />}
-            />
-            <Route
-              path="/university-viewers"
-              element={<UniversityViewersScreen />}
-            />
-            <Route
-              path="/university-managers"
-              element={<UniversityManagersScreen />}
-            />
+            <Route path="/account-university" element={<MotionWrapper><AccountUniversityScreen /></MotionWrapper>} />
+            <Route path="/university-viewers" element={<MotionWrapper><UniversityViewersScreen /></MotionWrapper>} />
+            <Route path="/university-managers" element={<MotionWrapper><UniversityManagersScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
         {/* InfoManager */}
         <Route element={<InfoManagerRoutes />}>
-          <Route path="/infomanager-main" element={<InfoManagerMainScreen />} />
+          <Route path="/infomanager-main" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
         </Route>
 
         {/* Admin */}
         <Route element={<AdminRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/account-admin" element={<AccountAdminScreen />} />
-            <Route path="/admin-support" element={<AdminSupportScreen />} />
-            <Route path="/admin-finances" element={<AdminFinancesScreen />} />
-            <Route path="/admin-marketing" element={<AdminMarketingScreen />} />
-            <Route path="/admin-job-opportunities" element={<AdminJobOpportunities />} />
-            <Route path="/admin-dashboard" element={<AdminDashboardScreen />} />
+            <Route path="/account-admin" element={<MotionWrapper><AccountAdminScreen /></MotionWrapper>} />
+            <Route path="/admin-support" element={<MotionWrapper><AdminSupportScreen /></MotionWrapper>} />
+            <Route path="/admin-finances" element={<MotionWrapper><AdminFinancesScreen /></MotionWrapper>} />
+            <Route path="/admin-marketing" element={<MotionWrapper><AdminMarketingScreen /></MotionWrapper>} />
+            <Route path="/admin-job-opportunities" element={<MotionWrapper><AdminJobOpportunities /></MotionWrapper>} />
+            <Route path="/admin-dashboard" element={<MotionWrapper><AdminDashboardScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
         {/* Marketing */}
         <Route element={<MarketingRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route
-              path="/marketing-main"
-              element={<Navigate to="/marketing-university" replace />}
-            />
-            <Route
-              path="/marketing-university"
-              element={<MarketingMainScreen />}
-            />
-            <Route
-              path="/marketing-scholar"
-              element={<MarketingMainScreen />}
-            />
+            <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
+            <Route path="/marketing-university" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
+            <Route path="/marketing-scholar" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
@@ -262,21 +213,15 @@ function AnimatedRoutes() {
         <Route element={<FinancesRoutes />}>
           <Route element={<LayoutScreen />}>
             <Route path="/finances-income" element={<FinancesIncomeScreen />} />
-            <Route
-              path="/finances-campaings"
-              element={<FinancesCampaingsScreen />}
-            />
-            <Route
-              path="/finances-subscriptions"
-              element={<FinancesSubscriptionScreen />}
-            />
+            <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
+            <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
           </Route>
         </Route>
 
         {/* Support */}
         <Route element={<SupportRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/support" element={<SupportScreen />} />
+            <Route path="/support" element={<MotionWrapper><SupportScreen /></MotionWrapper>} />
           </Route>
         </Route>
       </Routes>
