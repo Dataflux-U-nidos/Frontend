@@ -1,28 +1,29 @@
+// src/components/molecules/JobOpportunityCard.tsx
 import { JobOpportunity } from "@/types/jobOpportunityType";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from "@/components/atoms/ui/card";
 import { DollarSign, BriefcaseBusiness } from "lucide-react";
 
-// Imágenes quemadas para las tarjetas de trabajo
+// Imágenes genéricas para trabajos con temática profesional
 const jobImages = [
-  "https://img.freepik.com/free-photo/programming-background-with-person-working-with-codes-computer_23-2150010136.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/close-up-image-programer-working-his-desk-office_1098-18707.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/data-center-with-server-racks-room-generative-ai_188544-12101.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/businessman-using-digital-tablet_53876-101933.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/woman-working-call-center_23-2149269342.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/business-concept-with-team-close-up_23-2149151159.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/business-people-meeting_53876-15194.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/young-woman-working-laptop-isolated-white-background_231208-1604.jpg?size=626&ext=jpg",
-  "https://img.freepik.com/free-photo/medium-shot-woman-working-laptop_23-2150280947.jpg?size=626&ext=jpg",
+  "https://images.unsplash.com/photo-1560472355-536de3962603?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1551434678-e076c223a692?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1556761175-b413da4baf72?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&h=600&fit=crop",
+  "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=600&fit=crop"
 ];
 
-// Función para obtener una imagen aleatoria o basada en ID
+// Función para obtener una imagen basada en ID
 const getJobImage = (id: string): string => {
   const numericId = parseInt(id.replace(/[^0-9]/g, ''), 10) || 0;
   const index = numericId % jobImages.length;
@@ -47,43 +48,44 @@ export function JobOpportunityCard({ jobOpportunity, onClick }: JobOpportunityCa
   const imageUrl = getJobImage(jobOpportunity._id || jobOpportunity.id || "1");
 
   return (
-    <Card 
-      className="h-full flex flex-col shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden"
+    <Card
+      className="h-full flex flex-col shadow-md hover:shadow-lg transition-shadow cursor-pointer overflow-hidden group"
       onClick={onClick}
     >
       {/* Imagen de cabecera */}
-      <div className="w-full h-40 overflow-hidden">
-        <img 
-          src={imageUrl} 
-          alt={jobOpportunity.name} 
-          className="w-full h-full object-cover transition-transform hover:scale-105"
+      <div className="w-full h-48 overflow-hidden">
+        <img
+          src={imageUrl}
+          alt={jobOpportunity.name}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
-      
+
       <CardHeader className="pb-2">
         <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-xl text-gray-800">{jobOpportunity.name}</CardTitle>
+          <div className="flex-1">
+            <CardTitle className="text-xl text-gray-800 group-hover:text-orange-600 transition-colors">
+              {jobOpportunity.name}
+            </CardTitle>
           </div>
           <div className="p-2 bg-orange-100 rounded-full">
             <BriefcaseBusiness className="h-5 w-5 text-orange-500" />
           </div>
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-grow">
-        <CardDescription className="text-gray-600 mb-2 line-clamp-3">
+        {/* Descripción */}
+        <CardDescription className="text-gray-600 mb-3 text-sm line-clamp-3">
           {jobOpportunity.description}
         </CardDescription>
-      </CardContent>
-      
-      <CardFooter className="bg-gray-50 pt-3 pb-3 border-t border-gray-100">
-        <div className="flex items-center text-gray-700">
-          <DollarSign className="h-4 w-4 text-green-600 mr-1" />
-          <span className="font-semibold">{formattedSalary}</span>
-          <span className="text-gray-500 text-sm ml-1">/ año</span>
+
+        {/* Información de salario */}
+        <div className="flex items-center text-gray-600">
+          <DollarSign className="h-4 w-4 mr-2" />
+          <span className="text-sm font-medium">{formattedSalary} / año</span>
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }
