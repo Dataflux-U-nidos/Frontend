@@ -2,17 +2,12 @@ import { StudentProfileTemplate } from "../templates/ProfileTemplate";
 import collegeStudentImg from "../../assets/college-student.jpg";
 import { useEffect, useState } from "react";
 import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
-import { getAllRecomendations } from "@/services/userService"; // Importar el servicio directamente
+import { getAllRecomendations } from "@/services/userService";
 import LoadingTemplate from "../templates/LoadingTemplate";
 
 const studentProfileExtras = {
-  avatar: collegeStudentImg,
+  avatar: "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png",
   // TODO: Put a real image
-  personality: [
-    { trait: "Extrovertido", value: 70, color: "green" },
-    { trait: "Lógico", value: 60, color: "blue" },
-    { trait: "Directo", value: 90, color: "purple" },
-  ],
   preferences: [
     { label: "Actividades deportivas", icon: "Dumbbell", color: "orange" },
     { label: "Creatividad", icon: "Lightbulb", color: "yellow" },
@@ -23,45 +18,81 @@ const studentProfileExtras = {
 // Colores para las carreras
 const careerColors = ["indigo", "green", "red", "blue", "purple", "orange", "yellow", "pink"];
 
+// Mapeo de competencias del usuario a formato display
+const mapUserCompetenciesToPersonality = (userData: any) => {
+  if (!userData) return [];
+  
+  const competencies = [
+    { trait: "Matemáticas", value: userData.ma, color: "green" },
+    { trait: "Competencia Lectora", value: userData.le, color: "blue" },
+    { trait: "Ciencias Naturales", value: userData.ci, color: "purple" },
+    { trait: "Ciencias Sociales", value: userData.cc, color: "orange" },
+    { trait: "Idiomas", value: userData.idi, color: "red" },
+    { trait: "Arte", value: userData.ar, color: "pink" },
+  ];
+
+  // Filtrar y mapear solo las competencias que tienen un valor válido
+  return competencies
+    .filter(competency => 
+      competency.value !== null && 
+      competency.value !== undefined && 
+      !isNaN(competency.value)
+    )
+    .map(competency => ({
+      ...competency,
+      value: Math.round(competency.value) // Redondear a número entero
+    }));
+};
+
 export default function StudentProfileScreen() {
   const [userData, setUserData] = useState<any | null>(null);
   const [recommendations, setRecommendations] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasRecommendationsError, setHasRecommendationsError] = useState(false);
   const { mutateAsync: fetchUser } = useGetMyUser();
 
   useEffect(() => {
     const loadData = async () => {
       setIsLoading(true);
+      setHasRecommendationsError(false);
       
       try {
-        // Ejecutar ambas consultas en paralelo
-        const [user, recommendationsData] = await Promise.all([
-          fetchUser(),
-          getAllRecomendations()
-        ]);
-
-        // Procesar datos del usuario
+        // Cargar usuario (obligatorio)
+        const user = await fetchUser();
+        console.log("User data:", user);
         const userData = {
           name: user.name,
           last_name: user.last_name,
           email: user.email,
           age: user.age,
           school: user.school,
+          le: user.le,   // Competencia Lectora
+          ma: user.ma,   // Matemáticas
+          ci: user.ci,   // Ciencias Naturales
+          cc: user.cc,   // Ciencias Sociales
+          idi: user.idi, // Idiomas
+          ar: user.ar,   // Arte
         };
         
         const mappedUser = {
           ...userData,
           location: user.locality
         };
-
-        // Actualizar estados
         setUserData(mappedUser);
-        setRecommendations(recommendationsData || []);
+
+        // Cargar recomendaciones (opcional)
+        try {
+          const recommendationsData = await getAllRecomendations();
+          setRecommendations(recommendationsData || []);
+        } catch (recommendationsError) {
+          console.error("Error fetching recommendations:", recommendationsError);
+          setHasRecommendationsError(true);
+          setRecommendations([]); // Array vacío para mostrar el estado empty
+        }
         
       } catch (error) {
-        console.error("Error fetching data:", error);
-        // En caso de error, establecer valores por defecto
-        setRecommendations([]);
+        console.error("Error fetching user data:", error);
+        // Si falla el usuario, es un error crítico
       } finally {
         setIsLoading(false);
       }
@@ -81,11 +112,22 @@ export default function StudentProfileScreen() {
     ? processedRecommendations.slice(0, 3)
     : [];
 
+  // Mapear competencias reales del usuario
+  const personalityTraits = mapUserCompetenciesToPersonality(userData);
+  
+  // Debug: Log para ver qué datos tenemos
+  console.log('userData:', userData);
+  console.log('personalityTraits:', personalityTraits);
+
   const mockStudentData = {
     ...userData,
     ...studentProfileExtras,
+    personality: personalityTraits, // Usar competencias reales
     topCareers,
   };
+
+  // Debug: Log del objeto final
+  console.log('mockStudentData:', mockStudentData);
 
   return isLoading ? (
     <div>

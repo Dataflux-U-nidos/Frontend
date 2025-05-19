@@ -11,6 +11,12 @@ export interface User {
   preferences?: Record<string, unknown>;
   avatar?: string;
   testCompleted?: boolean;
+  le?: number;
+  ma?: number;
+  ci?: number;
+  cc?: number;
+  idi?: number;
+  ar?: number;
 }
 
 //excludes id when creating a new user

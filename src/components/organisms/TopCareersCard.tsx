@@ -98,7 +98,7 @@ type TopCareersCardProps = {
 export function TopCareersCard({ careers }: TopCareersCardProps) {
   return (
     <Card className="shadow-lg border-0 rounded-2xl overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-400 to-blue-600 text-white">
+      <CardHeader className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
         <CardTitle className="text-2xl font-bold text-center">
           🏆 TOP 3 Carreras Recomendadas
         </CardTitle>
@@ -163,9 +163,51 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
         
         {/* Mensaje si no hay carreras */}
         {careers.length === 0 && (
-          <div className="text-center py-8">
-            <GraduationCap className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">No hay carreras recomendadas disponibles</p>
+          <div className="text-center py-12">
+            <div className="relative">
+              {/* Ilustración de fondo decorativa */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-5">
+                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-orange-400 to-orange-600"></div>
+              </div>
+              
+              {/* Contenido principal */}
+              <div className="relative z-10">
+                <div className="flex justify-center mb-6">
+                  <div className="relative">
+                    <div className="w-24 h-24 bg-orange-100 rounded-full flex items-center justify-center">
+                      <GraduationCap className="h-12 w-12 text-orange-500" />
+                    </div>
+                    {/* Puntitos decorativos */}
+                    <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full"></div>
+                    <div className="absolute -bottom-1 -left-3 w-3 h-3 bg-blue-400 rounded-full"></div>
+                  </div>
+                </div>
+                
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                  ¡Estamos trabajando en tus recomendaciones! 
+                </h3>
+                
+                <p className="text-gray-500 mb-4 max-w-md mx-auto leading-relaxed">
+                  Aún no tenemos suficiente información para sugerirte las mejores carreras. 
+                  Completa tu perfil para recibir recomendaciones personalizadas.
+                </p>
+                
+                <div className="flex justify-center space-x-4 text-sm text-gray-400">
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-orange-400 rounded-full mr-2 animate-pulse"></div>
+                    Analizando intereses
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-blue-400 rounded-full mr-2 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+                    Evaluando aptitudes
+                  </div>
+                  <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse" style={{animationDelay: '1s'}}></div>
+                    Generando sugerencias
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </CardContent>
