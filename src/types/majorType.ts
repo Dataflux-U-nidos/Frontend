@@ -11,12 +11,10 @@ export interface Major {
     jobId: string;
     focus: string;
     createdBy?: string;
-    createdAt?: string;
-    updatedAt?: string;
   }
   
-  export type CreateMajorInput = Omit<Major, '_id' | 'id' | 'createdAt' | 'updatedAt'>;
-  export type UpdateMajorInput = Partial<Omit<Major, '_id' | 'id' | 'createdAt' | 'updatedAt'>>;
+  export type CreateMajorInput = Omit<Major, '_id' | 'id'>;
+  export type UpdateMajorInput = Partial<Omit<Major, '_id' | 'id'>>;
   
   export interface MajorFilters {
     name?: string;

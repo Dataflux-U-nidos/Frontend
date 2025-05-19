@@ -102,10 +102,14 @@ export default function StudentProfileScreen() {
     loadData();
   }, []);
 
-  // Procesar las recomendaciones para el formato esperado
+  // Procesar las recomendaciones para el formato esperado - MANTENER DATOS COMPLETOS
   const processedRecommendations = recommendations?.map((recommendation: any, index: number) => ({
-    name: recommendation.name || recommendation.career || recommendation.title,
-    color: careerColors[index % careerColors.length]
+    // Mantener todos los datos originales del backend
+    ...recommendation,
+    // Solo agregar el color para la UI
+    color: careerColors[index % careerColors.length],
+    // Asegurar que tenga un campo name para la UI
+    name: recommendation.name || recommendation.career || recommendation.title
   })) || [];
 
   // Usar recomendaciones reales si están disponibles, sino array vacío
@@ -117,8 +121,15 @@ export default function StudentProfileScreen() {
   const personalityTraits = mapUserCompetenciesToPersonality(userData);
   
   // Debug: Log para ver qué datos tenemos
-  console.log('userData:', userData);
-  console.log('personalityTraits:', personalityTraits);
+  console.log('userData competencies:', {
+    le: userData?.le,
+    ma: userData?.ma,
+    ci: userData?.ci,
+    cc: userData?.cc,
+    idi: userData?.idi,
+    ar: userData?.ar
+  });
+  console.log('personalityTraits converted:', personalityTraits);
 
   const mockStudentData = {
     ...userData,
