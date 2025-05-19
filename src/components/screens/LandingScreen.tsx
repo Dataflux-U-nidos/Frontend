@@ -93,6 +93,7 @@ export default function LandingScreen() {
     if (apiPlans) {
       setPlans(
         apiPlans.map((p) => ({
+          id: p.id, 
           title: p.name,
           popular: p.type === "STANDARD" ? PopularPlanType.YES : PopularPlanType.NO,
           price: p.cost,
@@ -112,6 +113,10 @@ export default function LandingScreen() {
     navigate("/auth");
   };
 
+   const handlePlanSelect = (planId: string) => {
+    navigate("/university-registry", { state: { subscriptionPlanId: planId } });
+  };
+
   const pricingList = isLoading || error ? [] : plans;
   return (
     <LandingTemplate
@@ -120,6 +125,7 @@ export default function LandingScreen() {
       reviews={reviews}
       onCreateAccount={handleCreateAccount}
       pricingList={pricingList}
+      onPlanSelect={handlePlanSelect}
       onPartialTest={handlePartialTest}
     />
   );

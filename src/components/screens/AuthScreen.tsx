@@ -326,12 +326,7 @@ export default function AuthScreen() {
             icon: "School",
             description: "Para docentes y orientadores académicos",
           },
-          {
-            value: "UNIVERSITY",
-            label: "Universidad",
-            icon: "Building2",
-            description: "Para instituciones educativas",
-          },
+
         ],
       }}
     />
