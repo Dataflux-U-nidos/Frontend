@@ -36,11 +36,13 @@ const mapUserCompetenciesToPersonality = (userData: any) => {
     .filter(competency => 
       competency.value !== null && 
       competency.value !== undefined && 
-      !isNaN(competency.value)
+      !isNaN(competency.value) &&
+      competency.value >= 0 // Asegurar que el valor sea positivo
     )
     .map(competency => ({
       ...competency,
-      value: Math.round(competency.value) // Redondear a número entero
+      // Convertir de escala 0-5 a porcentaje 0-100%
+      value: Math.round((competency.value / 5) * 100)
     }));
 };
 
@@ -59,7 +61,6 @@ export default function StudentProfileScreen() {
       try {
         // Cargar usuario (obligatorio)
         const user = await fetchUser();
-        console.log("User data:", user);
         const userData = {
           name: user.name,
           last_name: user.last_name,
