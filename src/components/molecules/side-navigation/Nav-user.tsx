@@ -54,6 +54,11 @@ export function NavUser({
         navigate("/account-admin");
       } else if (userType === "SUPPORT") {
         navigate("/account-support");
+      } else if (userType === "MARKETING") {
+        navigate("/account-marketing");
+      }
+      else if (userType === "FINANCES") {
+        navigate("/account-finance");
       }
     } catch (error) {
       console.error("Error during navigation:", error);

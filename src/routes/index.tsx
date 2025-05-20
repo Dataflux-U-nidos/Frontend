@@ -22,6 +22,8 @@ import SupportRoutes from "./SupportRoutes";
 
 // Screens que no animamos
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import AccountMarketingScreen from "@/components/screens/AccountMarketingScreen";
+import AccountFinanceScreen from "@/components/screens/AccountFinanceScreen"
 import AccountSupportScreen from "@/components/screens/AccountSupportScreen";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
@@ -212,6 +214,7 @@ function AnimatedRoutes() {
         {/* Marketing */}
         <Route element={<MarketingRoutes />}>
           <Route element={<LayoutScreen />}>
+            <Route path="/account-marketing" element={<AccountMarketingScreen/>}/>
             <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
             <Route path="/marketing-university" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
             <Route path="/marketing-scholar" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
@@ -221,6 +224,7 @@ function AnimatedRoutes() {
         {/* Finances */}
         <Route element={<FinancesRoutes />}>
           <Route element={<LayoutScreen />}>
+            <Route path="/account-finance" element={<AccountFinanceScreen />} />
             <Route path="/finances-income" element={<FinancesIncomeScreen />} />
             <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
             <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
