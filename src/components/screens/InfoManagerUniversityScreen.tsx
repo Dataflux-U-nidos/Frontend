@@ -107,7 +107,8 @@ export default function InfoManagerUniversityScreen() {
   
   // Estados
   const [notification, setNotification] = useState<Notification | null>(null);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<any | null>(null);
+  const [universityLoaded, setUniversityLoaded] = useState(false);
   
   // Hooks - usar el ID determinado
   const { data: universityData, isLoading, error } = useGetUniversityById(universityIdToUse || "");
@@ -122,22 +123,27 @@ export default function InfoManagerUniversityScreen() {
 
   // Cargar datos iniciales cuando se obtiene la universidad
   useEffect(() => {
-    if (universityData) {
+    if (universityData && !universityLoaded) {
+      // Usar type assertion para evitar errores de tipo
+      const uniData = universityData as any;
+      
       const initialData = {
-        name: universityData.name || '',
-        email: universityData.email || '',
-        address: universityData.address || '',
-        locality: universityData.locality || '',
-        zone: universityData.zone || '',
-        price_range: universityData.price_range || '',
-        aceptation_difficulty: universityData.aceptation_difficulty || '',
-        description: universityData.description || '',
-        link: universityData.link || ''
+        name: uniData.name || '',
+        email: uniData.email || '',
+        address: uniData.address || '',
+        locality: uniData.locality || '',
+        zone: uniData.zone || '',
+        price_range: uniData.price_range || '',
+        aceptation_difficulty: uniData.aceptation_difficulty || '',
+        description: uniData.description || '',
+        link: uniData.link || ''
       };
+      
+      console.log('Setting initial form data:', initialData);
       setFormData(initialData);
-      console.log('University data loaded:', universityData);
+      setUniversityLoaded(true);
     }
-  }, [universityData]);
+  }, [universityData, universityLoaded]);
 
   // Manejar notificaciones
   const handleCloseNotification = () => {
@@ -155,7 +161,7 @@ export default function InfoManagerUniversityScreen() {
 
   // Manejar cambios del formulario
   const handleFormChange = (data: any) => {
-    setFormData(data);
+    console.log('Form data changed:', data);
   };
 
   // Manejar envío del formulario
@@ -187,7 +193,11 @@ export default function InfoManagerUniversityScreen() {
           }
         };
 
+        console.log('Update data to send:', updateData);
         await updateUniversity(updateData);
+        
+        // Recargar los datos de la universidad después de la actualización
+        setUniversityLoaded(false);
         
         setNotification({
           type: 'success',
@@ -342,39 +352,45 @@ export default function InfoManagerUniversityScreen() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <DynamicForm
-                  ref={formRef}
-                  formDataConfig={universityFormFields}
-                  onChange={handleFormChange}
-                  initialData={formData}
-                />
-                
-                <div className="flex justify-end space-x-4 pt-6 border-t">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => window.history.back()}
-                    disabled={isUpdating}
-                  >
-                    Cancelar
-                  </Button>
-                  <Button
-                    type="submit"
-                    disabled={isUpdating}
-                    className="min-w-[120px]"
-                  >
-                    {isUpdating ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Guardando...
-                      </>
-                    ) : (
-                      'Guardar Cambios'
-                    )}
-                  </Button>
+              {formData ? (
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <DynamicForm
+                    ref={formRef}
+                    formDataConfig={universityFormFields}
+                    onChange={handleFormChange}
+                    initialData={formData}
+                  />
+                  
+                  <div className="flex justify-end space-x-4 pt-6 border-t">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => window.history.back()}
+                      disabled={isUpdating}
+                    >
+                      Cancelar
+                    </Button>
+                    <Button
+                      type="submit"
+                      disabled={isUpdating}
+                      className="min-w-[120px]"
+                    >
+                      {isUpdating ? (
+                        <>
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                          Guardando...
+                        </>
+                      ) : (
+                        'Guardar Cambios'
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              ) : (
+                <div className="flex justify-center py-6">
+                  <Loader2 className="h-6 w-6 animate-spin text-orange-500" />
                 </div>
-              </form>
+              )}
             </CardContent>
           </Card>
         </div>
