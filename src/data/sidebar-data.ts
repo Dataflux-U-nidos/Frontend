@@ -9,7 +9,7 @@ import {
   School,
   FileUser,
   BookCopy,
-  NotebookPen,
+  Glasses,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -53,11 +53,11 @@ export const sidebarData: SidebarData = {
         { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING", "ADMIN"] },
 
         // Info Manager
-        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: NotebookPen, roles: ["INFOMANAGER"] },
+        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: Glasses, roles: ["INFOMANAGER"] },
         { title: "Gestión de Universidad", url: "/infomanager-university", icon: University, roles: ["INFOMANAGER"] },
         
         //support
-        { title: "Dar soporte", url: "/support", icon: Headset, roles: ["SUPPORT", "ADMIN"] },
+        { title: "Support Spoofing", url: "/support", icon: Headset, roles: ["SUPPORT", "ADMIN"] },
       ],
     },
   ],
