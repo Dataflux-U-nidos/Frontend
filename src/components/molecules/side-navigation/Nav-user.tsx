@@ -52,6 +52,8 @@ export function NavUser({
         navigate("/account-university");
       } else if (userType === "ADMIN") {
         navigate("/account-admin");
+      } else if (userType === "SUPPORT") {
+        navigate("/account-support");
       }
     } catch (error) {
       console.error("Error during navigation:", error);

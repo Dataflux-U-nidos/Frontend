@@ -22,6 +22,7 @@ import SupportRoutes from "./SupportRoutes";
 
 // Screens que no animamos
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import AccountSupportScreen from "@/components/screens/AccountSupportScreen";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
@@ -230,6 +231,7 @@ function AnimatedRoutes() {
         <Route element={<SupportRoutes />}>
           <Route element={<LayoutScreen />}>
             <Route path="/support" element={<MotionWrapper><SupportScreen /></MotionWrapper>} />
+            <Route path="/account-support" element={<MotionWrapper><AccountSupportScreen /></MotionWrapper>} />
           </Route>
         </Route>
       </Routes>
