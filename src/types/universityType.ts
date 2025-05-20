@@ -13,6 +13,11 @@ export interface University {
   viewers?: string[];
   createdAt?: string;
   updatedAt?: string;
+  phone?: string;
+  price_range?: string;
+  aceptation_difficulty?: string;
+  description?: string;
+  link?: string;
 }
 
 export interface UniversityFilters {
@@ -24,3 +29,4 @@ export interface UniversityFilters {
 
 export type CreateUniversityInput = Omit<University, '_id' | 'id' | 'createdAt' | 'updatedAt' | 'userType'>;
 export type UpdateUniversityInput = Partial<Omit<University, '_id' | 'id' | 'createdAt' | 'updatedAt' | 'userType'>>;
+

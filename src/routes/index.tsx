@@ -113,6 +113,7 @@ const UniversityDetailMockScreen = lazy(
 const StudentUniversitiesScreen = lazy(
   () => import("@/components/screens/StudentUniversitiesScreen")
 );
+const InfoManagerUniversityScreen = lazy(() => import("@/components/screens/InfoManagerUniversityScreen"));
 
 // Wrapper que aplica la animación de entrada/salida
 const MotionWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -196,7 +197,10 @@ function AnimatedRoutes() {
 
         {/* InfoManager */}
         <Route element={<InfoManagerRoutes />}>
-          <Route path="/infomanager-main" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+          <Route element={<LayoutScreen />}>
+            <Route path="/infomanager-majors" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+            <Route path="/infomanager-university" element={<MotionWrapper><InfoManagerUniversityScreen /></MotionWrapper>} />
+          </Route>
         </Route>
 
         {/* Admin */}
