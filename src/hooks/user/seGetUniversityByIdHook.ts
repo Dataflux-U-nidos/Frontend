@@ -1,7 +1,6 @@
 // src/hooks/user/useGetUniversityByIdHook.ts
 import { useQuery } from '@tanstack/react-query';
 import { userApi } from '@/lib/api';
-import { User } from '@/types';
 
 const getUniversityById = async (id: string): Promise<any> => {  // Cambiamos a any para evitar problemas de tipo
   console.log('Fetching university with ID:', id);

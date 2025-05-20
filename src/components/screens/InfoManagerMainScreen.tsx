@@ -14,16 +14,6 @@ import {
 } from "@/hooks";
 import { useAuthContext } from "@/context/AuthContext";
 
-interface JobOpportunity {
-  _id: string;
-  id?: string;
-  name: string;
-  description?: string;
-  salary?: number;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 interface Major {
   _id?: string;
   id?: string;
@@ -629,6 +619,18 @@ const majorEditFormFields: FormField[] = [
     }
   };
 
+  const formatJobOpportunities = (jobOpportunityIds: string[] = []) => {
+    if (!jobOpportunityIds || jobOpportunityIds.length === 0) return "No hay salidas laborales asignadas";
+    
+    // Obtener los nombres de las salidas laborales a partir de sus IDs
+    const jobNames = jobOpportunityIds.map(id => {
+      const job = jobOpportunities.find(j => (j._id === id || j.id === id));
+      return job ? job.name : "Desconocido";
+    });
+    
+    return jobNames.join(", ");
+  };
+
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
@@ -639,27 +641,29 @@ const majorEditFormFields: FormField[] = [
   };
 
   // Entity display configuration for details modal
-  const entityDisplayConfig = {
-    fields: ["name", "difficulty", "price", "focus", "description"] as (keyof Major)[],
-    labels: {
-      name: "Nombre",
-      difficulty: "Dificultad",
-      price: "Precio",
-      focus: "Enfoque",
-      description: "Descripción",
-      pensumLink: "Enlace del Pensum"
-    },
-    formatters: {
-      price: formatPrice,
-      difficulty: getDifficultyDisplay,
-    },
-    avatar: {
-      field: "name" as keyof Major,
-      fallback: (major: Major) => major.name.charAt(0).toUpperCase(),
-      bgColor: "bg-blue-500",
-      textColor: "text-white",
-    },
-  };
+const entityDisplayConfig = {
+  fields: ["name", "difficulty", "price", "focus", "description", "jobOpportunityIds"] as (keyof Major)[],
+  labels: {
+    name: "Nombre",
+    difficulty: "Dificultad",
+    price: "Precio",
+    focus: "Enfoque",
+    description: "Descripción",
+    pensumLink: "Enlace del Pensum",
+    jobOpportunityIds: "Salidas Laborales"
+  },
+  formatters: {
+    price: formatPrice,
+    difficulty: getDifficultyDisplay,
+    jobOpportunityIds: formatJobOpportunities
+  },
+  avatar: {
+    field: "name" as keyof Major,
+    fallback: (major: Major) => major.name.charAt(0).toUpperCase(),
+    bgColor: "bg-blue-500",
+    textColor: "text-white",
+  },
+};
 
   // Table actions configuration
   const tableActions = [
