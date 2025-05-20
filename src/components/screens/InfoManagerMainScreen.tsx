@@ -5,8 +5,24 @@ import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import { FilterModal, FilterField } from "@/components/molecules/FilterModal";
-import { useCreateMajor, useGetMajorsByInstitution, useUpdateMajor, useDeleteMajor } from "@/hooks";
+import { 
+  useCreateMajor, 
+  useGetMajorsByInstitution, 
+  useUpdateMajor, 
+  useDeleteMajor,
+  useGetAllJobOpportunities
+} from "@/hooks";
 import { useAuthContext } from "@/context/AuthContext";
+
+interface JobOpportunity {
+  _id: string;
+  id?: string;
+  name: string;
+  description?: string;
+  salary?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 interface Major {
   _id?: string;
@@ -31,108 +47,161 @@ interface Notification {
   message: string;
 }
 
-// Form fields for adding a new major (incluye institutionId y preferences)
-const majorFormFields: FormField[] = [
-  {
-    name: "name",
-    label: "Nombre de la Carrera",
-    type: "text",
-    required: true,
-    validation: {
-      maxLength: {
-        value: 100,
-        message: "El nombre no puede exceder 100 caracteres"
-      }
-    }
-  },
-  {
-    name: "institutionId",
-    label: "ID de la Institución",
-    type: "text",
-    required: true,
-    placeholder: "Ej: 6830abcd1234e56789f01236",
-    helpText: "ID de la institución educativa"
-  },
-  {
-    name: "difficulty",
-    label: "Dificultad",
-    type: "select",
-    required: true,
-    options: [
-      { value: "EASY", label: "Fácil" },
-      { value: "MEDIUM", label: "Media" },
-      { value: "HARD", label: "Difícil" }
-    ]
-  },
-  {
-    name: "price",
-    label: "Precio",
-    type: "number",
-    required: true,
-    validation: {
-      min: {
-        value: 0,
-        message: "El precio debe ser un número positivo"
-      }
-    },
-    placeholder: "Ej: 9000"
-  },
-  {
-    name: "description",
-    label: "Descripción",
-    type: "textarea",
-    required: true,
-    validation: {
-      maxLength: {
-        value: 500,
-        message: "La descripción no puede exceder 500 caracteres"
-      }
-    }
-  },
-  {
-    name: "pensumLink",
-    label: "Enlace del Pensum",
-    type: "text",
-    required: true,
-    validation: {
-      pattern: {
-        value: /^https?:\/\/.+/,
-        message: "Debe ser una URL válida (http:// o https://)"
-      }
-    },
-    placeholder: "https://example.com/pensum.pdf"
-  },
-  {
-    name: "focus",
-    label: "Enfoque",
-    type: "text",
-    required: true,
-    validation: {
-      maxLength: {
-        value: 100,
-        message: "El enfoque no puede exceder 100 caracteres"
-      }
-    },
-    placeholder: "Ej: Ciencias Sociales"
-  },
-  {
-    name: "preferences",
-    label: "Preferencias",
-    type: "select",
-    required: false,
-    options: [
-      { value: "le", label: "Lenguas" },
-      { value: "ma", label: "Matemáticas" },
-      { value: "ci", label: "Ciencias Naturales" },
-      { value: "cc", label: "Competencias Ciudadanas" },
-      { value: "idi", label: "Idiomas" },
-      { value: "ar", label: "Artes" }
-    ],
-    helpText: "Selecciona una preferencia académica"
-  }
-];
+export default function InfoManagerMajorsScreen() {
+  // Get current user context
+  const { user } = useAuthContext();
+  
+  // Validar que el usuario tenga universityId antes de hacer la consulta
+  const universityId = user?.universityId || "";
+  
+  // Hooks for CRUD operations - usando useGetMajorsByInstitution para filtrar por universidad
+  const { mutateAsync: createMajor } = useCreateMajor();
+  const { data: majorsData = [], refetch, isLoading } = useGetMajorsByInstitution(universityId);
+  const { mutateAsync: updateMajor } = useUpdateMajor();
+  const { mutateAsync: deleteMajor } = useDeleteMajor();
+  
+  // Hook para obtener todas las salidas laborales
+  const { data: jobOpportunities = [], isLoading: isLoadingJobs } = useGetAllJobOpportunities();
+  
+  // State management
+  const [filteredData, setFilteredData] = useState<Major[]>([]);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  
+  // Loading states
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
-// Form fields para editar (sin institutionId ni preferences)
+  // Selected entities
+  const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
+  const [majorToDelete, setMajorToDelete] = useState<Major | null>(null);
+  const [majorToEdit, setMajorToEdit] = useState<Major | null>(null);
+
+  // Filters and search
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
+
+  // Notifications
+  const [notification, setNotification] = useState<Notification | null>(null);
+
+  // Form fields for adding a new major (incluye institutionId y preferences)
+  const majorFormFields: FormField[] = [
+    {
+      name: "name",
+      label: "Nombre de la Carrera",
+      type: "text",
+      required: true,
+      validation: {
+        maxLength: {
+          value: 100,
+          message: "El nombre no puede exceder 100 caracteres"
+        }
+      }
+    },
+    {
+      name: "institutionId",
+      label: "ID de la Institución",
+      type: "text",
+      required: true,
+      placeholder: "Ej: 6830abcd1234e56789f01236",
+      helpText: "ID de la institución educativa"
+    },
+    {
+      name: "difficulty",
+      label: "Dificultad",
+      type: "select",
+      required: true,
+      options: [
+        { value: "EASY", label: "Fácil" },
+        { value: "MEDIUM", label: "Media" },
+        { value: "HARD", label: "Difícil" }
+      ]
+    },
+    {
+      name: "price",
+      label: "Precio",
+      type: "number",
+      required: true,
+      validation: {
+        min: {
+          value: 0,
+          message: "El precio debe ser un número positivo"
+        }
+      },
+      placeholder: "Ej: 9000"
+    },
+    {
+      name: "description",
+      label: "Descripción",
+      type: "textarea",
+      required: true,
+      validation: {
+        maxLength: {
+          value: 500,
+          message: "La descripción no puede exceder 500 caracteres"
+        }
+      }
+    },
+    {
+      name: "pensumLink",
+      label: "Enlace del Pensum",
+      type: "text",
+      required: true,
+      validation: {
+        pattern: {
+          value: /^https?:\/\/.+/,
+          message: "Debe ser una URL válida (http:// o https://)"
+        }
+      },
+      placeholder: "https://example.com/pensum.pdf"
+    },
+    {
+      name: "focus",
+      label: "Enfoque",
+      type: "text",
+      required: true,
+      validation: {
+        maxLength: {
+          value: 100,
+          message: "El enfoque no puede exceder 100 caracteres"
+        }
+      },
+      placeholder: "Ej: Ciencias Sociales"
+    },
+    {
+      name: "preferences",
+      label: "Preferencias",
+      type: "select",
+      required: false,
+      options: [
+        { value: "le", label: "Lenguas" },
+        { value: "ma", label: "Matemáticas" },
+        { value: "ci", label: "Ciencias Naturales" },
+        { value: "cc", label: "Competencias Ciudadanas" },
+        { value: "idi", label: "Idiomas" },
+        { value: "ar", label: "Artes" }
+      ],
+      helpText: "Selecciona una preferencia académica"
+    },
+    {
+      name: "jobOpportunityIds",
+      label: "Salidas Laborales",
+      type: "select",
+      required: false,
+      options: jobOpportunities.map(job => ({
+        value: job._id || job.id || "",
+        label: job.name
+      })),
+      helpText: "Selecciona las salidas laborales para esta carrera"
+    }
+  ];
+
+  // Form fields para editar (sin institutionId ni preferences)
+  // Form fields para editar (ahora incluye jobOpportunityIds pero mantiene fuera institutionId y preferences)
 const majorEditFormFields: FormField[] = [
   {
     name: "name",
@@ -207,84 +276,54 @@ const majorEditFormFields: FormField[] = [
       }
     },
     placeholder: "Ej: Ciencias Sociales"
-  }
-];
-
-// Filter fields for major filtering
-const majorFilterFields: FilterField[] = [
-  {
-    id: "name",
-    label: "Nombre de la Carrera",
-    type: "text",
-    placeholder: "Buscar por nombre..."
   },
   {
-    id: "difficulty",
-    label: "Dificultad",
+    name: "jobOpportunityIds",
+    label: "Salidas Laborales",
     type: "select",
-    options: [
-      { value: "EASY", label: "Fácil" },
-      { value: "MEDIUM", label: "Media" },
-      { value: "HARD", label: "Difícil" }
-    ]
-  },
-  {
-    id: "priceMin",
-    label: "Precio Mínimo",
-    type: "number",
-    placeholder: "0"
-  },
-  {
-    id: "priceMax",
-    label: "Precio Máximo", 
-    type: "number",
-    placeholder: "100000"
-  },
-  {
-    id: "focus",
-    label: "Enfoque",
-    type: "text",
-    placeholder: "Buscar por enfoque..."
+    required: false,
+    options: [], // Se llenará dinámicamente
+    helpText: "Selecciona las salidas laborales para esta carrera"
   }
 ];
 
-export default function InfoManagerMajorsScreen() {
-  // Get current user context
-  const { user } = useAuthContext();
-  
-  // Validar que el usuario tenga universityId antes de hacer la consulta
-  const universityId = user?.universityId || "";
-  
-  // Hooks for CRUD operations - usando useGetMajorsByInstitution para filtrar por universidad
-  const { mutateAsync: createMajor } = useCreateMajor();
-  const { data: majorsData = [], refetch, isLoading } = useGetMajorsByInstitution(universityId);
-  const { mutateAsync: updateMajor } = useUpdateMajor();
-  const { mutateAsync: deleteMajor } = useDeleteMajor();
-
-  // State management
-  const [filteredData, setFilteredData] = useState<Major[]>([]);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showFilterModal, setShowFilterModal] = useState(false);
-  
-  // Loading states
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [isCreating, setIsCreating] = useState(false);
-
-  // Selected entities
-  const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
-  const [majorToDelete, setMajorToDelete] = useState<Major | null>(null);
-  const [majorToEdit, setMajorToEdit] = useState<Major | null>(null);
-
-  // Filters and search
-  const [searchTerm, setSearchTerm] = useState("");
-  const [currentFilters, setCurrentFilters] = useState<Record<string, any>>({});
-
-  // Notifications
-  const [notification, setNotification] = useState<Notification | null>(null);
+  // Filter fields for major filtering
+  const majorFilterFields: FilterField[] = [
+    {
+      id: "name",
+      label: "Nombre de la Carrera",
+      type: "text",
+      placeholder: "Buscar por nombre..."
+    },
+    {
+      id: "difficulty",
+      label: "Dificultad",
+      type: "select",
+      options: [
+        { value: "EASY", label: "Fácil" },
+        { value: "MEDIUM", label: "Media" },
+        { value: "HARD", label: "Difícil" }
+      ]
+    },
+    {
+      id: "priceMin",
+      label: "Precio Mínimo",
+      type: "number",
+      placeholder: "0"
+    },
+    {
+      id: "priceMax",
+      label: "Precio Máximo", 
+      type: "number",
+      placeholder: "100000"
+    },
+    {
+      id: "focus",
+      label: "Enfoque",
+      type: "text",
+      placeholder: "Buscar por enfoque..."
+    }
+  ];
 
   // Initialize filtered data when majors change
   useEffect(() => {
@@ -373,13 +412,28 @@ export default function InfoManagerMajorsScreen() {
     try {
       // Procesar preferences - ahora viene como un valor único del select
       const preferences = formData.preferences ? [formData.preferences] : undefined;
-
+      
+      // Obtener jobOpportunityIds del formulario (ya viene como array)
+      const jobOpportunityIds = formData.jobOpportunityIds || [];
+      
       // Usar el universityId del usuario como institutionId, fallback a formData si no existe
       const institutionId = user?.universityId || formData.institutionId;
       
       if (!institutionId) {
         throw new Error('No se pudo determinar la institución. Por favor, contacta al administrador.');
       }
+
+      console.log('Datos a enviar:', {
+        name: formData.name,
+        institutionId,
+        difficulty: formData.difficulty,
+        price: Number(formData.price),
+        description: formData.description,
+        pensumLink: formData.pensumLink,
+        focus: formData.focus,
+        ...(preferences && { preferences }),
+        ...(jobOpportunityIds.length > 0 && { jobOpportunityIds })
+      });
 
       await createMajor({
         name: formData.name,
@@ -389,7 +443,8 @@ export default function InfoManagerMajorsScreen() {
         description: formData.description,
         pensumLink: formData.pensumLink,
         focus: formData.focus,
-        ...(preferences && { preferences })
+        ...(preferences && { preferences }),
+        ...(jobOpportunityIds.length > 0 && { jobOpportunityIds })
       });
 
       handleCloseAddModal();
@@ -425,64 +480,68 @@ export default function InfoManagerMajorsScreen() {
   };
 
   const handleEditMajor = async (formData: any) => {
-    if (!majorToEdit) {
-      setNotification({
-        type: 'error',
-        title: 'Error',
-        message: 'No se ha seleccionado ninguna carrera para editar.'
-      });
-      return;
-    }
+  if (!majorToEdit) {
+    setNotification({
+      type: 'error',
+      title: 'Error',
+      message: 'No se ha seleccionado ninguna carrera para editar.'
+    });
+    return;
+  }
+  
+  if (!majorToEdit._id && !majorToEdit.id) {
+    setNotification({
+      type: 'error',
+      title: 'Error',
+      message: 'La carrera seleccionada no tiene un ID válido.'
+    });
+    return;
+  }
+  
+  const majorId = majorToEdit._id || majorToEdit.id || "";
+  
+  setIsEditing(true);
+  
+  try {
+    // Obtener jobOpportunityIds del formulario (ya viene como array)
+    const jobOpportunityIds = formData.jobOpportunityIds || [];
     
-    if (!majorToEdit._id && !majorToEdit.id) {
-      setNotification({
-        type: 'error',
-        title: 'Error',
-        message: 'La carrera seleccionada no tiene un ID válido.'
-      });
-      return;
-    }
+    const updates = {
+      name: formData.name,
+      difficulty: formData.difficulty,
+      price: Number(formData.price),
+      description: formData.description,
+      pensumLink: formData.pensumLink,
+      focus: formData.focus,
+      ...(jobOpportunityIds.length > 0 && { jobOpportunityIds })
+    };
     
-    const majorId = majorToEdit._id || majorToEdit.id || "";
+    console.log('Datos de actualización a enviar:', updates);
     
-    setIsEditing(true);
-    
-    try {
-      const updates = {
-        name: formData.name,
-        difficulty: formData.difficulty,
-        price: Number(formData.price),
-        description: formData.description,
-        pensumLink: formData.pensumLink,
-        focus: formData.focus
-      };
-      
-      await updateMajor({
-        id: majorId,
-        updates
-      });
-
-      setShowEditModal(false);
-      setMajorToEdit(null);
-      refetch();
-
-      setNotification({
-        type: 'success',
-        title: 'Carrera actualizada',
-        message: `La carrera ${formData.name} ha sido actualizada exitosamente.`
-      });
-    } catch (error) {
-      setNotification({
-        type: 'error',
-        title: 'Error al actualizar carrera',
-        message: error instanceof Error 
-          ? error.message 
-          : 'Ha ocurrido un error al intentar actualizar la carrera.'
-      });
-    } finally {
-      setIsEditing(false);
-    }
-  };
+    await updateMajor({
+      id: majorId,
+      updates
+    });
+    setShowEditModal(false);
+    setMajorToEdit(null);
+    refetch();
+    setNotification({
+      type: 'success',
+      title: 'Carrera actualizada',
+      message: `La carrera ${formData.name} ha sido actualizada exitosamente.`
+    });
+  } catch (error) {
+    setNotification({
+      type: 'error',
+      title: 'Error al actualizar carrera',
+      message: error instanceof Error 
+        ? error.message 
+        : 'Ha ocurrido un error al intentar actualizar la carrera.'
+    });
+  } finally {
+    setIsEditing(false);
+  }
+};
 
   // Delete major handlers
   const handleInitiateDelete = (major: Major) => {
@@ -520,11 +579,9 @@ export default function InfoManagerMajorsScreen() {
     
     try {
       await deleteMajor(majorId);
-
       setShowDeleteModal(false);
       setMajorToDelete(null);
       refetch();
-
       setNotification({
         type: 'success',
         title: 'Carrera eliminada',
@@ -654,13 +711,49 @@ export default function InfoManagerMajorsScreen() {
     showFilterButton: true
   };
 
+  // Función para obtener los campos del formulario de edición con las opciones de salidas laborales actualizadas
+const getEditFormFields = () => {
+  // Generamos los campos del formulario con las salidas laborales actualizadas
+  const formFields = [...majorEditFormFields];
+  
+  // Actualizamos las opciones del campo jobOpportunityIds
+  const jobOpportunitiesIndex = formFields.findIndex(field => field.name === "jobOpportunityIds");
+  if (jobOpportunitiesIndex !== -1) {
+    formFields[jobOpportunitiesIndex] = {
+      ...formFields[jobOpportunitiesIndex],
+      options: jobOpportunities.map(job => ({
+        value: job._id || job.id || "",
+        label: job.name
+      }))
+    };
+  }
+  
+  return formFields;
+};
+
   // Si el usuario tiene universityId, usar campos sin institutionId para crear
   const getCreateFormFields = () => {
-    if (user?.universityId) {
-      // Si tiene universityId, no mostrar el campo institutionId
-      return majorFormFields.filter(field => field.name !== 'institutionId');
+    // Generamos los campos del formulario con las salidas laborales actualizadas
+    const formFields = [...majorFormFields];
+    
+    // Actualizamos las opciones del campo jobOpportunityIds
+    const jobOpportunitiesIndex = formFields.findIndex(field => field.name === "jobOpportunityIds");
+    if (jobOpportunitiesIndex !== -1) {
+      formFields[jobOpportunitiesIndex] = {
+        ...formFields[jobOpportunitiesIndex],
+        options: jobOpportunities.map(job => ({
+          value: job._id || job.id || "",
+          label: job.name
+        }))
+      };
     }
-    return majorFormFields;
+    
+    // Si tiene universityId, no mostrar el campo institutionId
+    if (user?.universityId) {
+      return formFields.filter(field => field.name !== 'institutionId');
+    }
+    
+    return formFields;
   };
 
   const addFormConfig = {
@@ -672,33 +765,33 @@ export default function InfoManagerMajorsScreen() {
     description: "Completa el formulario para agregar una nueva carrera universitaria.",
     submitButtonText: "Agregar Carrera",
     cancelButtonText: "Cancelar",
-    isLoading: isCreating
+    isLoading: isCreating || isLoadingJobs
   };
 
   const editFormConfig = {
-    isOpen: showEditModal,
-    onClose: handleCancelEdit,
-    onSubmit: handleEditMajor,
-    fields: majorEditFormFields,
-    title: "Editar Carrera",
-    description: "Modifica la información de la carrera universitaria.",
-    submitButtonText: "Guardar Cambios",
-    cancelButtonText: "Cancelar",
-    isLoading: isEditing,
-    defaultValues: majorToEdit ? {
-      name: majorToEdit.name,
-      difficulty: majorToEdit.difficulty,
-      price: majorToEdit.price,
-      description: majorToEdit.description,
-      pensumLink: majorToEdit.pensumLink,
-      focus: majorToEdit.focus
-    } : undefined
-  };
+  isOpen: showEditModal,
+  onClose: handleCancelEdit,
+  onSubmit: handleEditMajor,
+  fields: getEditFormFields(),
+  title: "Editar Carrera",
+  description: "Modifica la información de la carrera universitaria.",
+  submitButtonText: "Guardar Cambios",
+  cancelButtonText: "Cancelar",
+  isLoading: isEditing || isLoadingJobs,
+  defaultValues: majorToEdit ? {
+    name: majorToEdit.name,
+    difficulty: majorToEdit.difficulty,
+    price: majorToEdit.price,
+    description: majorToEdit.description,
+    pensumLink: majorToEdit.pensumLink,
+    focus: majorToEdit.focus,
+    jobOpportunityIds: majorToEdit.jobOpportunityIds || []
+  } : undefined
+};
 
   // Custom notification component
   const CustomNotification = () => {
     if (!notification) return null;
-
     const isSuccess = notification.type === 'success';
     
     return (
