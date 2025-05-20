@@ -4,7 +4,8 @@ import { JobOpportunity } from "@/types/jobOpportunityType";
 import { DataTable } from "@/components/organisms/DataTable"; 
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import { EntityForm, FormField } from "../molecules/EntityForm";
-import { Notification, NotificationData } from "../molecules/Notification"; // Ajusta la ruta
+import { Notification, NotificationData } from "../molecules/Notification"; 
+import { Button } from "@/components/atoms/ui/button"; // Asumiendo que tienes un componente Button
 
 interface Action<T> {
   label: string;
@@ -25,6 +26,10 @@ export default function AdminManageJobOpScreen() {
   const [editError, setEditError] = useState<string | null>(null); 
   // Notification state
   const [notification, setNotification] = useState<NotificationData | null>(null);
+  // State for add dialog
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
 
   const jobFormFields: FormField[] = [
     {
@@ -124,15 +129,17 @@ export default function AdminManageJobOpScreen() {
     setIsEditDialogOpen(true);
   };
 
+  const handleAddClick = () => {
+    setAddError(null);
+    setIsAddDialogOpen(true);
+  };
+
   const handleSaveEdit = (editedJobData: any) => {
     setIsEditing(true);
     setEditError(null);
 
     setTimeout(() => {
       try {
-        
-
-
         setNotification({
           type: 'success',
           title: 'Salida laboral actualizada',
@@ -153,6 +160,38 @@ export default function AdminManageJobOpScreen() {
         });
         
         console.error("Error saving job:", error);
+      }
+    }, 1000);
+  };
+
+  const handleSaveAdd = (newJobData: any) => {
+    setIsAdding(true);
+    setAddError(null);
+
+    setTimeout(() => {
+      try {
+        // Simulamos que se guarda en la BD
+        // En un caso real, aquí harías una llamada a la API
+
+        setNotification({
+          type: 'success',
+          title: 'Salida laboral creada',
+          message: `${newJobData.name} ha sido creada correctamente.`
+        });
+
+        setIsAdding(false);
+        setIsAddDialogOpen(false);
+      } catch (error) {
+        setIsAdding(false);
+        setAddError("Error al crear la salida laboral. Inténtelo de nuevo.");
+        
+        setNotification({
+          type: 'error',
+          title: 'Error al crear',
+          message: 'No se pudo crear la salida laboral. Inténtelo de nuevo.'
+        });
+        
+        console.error("Error adding job:", error);
       }
     }, 1000);
   };
@@ -205,6 +244,11 @@ export default function AdminManageJobOpScreen() {
     setEditError(null);
   };
 
+  const closeAddDialog = () => {
+    setIsAddDialogOpen(false);
+    setAddError(null);
+  };
+
   // Define actions for edit and delete
   const actions: Action<JobOpportunity>[] = [
     {
@@ -221,7 +265,18 @@ export default function AdminManageJobOpScreen() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Modificar salidas laborales</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Modificar salidas laborales</h1>
+        
+        {/* Botón Agregar */}
+        <Button 
+          onClick={handleAddClick} 
+          variant="default" 
+          className="bg-orange-500 hover:bg-orange-600 text-white"
+        >
+          Agregar Salida Laboral
+        </Button>
+      </div>
 
       {/* Error State */}
       {isError && (
@@ -268,6 +323,20 @@ export default function AdminManageJobOpScreen() {
         cancelButtonText="Cancelar"
         isLoading={isEditing}
         defaultValues={jobToEdit || undefined}
+      />
+
+      {/* Add Dialog */}
+      <EntityForm
+        isOpen={isAddDialogOpen}
+        onClose={closeAddDialog}
+        onSubmit={handleSaveAdd}
+        fields={jobFormFields}
+        error={addError}
+        title="Agregar Salida Laboral"
+        description="Ingrese los detalles de la nueva salida laboral"
+        submitButtonText="Crear Salida Laboral"
+        cancelButtonText="Cancelar"
+        isLoading={isAdding}
       />
 
       {/* Notification Component */}
