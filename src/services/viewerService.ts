@@ -1,8 +1,5 @@
-// src/services/viewerService.ts
 import { userApi } from "../lib/api";
-import { User } from "../types";
 
-// Define types for the dashboard data
 export interface UniversidadData {
   name: string;
   total: number;
@@ -21,7 +18,7 @@ export interface UniversidadBuscadaData {
   Externado: number;
   UDCA: number;
   ECI: number;
-  [key: string]: number | string; // Para permitir acceso dinámico a las propiedades
+  [key: string]: number | string; 
 }
 
 export interface UserData {
