@@ -10,7 +10,7 @@ import { notifySuccess } from "@/lib/utils/notify";
 
 export default function TestSatisfactionScreen() {
   const navigate = useNavigate();
-  const { answers } = useSurveyStore();
+  const { answers, resetSurvey, currentPage } = useSurveyStore();
   const { data, loading, error } = useSatisfactionTest();
   const { submit, loading: submitting, error: submitError } = usePatchTestResult();
   const { notifyError } = useNotify();
@@ -42,6 +42,7 @@ export default function TestSatisfactionScreen() {
 
     try {
       await submit(results);
+      resetSurvey();
       navigate("/student-profile");
       notifySuccess({
         title: "¡Gracias!",
@@ -49,6 +50,7 @@ export default function TestSatisfactionScreen() {
         icon: "✅",
         closeButton: true,
       });
+       navigate("/student-profile");
     } catch {
       notifyError({
         title: "Error",
@@ -57,6 +59,7 @@ export default function TestSatisfactionScreen() {
         closeButton: true,
       });
     }
+    resetSurvey();
   }, [answers, navigate, submit, notifyError]);
 
   useEffect(() => {

@@ -128,8 +128,7 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
 
             {/* controles: barra (60 %) + paginación (botones numerados) */}
             <div className="mt-8 flex w-full items-center justify-center gap-6">
-                <span className="text-xs">{progress}%</span>
-                <Progress value={progress} className="h-2 w-[60%] flex-shrink-0" />
+
 
                 <Pagination>
                     <PaginationContent>

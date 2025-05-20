@@ -7,6 +7,7 @@ interface SurveyState {
     setAnswer: (key: string, value: number) => void;
     nextPage: () => void;
     prevPage: () => void;
+    resetSurvey: () => void;
 }
 
 export const useSurveyStore = create<SurveyState>()(
@@ -17,6 +18,7 @@ export const useSurveyStore = create<SurveyState>()(
             setAnswer: (key, value) => set((s) => ({ answers: { ...s.answers, [key]: value } })),
             nextPage: () => set((s) => ({ currentPage: s.currentPage + 1 })),
             prevPage: () => set((s) => ({ currentPage: Math.max(0, s.currentPage - 1) })),
+            resetSurvey: () => set({ answers: {}, currentPage: 0 }),
         }),
         { name: "likert-survey" }
     )
