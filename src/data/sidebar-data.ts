@@ -9,6 +9,7 @@ import {
   School,
   FileUser,
   BookCopy,
+  Glasses,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -50,6 +51,9 @@ export const sidebarData: SidebarData = {
         // Marketing
         { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },
         { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING"] },
+
+        // Support
+        { title: "Support Spoofing", url: "/support", icon: Glasses, roles: ["SUPPORT"] },
       ],
     },
   ],
