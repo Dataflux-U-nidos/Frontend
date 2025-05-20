@@ -1,5 +1,4 @@
-// MajorDetailsModal.tsx
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Dialog,
   DialogContent as BaseContent,

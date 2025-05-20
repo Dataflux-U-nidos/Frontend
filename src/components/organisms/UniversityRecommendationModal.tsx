@@ -1,11 +1,10 @@
 import React from 'react'
-import { X as XIcon, MapPin, Calendar, Users, GraduationCap } from 'lucide-react'
+import {  MapPin, Calendar, Users, GraduationCap } from 'lucide-react'
 import { RecommendationWithUniversity } from '@/types/recomendationType'
 import {
   Dialog,
   DialogOverlay,
   DialogContent,
-  DialogClose,
   // si tienes DialogHeader, DialogFooter, etc. también los puedes usar
 } from '@/components/atoms/ui/dialog'
 import { cn } from '@/lib/utils'
