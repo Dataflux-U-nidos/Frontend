@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import {  useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import { RetrievePasswordTemplate } from "@/components/templates/RetrievePasswordTemplate";
@@ -45,6 +45,7 @@ export default function ResetPasswordScreen() {
   // allows us to get the search parameters from the URL
   const location = useLocation();
   const [token, setToken] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
@@ -78,6 +79,7 @@ export default function ResetPasswordScreen() {
       password: data.newPassword,
     });
 
+    navigate("/auth");
   };
 
   return (
