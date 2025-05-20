@@ -37,6 +37,9 @@ export * from "./major/useGetAllMajorsHook";
 export * from "./major/useGetMajorByIdHook";
 export * from "./major/useGetMajorsByInstitutionHook";
 export * from "./major/useFilterMajorsHook";
+export * from "./major/useCreateMajorHook";
+export * from "./major/useUpdateMajorHook";
+export * from "./major/useDeleteMajorHook";
 
 // Subscription hooks
 export * from "./subscription/useGetAllSubscriptionHook";

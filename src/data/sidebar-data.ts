@@ -50,6 +50,9 @@ export const sidebarData: SidebarData = {
         // Marketing
         { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },
         { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING"] },
+
+        // Info Manager
+        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: University, roles: ["INFOMANAGER"] },
       ],
     },
   ],

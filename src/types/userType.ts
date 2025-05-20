@@ -17,6 +17,7 @@ export interface User {
   cc?: number;
   idi?: number;
   ar?: number;
+  universityId?: string;
 }
 
 //excludes id when creating a new user
