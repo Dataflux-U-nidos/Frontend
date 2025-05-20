@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { ListPageTemplate } from "@/components/templates/ListPageTemplate";
 import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";

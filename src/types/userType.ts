@@ -18,6 +18,20 @@ export interface User {
   idi?: number;
   ar?: number;
   universityId?: string;
+
+  phone?: string;
+  address?: string;
+  zone?: string;
+  price_range?: string;  
+  aceptation_difficulty?: string;  
+  description?: string;  
+  link?: string;  
+
+  // Campos adicionales
+  createdAt?: string;
+  updatedAt?: string;
+  _id?: string;
+
 }
 
 //excludes id when creating a new user

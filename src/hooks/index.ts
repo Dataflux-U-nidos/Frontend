@@ -17,6 +17,7 @@ export * from "./user/useUpdateMyUserHook";
 export * from "./user/useSupportHook";
 export * from "./user/useSpoofHook";
 
+
 // Campaign hooks
 export * from "./campaign/useCreateCampaignHook";
 export * from "./campaign/useGetAllCampaignsHook";
@@ -60,3 +61,4 @@ export * from "./jobOpportunity/useJobOpportunitiesWithMajorFilterHook";
 export * from './university/useGetAllUniversitiesHook';
 export * from './university/useGetUniversityByIdHook';
 export * from './university/useFilterUniversitiesHook';
+export * from "./user/useUpdateUniversityHook";

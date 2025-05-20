@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom"
 export default function InfoManagerRoutes() {
     const { userType } = useAuthContext()
 
-    if (userType === "INFOMANAGER") {
+    if (userType === "INFOMANAGER" || userType === "UNIVERSITY") {
         return <Outlet />
     }
 
