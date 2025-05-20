@@ -27,32 +27,32 @@ export const filterMajors = (majors: Major[], filters: MajorFilters): Major[] =>
     if (filters.name && !major.name.toLowerCase().includes(filters.name.toLowerCase())) {
       return false;
     }
-    
+
     // Filtro por institución
     if (filters.institutionId && major.institutionId !== filters.institutionId) {
       return false;
     }
-    
+
     // Filtro por dificultad
     if (filters.difficulty && major.difficulty !== filters.difficulty) {
       return false;
     }
-    
+
     // Filtro por precio mínimo
     if (filters.priceMin !== undefined && major.price < filters.priceMin) {
       return false;
     }
-    
+
     // Filtro por precio máximo
     if (filters.priceMax !== undefined && major.price > filters.priceMax) {
       return false;
     }
-    
+
     // Filtro por enfoque
     if (filters.focus && !major.focus.toLowerCase().includes(filters.focus.toLowerCase())) {
       return false;
     }
-    
+
     return true;
   });
 };
@@ -75,3 +75,16 @@ export const updateMajor = async (id: string, updates: UpdateMajorInput): Promis
 export const deleteMajor = async (id: string): Promise<void> => {
   await majorApi.delete(`/major/${id}`);
 };
+
+export const getMajorComments = async (majorId: string): Promise<Comment[]> => {
+  const { data } = await majorApi.get<Comment[]>(`/comment/major/${majorId}`)
+  return data
+}
+
+export const createComment = async (payload: {
+  majorId: string
+  text: string
+}): Promise<Comment> => {
+  const { data } = await majorApi.post<Comment>("/comment", payload)
+  return data
+}
