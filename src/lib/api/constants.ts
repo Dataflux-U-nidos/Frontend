@@ -3,6 +3,7 @@ export const QUERY_KEYS = {
     STATSADMIN: 'stats',
     SURVEY_STATS: 'survey-stats',
     PLATFORM_STATS: 'platform-stats',
+    MAJOR_COMMENTS: 'major-comments',
 };
 
 export const DEFAULT_QUERY_OPTIONS = {

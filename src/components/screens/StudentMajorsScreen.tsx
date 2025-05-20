@@ -15,6 +15,7 @@ export default function StudentMajorsScreen() {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [selectedMajor, setSelectedMajor] = useState<any>(null);
+  console.log("Selected Major:", selectedMajor);
   const [notification, setNotification] = useState<NotificationData | null>(null);
   const [filters, setFilters] = useState<MajorFilters>({});
 

@@ -21,10 +21,17 @@ export default function SendEmailTemplate({
   success
 }: SendEmailTemplateProps) {
   return (
-    <main className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <main
+      className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+      style={{
+        backgroundImage: "url('https://images.pexels.com/photos/7683685/pexels-photo-7683685.jpeg?cs=srgb&dl=pex')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-semibold mb-6 text-center">
-          Por favor envíar si deseas llenar tu encuesta de Satisfacción
+          ¡Comparte tu experiencia! Llena nuestra encuesta de satisfacción
         </h1>
 
         {error && (
@@ -44,7 +51,7 @@ export default function SendEmailTemplate({
           fields={fields}
           initialValues={initialValues}
           onSubmit={onSubmit}
-          onCancel={() => {}}
+          onCancel={() => { }}
           loading={loading}
         />
       </div>
