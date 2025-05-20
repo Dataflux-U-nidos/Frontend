@@ -1,6 +1,7 @@
 import { ProfileCard } from "../organisms/ProfileCard"
 import { PersonalityCard } from "../organisms/PersonalityCard"
 import { TopCareersCard } from "../organisms/TopCareersCard"
+import { RecommendationWithUniversity } from "@/types/recomendationType"
 import Nacional from "../../assets/nacional.jpg"
 
 interface StudentProfileTemplateProps {
@@ -20,11 +21,7 @@ interface StudentProfileTemplateProps {
     icon: string;
     color: string;
   }[];
-  topCareers: {
-    name: string;
-    icon?: string;
-    color: string;
-  }[];
+  topCareers: RecommendationWithUniversity[];
 }
 
 export const StudentProfileTemplate = ({
@@ -41,14 +38,14 @@ export const StudentProfileTemplate = ({
     <div className="min-h-screen bg-gray-100">
       {/* Banner/Header image */}
       <div className="w-full h-64 bg-gray-300 relative overflow-hidden">
-        <img 
-          src= {Nacional}
-          alt="Universidad" 
+        <img
+          src={Nacional}
+          alt="Universidad"
           className="w-full h-full object-cover"
         />
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gray-100 rounded-t-full " />
       </div>
-      
+
       <div className="max-w-5xl mx-auto px-4 -mt-24 relative z-10">
         <ProfileCard
           name={name}
@@ -58,13 +55,13 @@ export const StudentProfileTemplate = ({
           location={location}
           avatar={avatar}
         />
-        
+
         <div className="mt-6 grid grid-cols-1 md:grid-cols-5 gap-6">
           <div className="md:col-span-6">
             <PersonalityCard personality={personality} />
           </div>
         </div>
-        
+
         <div className="mt-6 mb-6">
           <TopCareersCard careers={topCareers} />
         </div>
