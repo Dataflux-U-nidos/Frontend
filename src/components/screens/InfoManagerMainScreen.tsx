@@ -118,10 +118,17 @@ const majorFormFields: FormField[] = [
   {
     name: "preferences",
     label: "Preferencias",
-    type: "text",
+    type: "select",
     required: false,
-    placeholder: "Ej: le,ar (separadas por comas)",
-    helpText: "Códigos de preferencias separados por comas"
+    options: [
+      { value: "le", label: "Lenguas" },
+      { value: "ma", label: "Matemáticas" },
+      { value: "ci", label: "Ciencias Naturales" },
+      { value: "cc", label: "Competencias Ciudadanas" },
+      { value: "idi", label: "Idiomas" },
+      { value: "ar", label: "Artes" }
+    ],
+    helpText: "Selecciona una preferencia académica"
   }
 ];
 
@@ -364,10 +371,8 @@ export default function InfoManagerMajorsScreen() {
     setIsCreating(true);
     
     try {
-      // Procesar preferences si están presentes
-      const preferences = formData.preferences 
-        ? formData.preferences.split(',').map((p: string) => p.trim()).filter((p: string) => p)
-        : undefined;
+      // Procesar preferences - ahora viene como un valor único del select
+      const preferences = formData.preferences ? [formData.preferences] : undefined;
 
       // Usar el universityId del usuario como institutionId, fallback a formData si no existe
       const institutionId = user?.universityId || formData.institutionId;

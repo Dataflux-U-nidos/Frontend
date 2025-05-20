@@ -194,7 +194,8 @@ function AnimatedRoutes() {
         {/* InfoManager */}
         <Route element={<InfoManagerRoutes />}>
           <Route element={<LayoutScreen />}>
-            <Route path="/infomanager-main" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+            <Route path="/infomanager-majors" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+            <Route path="/infomanager-university" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
