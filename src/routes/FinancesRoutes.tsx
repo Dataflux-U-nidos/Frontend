@@ -3,7 +3,7 @@ import { Navigate, Outlet } from "react-router-dom";
 
 export default function FinancesRoutes() {
   const { userType } = useAuthContext();
-  if (userType === "FINANCES") {
+  if (userType === "FINANCES" || userType === "ADMIN") {
     return <Outlet />;
   }
   return <Navigate to="/auth" />;

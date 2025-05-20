@@ -22,6 +22,9 @@ import SupportRoutes from "./SupportRoutes";
 
 // Screens que no animamos
 import AccountViewerScreen from "@/components/screens/AccountViewerScreen";
+import AccountMarketingScreen from "@/components/screens/AccountMarketingScreen";
+import AccountFinanceScreen from "@/components/screens/AccountFinanceScreen"
+import AccountSupportScreen from "@/components/screens/AccountSupportScreen";
 import AccountTutorScreen from "@/components/screens/AccountTutorScreen";
 import AccountUniversityScreen from "@/components/screens/AccountUniversityScreen";
 import AccountAdminScreen from "@/components/screens/AccountAdminScreen";
@@ -110,6 +113,7 @@ const UniversityDetailMockScreen = lazy(
 const StudentUniversitiesScreen = lazy(
   () => import("@/components/screens/StudentUniversitiesScreen")
 );
+const InfoManagerUniversityScreen = lazy(() => import("@/components/screens/InfoManagerUniversityScreen"));
 
 // Wrapper que aplica la animación de entrada/salida
 const MotionWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -193,7 +197,10 @@ function AnimatedRoutes() {
 
         {/* InfoManager */}
         <Route element={<InfoManagerRoutes />}>
-          <Route path="/infomanager-main" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+          <Route element={<LayoutScreen />}>
+            <Route path="/infomanager-majors" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
+            <Route path="/infomanager-university" element={<MotionWrapper><InfoManagerUniversityScreen /></MotionWrapper>} />
+          </Route>
         </Route>
 
         {/* Admin */}
@@ -211,6 +218,7 @@ function AnimatedRoutes() {
         {/* Marketing */}
         <Route element={<MarketingRoutes />}>
           <Route element={<LayoutScreen />}>
+            <Route path="/account-marketing" element={<AccountMarketingScreen/>}/>
             <Route path="/marketing-main" element={<Navigate to="/marketing-university" replace />} />
             <Route path="/marketing-university" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
             <Route path="/marketing-scholar" element={<MotionWrapper><MarketingMainScreen /></MotionWrapper>} />
@@ -220,6 +228,7 @@ function AnimatedRoutes() {
         {/* Finances */}
         <Route element={<FinancesRoutes />}>
           <Route element={<LayoutScreen />}>
+            <Route path="/account-finance" element={<AccountFinanceScreen />} />
             <Route path="/finances-income" element={<FinancesIncomeScreen />} />
             <Route path="/finances-campaings" element={<FinancesCampaingsScreen />} />
             <Route path="/finances-subscriptions" element={<FinancesSubscriptionScreen />} />
@@ -230,6 +239,7 @@ function AnimatedRoutes() {
         <Route element={<SupportRoutes />}>
           <Route element={<LayoutScreen />}>
             <Route path="/support" element={<MotionWrapper><SupportScreen /></MotionWrapper>} />
+            <Route path="/account-support" element={<MotionWrapper><AccountSupportScreen /></MotionWrapper>} />
           </Route>
         </Route>
       </Routes>

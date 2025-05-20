@@ -82,6 +82,8 @@ export default function SupportPage() {
           <option value="MARKETING">Marketing</option>
           <option value="SUPPORT">Support</option>
           <option value="FINANCES">Finances</option>
+          <option value="UNIVERSITY">Universidad</option>
+          <option value="INFOMANAGER">Info Manager</option>
         </select>
       </div>
 
