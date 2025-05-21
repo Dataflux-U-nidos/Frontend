@@ -9,6 +9,7 @@ interface RadioDotProps {
   disabled?: boolean;
   onSelect: (v: number) => void;
   size: "sm" | "md" | "lg";
+  layoutId: string;
 }
 
 const SIZE_MAP: Record<RadioDotProps["size"], string> = {
@@ -23,7 +24,8 @@ export const RadioDot = ({
   color,
   disabled,
   onSelect,
-  size,
+  size,  
+  layoutId,
 }: RadioDotProps) => (
   <button
     aria-label={`Valor ${value}`}
@@ -40,7 +42,7 @@ export const RadioDot = ({
   >
     {selected && (
       <motion.div
-        layoutId="dotFill"
+        layoutId={layoutId}
         initial={{ scale: 0.5 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0 }}
