@@ -1,16 +1,24 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { userApi, QUERY_KEYS } from '../../lib/api';
-import { UpdateUserInput, User } from '../../types';
+// hooks/useUserHooks.ts
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
+import { updateUser } from "@/services/userService";
+import { UpdateUserInput, User } from "@/types";
+import { QUERY_KEYS } from "@/lib/api";
 
-const updateUser = async ({ id, ...updates }: { id: string } & UpdateUserInput): Promise<User> => {
-  const { data } = await userApi.patch<User>(`/user/${id}`, updates);
-  return data;
-};
+interface JwtPayload {
+  id: string /* otros campos… */;
+}
 
-export function useUpdateUser() {
+export function useUpdateMyUser() {
   const queryClient = useQueryClient();
-  return useMutation<User, Error, { id: string } & UpdateUserInput>({
-    mutationFn: updateUser,
+
+  return useMutation<User, Error, UpdateUserInput>({
+    mutationFn: async (updates) => {
+      const token = localStorage.getItem("accessToken");
+      if (!token) throw new Error("No auth token found");
+      const { id } = jwtDecode<JwtPayload>(token);
+      return await updateUser(id, updates);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USERS] });
     },

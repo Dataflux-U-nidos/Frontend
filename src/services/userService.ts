@@ -96,10 +96,7 @@ export const getUniversityById = async (id: string): Promise<User> => {
   return data;
 };
 
-export const updateUser = async ({
-  id,
-  updates
-}: { id: string, updates: Partial<User> }): Promise<User> => {
+export const updateUser = async (id: string, updates: UpdateUserInput): Promise<User> => {
   const { data } = await userApi.patch<User>(`/user/${id}`, updates);
   return data;
 };
