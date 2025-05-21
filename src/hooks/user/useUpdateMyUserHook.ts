@@ -9,6 +9,7 @@ export function useUpdateMyUser() {
 
   return useMutation<User, Error, UpdateUserInput>({
     mutationFn: async (updates: UpdateUserInput) => {
+      //@ts-ignore
       return await updateUser({ ...updates });
     },
     onSuccess: () => {

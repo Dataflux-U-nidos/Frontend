@@ -32,8 +32,8 @@ import {
   Globe,
   Monitor
 } from "lucide-react"
-import { MajorDetailsModal } from "@/components/molecules/MajorDetailsModal";
-import type { Major } from "@/types/majorType";
+import { UniversityRecommendationModal } from "@/components/organisms/UniversityRecommendationModal";
+import type { RecommendationWithUniversity } from "@/types/recomendationType";
 
 // Imágenes genéricas de carreras
 const careerImages = [
@@ -71,12 +71,7 @@ const iconMap: Record<string, React.FC<any>> = {
   "Relaciones Internacionales": Globe
 }
 
-// Función para obtener una imagen basada en el índice
-const getCareerImage = (index: number): string => {
-  return careerImages[index % careerImages.length];
-};
-
-// Función para obtener una imagen basada en ID (como en CareerCard)
+// Función para obtener una imagen basada en ID
 const getCareerImageById = (id: string): string => {
   const numericId = parseInt(id.replace(/[^0-9]/g, ''), 10) || 0;
   const index = numericId % careerImages.length;
@@ -95,63 +90,22 @@ const colorClasses: Record<string, string> = {
   pink: "bg-pink-100 text-pink-800",
 };
 
-// Tipo actualizado para las carreras que incluye todos los datos del backend
-type Career = {
-  // Campos requeridos para la UI básica
-  name: string;
-  color: string;
-  
-  // Campos opcionales que pueden venir del backend (Major)
-  _id?: string;
-  id?: string;
-  description?: string;
-  difficulty?: "EASY" | "MEDIUM" | "HARD";
-  price?: number;
-  focus?: string;
-  institutionId?: string;
-  pensumLink?: string;
-  jobId?: string;
-  
-  // Campos adicionales que puedan venir del API
-  [key: string]: any;
-}
-
 type TopCareersCardProps = {
-  careers: Career[]
+  careers: RecommendationWithUniversity[]
 }
 
 export function TopCareersCard({ careers }: TopCareersCardProps) {
-  const [selectedMajor, setSelectedMajor] = useState<Major | null>(null);
+  const [selectedRecommendation, setSelectedRecommendation] = useState<RecommendationWithUniversity | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCareerClick = (career: Career, index: number) => {
-    // Si la carrera ya tiene todos los datos de Major, usarlos directamente
-    if (career._id || career.id) {
-      // La carrera ya tiene datos completos del backend
-      setSelectedMajor(career as Major);
-    } else {
-      // Fallback: crear datos básicos si no vienen del backend
-      console.warn("Carrera sin datos completos, usando datos básicos:", career);
-      const basicMajor: Major = {
-        _id: `temp-${index}`,
-        id: `temp-${index}`,
-        name: career.name,
-        description: career.description || `Información sobre ${career.name}`,
-        difficulty: career.difficulty || "MEDIUM",
-        price: career.price || 0,
-        focus: career.focus || "General",
-        institutionId: career.institutionId || "",
-        pensumLink: career.pensumLink || "",
-        jobId: career.jobId || "",
-      };
-      setSelectedMajor(basicMajor);
-    }
+  const handleCareerClick = (recommendation: RecommendationWithUniversity) => {
+    setSelectedRecommendation(recommendation);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedMajor(null);
+    setSelectedRecommendation(null);
   };
 
   return (
@@ -165,25 +119,22 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
         
         <CardContent className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {careers.map((career, index) => {
-              const Icon = iconMap[career.name] || Monitor;
-              // Usar imagen basada en ID si está disponible, sino usar índice
-              const imageUrl = career._id || career.id ? 
-                getCareerImageById((career._id || career.id) ?? "") : 
-                getCareerImage(index);
-              const colorClass = colorClasses[career.color] || "bg-gray-100 text-gray-800";
+            {careers.map((recommendation, index) => {
+              const Icon = iconMap[recommendation.name] || Monitor;
+              const imageUrl = getCareerImageById(recommendation._id);
+              const colorClass = colorClasses[recommendation.color || 'blue'] || "bg-gray-100 text-gray-800";
               
               return (
                 <Card
-                  key={`${career.name}-${index}`}
+                  key={recommendation._id}
                   className="h-full flex flex-col shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer overflow-hidden group hover:scale-105"
-                  onClick={() => handleCareerClick(career, index)}
+                  onClick={() => handleCareerClick(recommendation)}
                 >
                   {/* Imagen de cabecera */}
                   <div className="w-full h-48 overflow-hidden bg-gray-100">
                     <img
                       src={imageUrl}
-                      alt={career.name}
+                      alt={recommendation.name}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                       onError={(e) => {
                         // Fallback si la imagen no carga
@@ -197,8 +148,9 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <CardTitle className="text-lg text-gray-800 group-hover:text-orange-600 transition-colors">
-                          {career.name}
+                          {recommendation.name}
                         </CardTitle>
+                        <p className="text-sm text-gray-600 mt-1">{recommendation.university.name}</p>
                       </div>
                       <div className="p-2 bg-orange-100 rounded-full">
                         <Icon className="h-5 w-5 text-orange-500" />
@@ -207,17 +159,62 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
                   </CardHeader>
                   
                   <CardContent className="flex-grow">
-                    {/* Badge con el color de la carrera */}
+                    {/* Badge con el ranking */}
                     <div className="flex flex-wrap gap-2 mb-3">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${colorClass}`}>
                         #{index + 1} Recomendada
                       </span>
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                        {recommendation.university.zone}
+                      </span>
+                    </div>
+                    
+                    {/* Información básica */}
+                    <div className="space-y-2 mb-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-600">Precio:</span>
+                        <span className="font-medium text-green-600">
+                          {new Intl.NumberFormat('es-CO', {
+                            style: 'currency',
+                            currency: 'COP',
+                            minimumFractionDigits: 0,
+                          }).format(recommendation.price)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-600">Dificultad:</span>
+                        <span className={`px-2 py-1 rounded text-xs font-medium ${
+                          recommendation.difficulty === 'EASY' ? 'bg-green-100 text-green-800' :
+                          recommendation.difficulty === 'MEDIUM' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {recommendation.difficulty === 'EASY' ? 'Fácil' : 
+                           recommendation.difficulty === 'MEDIUM' ? 'Moderada' : 'Difícil'}
+                        </span>
+                      </div>
                     </div>
                     
                     {/* Descripción */}
-                    <p className="text-gray-500 text-sm text-center">
-                      Carrera seleccionada especialmente para tu perfil académico e intereses personales.
+                    <p className="text-gray-500 text-sm text-center mb-3 line-clamp-2">
+                      {recommendation.description}
                     </p>
+                    
+                    {/* Competencias relacionadas */}
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {recommendation.preferences.slice(0, 2).map((pref, idx) => (
+                        <span 
+                          key={idx}
+                          className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-medium"
+                        >
+                          {pref.toUpperCase()}
+                        </span>
+                      ))}
+                      {recommendation.preferences.length > 2 && (
+                        <span className="px-2 py-1 bg-gray-50 text-gray-500 rounded text-xs">
+                          +{recommendation.preferences.length - 2}
+                        </span>
+                      )}
+                    </div>
                     
                     {/* Indicador de click */}
                     <div className="mt-3 text-center">
@@ -282,12 +279,12 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
           )}
         </CardContent>
       </Card>
-
-      {/* Modal de detalles */}
-      <MajorDetailsModal
+      
+      {/* Modal de detalles de universidad */}
+      <UniversityRecommendationModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
-        major={selectedMajor}
+        recommendation={selectedRecommendation}
       />
     </>
   )

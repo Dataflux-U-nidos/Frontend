@@ -1,5 +1,4 @@
 // src/services/userService.ts
-import { Major } from "@/types/majorType";
 import { userApi } from "../lib/api";
 import {
   CreateUserInput,
@@ -9,12 +8,10 @@ import {
   ImpersonateUserDto,
   PaginatedUsers,
 } from "../types";
+import { RecommendationWithUniversity } from "@/types/recomendationType";
 
 export const createUser = async (newUser: CreateUserInput): Promise<User> => {
   const response = await userApi.post<User>("/user", newUser);
-
-  // Print headers for debugging
-
   return response.data;
 };
 
@@ -23,9 +20,9 @@ export const getAllUsers = async (): Promise<User[]> => {
   return data;
 };
 
-// Obtener recomendaciones de carreras
-export const getAllRecomendations = async (): Promise<Major[]> => {
-  const { data } = await userApi.get<Major[]>("/user/recommendations");
+// Obtener recomendaciones de carreras con información completa de universidad
+export const getAllRecomendations = async (): Promise<RecommendationWithUniversity[]> => {
+  const { data } = await userApi.get<RecommendationWithUniversity[]>("/user/recommendations");
   return data;
 };
 
@@ -85,7 +82,6 @@ export const deleteUser = async (cascade: boolean = false): Promise<void> => {
   await userApi.delete(`/user?cascade=${cascade}`);
 };
 
-// Y agregar un nuevo método para eliminar otros usuarios por ID si es necesario
 export const deleteUserById = async (id: string): Promise<void> => {
   await userApi.delete(`/user/${id}`);
 };
@@ -95,10 +91,16 @@ export const getUserById = async (id: string): Promise<User> => {
   return data;
 };
 
+export const getUniversityById = async (id: string): Promise<User> => {
+  const { data } = await userApi.get<User>(`/user/universities/${id}`);
+  return data;
+};
+
 export const updateUser = async ({
-  ...updates
-}: UpdateUserInput): Promise<User> => {
-  const { data } = await userApi.patch<User>(`/user/`, updates);
+  id,
+  updates
+}: { id: string, updates: Partial<User> }): Promise<User> => {
+  const { data } = await userApi.patch<User>(`/user/${id}`, updates);
   return data;
 };
 

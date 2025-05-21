@@ -9,6 +9,7 @@ import {
   School,
   FileUser,
   BookCopy,
+  Glasses,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -44,13 +45,21 @@ export const sidebarData: SidebarData = {
         { title: "Salidas laborales", url: "/admin-job-opportunities", icon: FileUser, roles: ["ADMIN"] },
 
         // Financiero
-        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
-        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES"] },
-        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES"] },
+        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES", "ADMIN"] },
+        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES", "ADMIN"] },
+        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES", "ADMIN"] },
         
         // Marketing
-        { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },
-        { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING"] },
+        { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING", "ADMIN"] },
+        { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING", "ADMIN"] },
+
+        // Info Manager
+        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: Glasses, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Universidad", url: "/infomanager-university", icon: University, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Eventos", url: "/infomanager-events", icon: BookOpenCheck, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        
+        //support
+        { title: "Support Spoofing", url: "/support", icon: Headset, roles: ["SUPPORT", "ADMIN"] },
       ],
     },
   ],

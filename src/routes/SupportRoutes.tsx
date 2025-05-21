@@ -4,7 +4,7 @@ import { Navigate, Outlet } from "react-router-dom";
 export default function SupportRoutes() {
   const { userType } = useAuthContext();
 
-  if (userType === "SUPPORT") {
+  if (userType === "SUPPORT" || userType === "ADMIN") {
     return <Outlet />;
   }
 

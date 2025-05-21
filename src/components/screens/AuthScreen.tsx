@@ -215,9 +215,9 @@ export default function AuthScreen() {
       navigate("/university-viewers");
     } else if (
       userType === "INFOMANAGER" &&
-      location.pathname !== "/infomanager-main"
+      location.pathname !== "/infomanager-majors"
     ) {
-      navigate("/infomanager-main");
+      navigate("/infomanager-majors");
     } else if (
       userType === "MARKETING" &&
       location.pathname !== "/marketing-main"
