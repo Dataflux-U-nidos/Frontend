@@ -8,7 +8,7 @@ import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetManagersByUniversity,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -129,7 +129,7 @@ export default function UniversityManagersScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getManagers } = useGetManagersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   // state variables
   const [managersData, setManagersData] = useState<Manager[]>([]);

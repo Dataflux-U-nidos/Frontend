@@ -8,7 +8,7 @@ import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetSupportByAdmin,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -128,7 +128,7 @@ export default function AdminSupportScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getSupportUsers } = useGetSupportByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   // state variables
   const [SupportUsersData, setSupportUsersData] = useState<SupportUser[]>([]);

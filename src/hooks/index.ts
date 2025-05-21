@@ -13,9 +13,9 @@ export * from "./user/useGetSupportByAdminHook";
 export * from "./user/useGetFinanceByAdminHook";
 export * from "./user/useGetMarketingByAdminHook";
 export * from "./user/useGetMyUserHook";
-export * from "./user/useUpdateMyUserHook";
 export * from "./user/useSupportHook";
 export * from "./user/useSpoofHook";
+export * from "./user/useGetMyUserHook";
 
 
 // Campaign hooks

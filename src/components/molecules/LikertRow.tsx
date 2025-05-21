@@ -29,8 +29,8 @@ export const LikertRow = ({
             </p>
 
             <div className="mt-6 grid grid-cols-[auto_1fr_auto]">
-                <Label className={cn("text-2xl font-medium", "text-green-600")}>
-                    De acuerdo
+                <Label className={cn("text-2xl font-medium", disabled ? "text-orange-300" : "text-orange-600")}>
+                    En  desacuerdo
                 </Label>
 
                 <div className="flex items-center justify-center gap-15">
@@ -41,7 +41,7 @@ export const LikertRow = ({
                                     value={i + 1}
                                     selected={value === i + 1}
                                     disabled={disabled}
-                                    color={i + 1 <= 2 ? "green" : i + 1 === 3 ? "gray" : "orange"}
+                                    color={i + 1 <= 2 ? "orange" : i + 1 === 3 ? "gray" : "green"}
                                     size={sizeFor(i + 1)}
                                     onSelect={onChange}
                                 />
@@ -54,8 +54,8 @@ export const LikertRow = ({
                     ))}
                 </div>
 
-                <Label className={cn("text-2xl font-medium", disabled ? "text-orange-300" : "text-orange-600")}>
-                    En desacuerdo
+                <Label className={cn("text-2xl font-medium", "text-green-600")}>
+                    De acuerdo
                 </Label>
             </div>
 

@@ -6,7 +6,7 @@ import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import { FilterModal, FilterField } from "@/components/molecules/FilterModal";
 import { useAuthContext } from "@/context/AuthContext";
-import { getUniversityById, updateUser } from "@/services/userService";
+import { getUniversityById, /*updateUser*/ } from "@/services/userService";
 
 interface Event {
     name: string;
@@ -255,11 +255,11 @@ export default function InfoManagerEventsScreen() {
 
         try {
             // Update the university with the new events array
-            await updateUser({
+            //await updateUser({
                 id: university.id,
                 //@ts-ignore
-                updates: { events: updatedEvents }
-            });
+                //updates: { events: updatedEvents }
+            //});
 
             // Update local state
             setUniversity(prev => prev ? { ...prev, events: updatedEvents } : null);

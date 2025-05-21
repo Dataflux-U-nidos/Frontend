@@ -8,7 +8,7 @@ import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetViewersByUniversity,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -133,7 +133,7 @@ export default function UniversityViewersScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getViewers } = useGetViewersByUniversity();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   // state variables
   const [viewersData, setViewersData] = useState<Viewer[]>([]);

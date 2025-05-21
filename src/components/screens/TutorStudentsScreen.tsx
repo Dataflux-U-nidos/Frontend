@@ -9,7 +9,7 @@ import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetStudentsByTutor,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -181,7 +181,7 @@ export default function TutorStudentsScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getStudents } = useGetStudentsByTutor();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   const [studentsData, setStudentsData] = useState<Student[]>([]);
   const [filteredData, setFilteredData] = useState<Student[]>([]);
