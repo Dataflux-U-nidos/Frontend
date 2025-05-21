@@ -38,12 +38,14 @@ export const LikertRow = ({
                         <Tooltip key={i} delayDuration={80}>
                             <TooltipTrigger asChild>
                                 <RadioDot
+                                    key={i}
                                     value={i + 1}
                                     selected={value === i + 1}
                                     disabled={disabled}
                                     color={i + 1 <= 2 ? "orange" : i + 1 === 3 ? "gray" : "green"}
                                     size={sizeFor(i + 1)}
                                     onSelect={onChange}
+                                    layoutId={`dot-${statement}-${i}`}
                                 />
                             </TooltipTrigger>
                             {/* Solo 2‑4 muestran tooltip */}
