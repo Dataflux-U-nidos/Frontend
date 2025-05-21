@@ -5,3 +5,10 @@ export const sendPasswordRecoveryEmail = async (email: string): Promise<void> =>
 
   await userApi.post('email/recover', { email });
 };
+
+
+export const sendCuestionaryEmail = async (email: string): Promise<void> => {
+
+  await userApi.post('email/cuestionary', { email });
+};
+

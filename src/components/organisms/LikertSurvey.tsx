@@ -1,27 +1,63 @@
 import { useState, useEffect, useMemo } from "react";
 import { Progress } from "@/components/atoms/ui/progress";
 import {
-    Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationEllipsis,
+    Pagination, PaginationContent, PaginationItem, PaginationLink,
 } from "@/components/atoms/ui/pagination"
 import { useSurveyStore } from "@/lib/Likert/useSurveyStore";
 import { LikertPage } from "./LikertPage";
 import { itemsSchema } from "@/lib/Likert/surveySchema";
-import { windowPages } from "@/lib/Likert/pagination-window"
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
 import { cn } from "@/lib/utils";
 
 const HEADER_OFFSET = 320; // px: título + margen superior
 
-const flattenItems = (data: any) =>
-    Object.values(data.tests).flatMap((domain: any) =>
-        Object.entries(domain).map(([k, v]: any) => ({
-            key: k,
-            description: v.description,
-            options: v.options.map((o: any) => o.text),
-        }))
-    );
+interface LikertSurveyProps {
+    data: any;
+    onSubmit: () => void;
+}
+const flattenItems = (data: any) => {
+  // Aseguramos que data.tests exista (puedes adaptar según tu estructura)
+  const tests = data.tests;
 
-export const LikertSurvey = ({ data }: { data: any }) => {
+  if (!tests) return [];
+
+  // Detectar si tests es plano (satisfaction) o anidado (vocational)
+  // Ejemplo: si tests tiene keys que apuntan a objetos con descripción => plano
+  // o si tests tiene keys que apuntan a objetos que a su vez tienen keys con descripción => anidado
+
+  // Tomamos un valor cualquiera de tests
+  const firstValue = Object.values(tests)[0];
+
+  // Si firstValue es objeto y tiene keys que a su vez son objetos con 'description', es anidado
+  if (
+    firstValue &&
+    typeof firstValue === "object" &&
+    !Array.isArray(firstValue) &&
+    Object.values(firstValue).every(
+      (item) =>
+        item && typeof item === "object" && "description" in item && "options" in item
+    )
+  ) {
+    // Vocational: aplanar todos los dominios y sus preguntas
+    return Object.values(tests).flatMap((domain: any) =>
+      Object.entries(domain).map(([k, v]: any) => ({
+        key: k,
+        description: v.description,
+        options: v.options.map((o: any) => o.text),
+      }))
+    );
+  }
+
+  // Si no es anidado, asumir que es plano (satisfaction)
+  // Cada key apunta directamente a una pregunta con description y options
+  return Object.entries(tests).map(([k, v]: any) => ({
+    key: k,
+    description: v.description,
+    options: v.options.map((o: any) => o.text),
+  }));
+};
+
+export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     const flatItems = useMemo(() => flattenItems(data), [data]);
 
     // validación opcional
@@ -84,6 +120,7 @@ export const LikertSurvey = ({ data }: { data: any }) => {
                             answers={answers}
                             onAnswer={setAnswer}
                             active={idx === currentPage}
+                            onSubmit={onSubmit}
                         />
                     </div>
                 ))}
@@ -111,31 +148,7 @@ export const LikertSurvey = ({ data }: { data: any }) => {
                             </PaginationLink>
                         </PaginationItem>
 
-                        {/* BOTONES DE PÁGINA CON ELLIPSIS */}
-                        {windowPages(pages.length, currentPage, 5).map((p, i) =>
-                            p === "left" ? (
-                                <PaginationItem key={`l${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : p === "right" ? (
-                                <PaginationItem key={`r${i}`}>
-                                    <PaginationEllipsis />
-                                </PaginationItem>
-                            ) : (
-                                <PaginationItem key={p}>
-                                    <PaginationLink
-                                        href="#"
-                                        isActive={p === currentPage}
-                                        onClick={() => {
-                                            if (p < currentPage) prevPage()
-                                            else if (p > currentPage && canNext) nextPage()
-                                        }}
-                                    >
-                                        {p + 1}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            )
-                        )}
+                        
 
                         {/* FLECHA SIGUIENTE */}
                         <PaginationItem>

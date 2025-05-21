@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { getPartialVocationalTest } from "../../services/studentTestService";
+import { getSatisfactionTest } from "../../services/studentTestService";
 
-export const usePartialVocationalTest = () => {
+export const useSatisfactionTest = () => {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -9,11 +9,11 @@ export const usePartialVocationalTest = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const items = await getPartialVocationalTest();
+        const items = await getSatisfactionTest();
         setData({ tests: items });
 
       } catch (err) {
-        console.error("Error loading Partial Test test:", err);
+        console.error("Error loading vocational test:", err);
         setError("Error cargando el test");
       } finally {
         setLoading(false);

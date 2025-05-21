@@ -52,12 +52,10 @@ export default function ResetPasswordScreen() {
     const tokenFromURL = searchParams.get("token");
 
     setToken(tokenFromURL);
-    console.log("🔍 Token que llegó desde la URL:", tokenFromURL);
 
     if (tokenFromURL) {
       const decodedEmail = getEmailFromToken(tokenFromURL);
       setEmail(decodedEmail);
-      console.log("📧 Correo decodificado del token:", decodedEmail);
     }
   }, [location.search]);
 
@@ -80,9 +78,6 @@ export default function ResetPasswordScreen() {
       password: data.newPassword,
     });
 
-    console.log("Email:", email);
-    console.log("Nueva contraseña:", newPassword);
-    console.log("Token:", token);
   };
 
   return (

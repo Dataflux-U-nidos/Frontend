@@ -16,6 +16,7 @@ export enum PopularPlanType {
 }
 
 export interface Plan {
+  id: string;
   title: string;
   popular: PopularPlanType;
   price: number;
@@ -27,9 +28,10 @@ export interface Plan {
 // Props del componente: un array de Plan
 export interface PricingProps {
   plans: Plan[];
+  onPlanSelect: (planId: string) => void;
 }
 
-export const Pricing = ({ plans }: PricingProps) => {
+export const Pricing = ({ plans, onPlanSelect }: PricingProps) => {
   return (
     <section
       id="pricing"
@@ -77,7 +79,7 @@ export const Pricing = ({ plans }: PricingProps) => {
             </CardHeader>
 
             <CardContent>
-              <Button className="w-full" >{pricing.buttonText}</Button>
+              <Button className="w-full" onClick={() => onPlanSelect(pricing.id)} >{pricing.buttonText}</Button>
             </CardContent>
 
             <hr className="w-4/5 m-auto mb-4" />

@@ -7,6 +7,9 @@ import {
   HandCoins,
   Headset,
   School,
+  FileUser,
+  BookCopy,
+  Glasses,
 } from "lucide-react";
 import type { SidebarData } from "../types/sideBar";
 
@@ -17,15 +20,15 @@ export const sidebarData: SidebarData = {
       
       items: [
         // Viewer
-        { title: "Dashboard", url: "/viewer-dashboard", icon: Presentation, roles: ["VIEWER"] },
+        { title: "Dashboard", url: "/viewer-dashboard", icon: ChartSpline, roles: ["VIEWER", "UNIVERSITY"] },
 
         // Student
-        { title: "Programas", url: "/student-programs", icon: House, roles: ["STUDENT"] },
+        { title: "Mi perfil", url: "/student-profile", icon: House, roles: ["STUDENT"] },
+        { title: "Programas", url: "/student-programs", icon: BookCopy, roles: ["STUDENT"] },
         { title: "Universidades", url: "/student-universities", icon: University, roles: ["STUDENT"] },
-        { title: "Test vocacional", url: "/student-vocationalTest", icon: BookOpenCheck, roles: ["STUDENT"] },
-        { title: "Test psicométrico", url: "/student-psychometricTest", icon: BookOpenCheck, roles: ["STUDENT"] },
-        { title: "Proyección en el mercado laboral", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
-
+        { title: "Salidas laborales", url: "/student-carrerProspects", icon: ChartSpline, roles: ["STUDENT"] },
+        { title: "Encuesta de satisfacción", url: "/student-survey", icon: Headset, roles: ["STUDENT"] },
+  
         // Tutor
         { title: "Estudiantes", url: "/tutor-students", icon: University, roles: ["TUTOR"] },
 
@@ -37,15 +40,25 @@ export const sidebarData: SidebarData = {
         { title: "Soporte", url: "/admin-support", icon: University, roles: ["ADMIN"] },
         { title: "Finanzas", url: "/admin-finances", icon: BookOpenCheck, roles: ["ADMIN"] },
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
+        { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
+        { title: "Salidas laborales", url: "/admin-job-opportunities", icon: FileUser, roles: ["ADMIN"] },
 
         // Financiero
-        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES"] },
-        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES"] },
-        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES"] },
+        { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES", "ADMIN"] },
+        { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES", "ADMIN"] },
+        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES", "ADMIN"] },
         
         // Marketing
-        { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING"] },
-        { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING"] },
+        { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING", "ADMIN"] },
+        { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING", "ADMIN"] },
+
+        // Info Manager
+        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: Glasses, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Universidad", url: "/infomanager-university", icon: University, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Eventos", url: "/infomanager-events", icon: BookOpenCheck, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        
+        //support
+        { title: "Support Spoofing", url: "/support", icon: Headset, roles: ["SUPPORT", "ADMIN"] },
       ],
     },
   ],

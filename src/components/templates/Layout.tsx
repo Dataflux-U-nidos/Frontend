@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom"
+import { Outlet, useLocation } from "react-router-dom"
 
 import { AppSidebar } from "../organisms/Side-bar"
 
@@ -18,10 +18,14 @@ type LayoutProps = {
 }
 
 export default function Layout({ navMain, user, getInitials }: LayoutProps) {
+  const { pathname } = useLocation()
+
+  const hideSidebarOn = ["/student-grades", "/student-vocationalTest"]
+  const shouldHide = hideSidebarOn.includes(pathname)
+
   return (
     <SidebarProvider>
-      <AppSidebar navMain={navMain} user={user} getInitials = {getInitials} />
-      <SidebarInset>
+      {!shouldHide && <AppSidebar navMain={navMain} user={user} getInitials={getInitials} />}      <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
