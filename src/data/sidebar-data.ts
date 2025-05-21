@@ -53,8 +53,9 @@ export const sidebarData: SidebarData = {
         { title: "Campañas Escolares", url: "/marketing-scholar", icon: School, roles: ["MARKETING", "ADMIN"] },
 
         // Info Manager
-        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: Glasses, roles: ["INFOMANAGER"] },
-        { title: "Gestión de Universidad", url: "/infomanager-university", icon: University, roles: ["INFOMANAGER"] },
+        { title: "Gestión de Carreras", url: "/infomanager-majors", icon: Glasses, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Universidad", url: "/infomanager-university", icon: University, roles: ["INFOMANAGER", "UNIVERSITY"] },
+        { title: "Gestión de Eventos", url: "/infomanager-events", icon: BookOpenCheck, roles: ["INFOMANAGER", "UNIVERSITY"] },
         
         //support
         { title: "Support Spoofing", url: "/support", icon: Headset, roles: ["SUPPORT", "ADMIN"] },

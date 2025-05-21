@@ -1,12 +1,12 @@
 // src/services/userService.ts
 import { userApi } from "../lib/api";
 import {
- CreateUserInput,
- UpdateUserInput,
- User,
- ImpersonateResponse,
- ImpersonateUserDto,
- PaginatedUsers,
+  CreateUserInput,
+  UpdateUserInput,
+  User,
+  ImpersonateResponse,
+  ImpersonateUserDto,
+  PaginatedUsers,
 } from "../types";
 import { RecommendationWithUniversity } from "@/types/recomendationType";
 
@@ -91,10 +91,16 @@ export const getUserById = async (id: string): Promise<User> => {
   return data;
 };
 
+export const getUniversityById = async (id: string): Promise<User> => {
+  const { data } = await userApi.get<User>(`/user/universities/${id}`);
+  return data;
+};
+
 export const updateUser = async ({
-  ...updates
-}: UpdateUserInput): Promise<User> => {
-  const { data } = await userApi.patch<User>(`/user/`, updates);
+  id,
+  updates
+}: { id: string, updates: Partial<User> }): Promise<User> => {
+  const { data } = await userApi.patch<User>(`/user/${id}`, updates);
   return data;
 };
 

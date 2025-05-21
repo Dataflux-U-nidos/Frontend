@@ -18,7 +18,6 @@ export interface User {
   idi?: number;
   ar?: number;
   universityId?: string;
-
   phone?: string;
   address?: string;
   zone?: string;

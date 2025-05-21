@@ -77,6 +77,9 @@ const AdminDashboardScreen = lazy(
 const InfoManagerMainScreen = lazy(
   () => import("../components/screens/InfoManagerMainScreen")
 );
+const InfoManagerEventsScreen = lazy(
+  () => import("../components/screens/InfoManagerEventsScreen")
+)
 const MarketingMainScreen = lazy(
   () => import("../components/screens/MarketingMainScreen")
 );
@@ -200,6 +203,7 @@ function AnimatedRoutes() {
           <Route element={<LayoutScreen />}>
             <Route path="/infomanager-majors" element={<MotionWrapper><InfoManagerMainScreen /></MotionWrapper>} />
             <Route path="/infomanager-university" element={<MotionWrapper><InfoManagerUniversityScreen /></MotionWrapper>} />
+            <Route path="/infomanager-events" element={<MotionWrapper><InfoManagerEventsScreen /></MotionWrapper>} />
           </Route>
         </Route>
 
