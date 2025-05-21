@@ -8,7 +8,7 @@ import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
 import {
   useCreateUser,
   useGetMarketingByAdmin,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -129,7 +129,7 @@ export default function UniversityMarketingUsersScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getMarketingUsers } = useGetMarketingByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
     // state variables
   const [marketingUsersData, setMarketingUsersData] = useState<MarketingUser[]>([]);
   const [filteredData, setFilteredData] = useState<MarketingUser[]>([]);

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Progress } from "@/components/atoms/ui/progress";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
 } from "@/components/atoms/ui/pagination"
@@ -90,9 +89,6 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     /* ---------- store ---------- */
     const { answers, currentPage, setAnswer, nextPage, prevPage } =
         useSurveyStore();
-
-    const answered = Object.values(answers).filter(Boolean).length;
-    const progress = Math.round((answered / flatItems.length) * 100);
 
     const canNext =
         pages[currentPage]?.every((it) => answers[it.key] !== null) ?? false;

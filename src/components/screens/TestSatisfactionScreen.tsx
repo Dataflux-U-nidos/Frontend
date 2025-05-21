@@ -10,7 +10,7 @@ import { notifySuccess } from "@/lib/utils/notify";
 
 export default function TestSatisfactionScreen() {
   const navigate = useNavigate();
-  const { answers, resetSurvey, currentPage } = useSurveyStore();
+  const { answers, resetSurvey } = useSurveyStore();
   const { data, loading, error } = useSatisfactionTest();
   const { submit, loading: submitting, error: submitError } = usePatchTestResult();
   const { notifyError } = useNotify();
