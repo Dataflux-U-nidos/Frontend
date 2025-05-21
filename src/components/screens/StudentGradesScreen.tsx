@@ -38,10 +38,12 @@ export default function StudentGradesScreen() {
       const updateTestCompleted = {
       testCompleted: true,
     };
-
+      console.log("Antes de updateUser");
       await updateUser(updateTestCompleted);
+      console.log("Despues de updateUser");
 
       await refreshUser();
+      console.log("Despues de refreshUser");
       navigate("/student-vocationalTest");
     } catch (err) {
       console.error("Error al enviar el formulario:", err);

@@ -21,8 +21,12 @@ export const getAllUsers = async (): Promise<User[]> => {
 };
 
 // Obtener recomendaciones de carreras con información completa de universidad
-export const getAllRecomendations = async (): Promise<RecommendationWithUniversity[]> => {
-  const { data } = await userApi.get<RecommendationWithUniversity[]>("/user/recommendations");
+export const getAllRecomendations = async (): Promise<
+  RecommendationWithUniversity[]
+> => {
+  const { data } = await userApi.get<RecommendationWithUniversity[]>(
+    "/user/recommendations"
+  );
   return data;
 };
 
@@ -96,10 +100,10 @@ export const getUniversityById = async (id: string): Promise<User> => {
   return data;
 };
 
-export const updateUser = async ({
-  id,
-  updates
-}: { id: string, updates: Partial<User> }): Promise<User> => {
+export const updateUser = async (
+  id: string,
+  updates: UpdateUserInput
+): Promise<User> => {
   const { data } = await userApi.patch<User>(`/user/${id}`, updates);
   return data;
 };
