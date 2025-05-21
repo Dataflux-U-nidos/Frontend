@@ -34,6 +34,7 @@ function baseValidationForType(type: FieldType): z.ZodString {
             schema = schema.email("El email no es válido").max(50, "Máximo 50 caracteres")
             break
         case "password":
+        case "create-password":
             schema = schema.min(6, "Mínimo 6 caracteres").max(50, "Máximo 50 caracteres")
             break
         case "phone":
@@ -63,14 +64,10 @@ function baseValidationForType(type: FieldType): z.ZodString {
     return schema
 }
 
-
 function buildZodSchemaForField(field: FormField): z.ZodType<string, any, string> {
     let schema = baseValidationForType(field.type)
     if (field.required) {
         schema = schema.nonempty("Este campo es requerido")
-    }
-    else {
-        z.optional(z.string());
     }
     if (typeof field.minLength !== "undefined") {
         schema = schema.min(field.minLength, `Mínimo ${field.minLength} caracteres`)
@@ -81,7 +78,6 @@ function buildZodSchemaForField(field: FormField): z.ZodType<string, any, string
     return schema
 }
 
-/** Aplana si es un array de arrays */
 function flattenFields(data: FormField[] | FormField[][]): FormField[] {
     if (!Array.isArray(data) || data.length === 0) return []
     if (Array.isArray(data[0])) return (data as FormField[][]).flat()
@@ -146,7 +142,6 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
             name={field.key}
             render={({ field: controllerField }) => (
                 <FormItem
-                    // Múltiples items en una fila:
                     className={cn(field.width ? "max-w-full" : "flex-1", "flex flex-col p-0.5")}
                     style={field.width ? { width: `${field.width}%` } : {}}
                 >
@@ -188,27 +183,27 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
                                     />
                                 )
                             }
-                            if (field.type !== "create-password") {
-                                return (
-                                    <Input
-                                        inputType={field.type}
-                                        placeholder={field.placeholder}
-                                        autoComplete={
-                                            field.type === "email"
-                                                ? "email"
-                                                : field.type === "password"
-                                                    ? "current-password"
-                                                    : field.type === "user"
-                                                        ? "username"
-                                                        : "off"
-                                        }
-                                        value={controllerField.value || ""}
-                                        onChange={controllerField.onChange}
-                                    />
-                                )
-                            } else {
-                                // Render a different component or handle the "create-password" case differently
-                            }
+                            return (
+                                <Input
+                                    inputType={
+                                        field.type === "create-password" || field.type === "password"
+                                            ? "password"
+                                            : field.type
+                                    }
+                                    placeholder={field.placeholder}
+                                    autoComplete={
+                                        field.type === "email"
+                                            ? "email"
+                                            : field.type === "password" || field.type === "create-password"
+                                                ? "new-password"
+                                                : field.type === "user"
+                                                    ? "username"
+                                                    : "off"
+                                    }
+                                    value={controllerField.value || ""}
+                                    onChange={controllerField.onChange}
+                                />
+                            )
                         })()}
                     </FormControl>
                     <FormMessage className="min-h-[1.25rem]">

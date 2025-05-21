@@ -10,7 +10,7 @@ import { notifySuccess } from "@/lib/utils/notify";
 
 export default function TestVocationalScreen() {
   const navigate = useNavigate();
-  const { answers } = useSurveyStore();
+  const { answers, resetSurvey } = useSurveyStore();
   const { data, loading, error } = useVocationalTest();
   const { submit, loading: submitting, error: submitError } = usePatchTestResult();
   const { notifyError } = useNotify();
@@ -66,6 +66,9 @@ export default function TestVocationalScreen() {
           });
     } catch {
     }
+
+    resetSurvey();
+
   }, [answers, navigate, submit]);
 
 

@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import { Progress } from "@/components/atoms/ui/progress";
 import {
     Pagination, PaginationContent, PaginationItem, PaginationLink,
 } from "@/components/atoms/ui/pagination"
@@ -91,9 +90,6 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
     const { answers, currentPage, setAnswer, nextPage, prevPage } =
         useSurveyStore();
 
-    const answered = Object.values(answers).filter(Boolean).length;
-    const progress = Math.round((answered / flatItems.length) * 100);
-
     const canNext =
         pages[currentPage]?.every((it) => answers[it.key] !== null) ?? false;
 
@@ -128,8 +124,7 @@ export const LikertSurvey = ({ data, onSubmit }: LikertSurveyProps) => {
 
             {/* controles: barra (60 %) + paginación (botones numerados) */}
             <div className="mt-8 flex w-full items-center justify-center gap-6">
-                <span className="text-xs">{progress}%</span>
-                <Progress value={progress} className="h-2 w-[60%] flex-shrink-0" />
+
 
                 <Pagination>
                     <PaginationContent>

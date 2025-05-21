@@ -8,7 +8,7 @@ import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetFinanceByAdmin,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -130,7 +130,7 @@ export default function AdminFinancesScreen() {
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getFinanceUsers } = useGetFinanceByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   // state variables
   const [financeUsersData, setFinanceUsersData] = useState<FinanceUser[]>([]);

@@ -254,12 +254,12 @@ export default function InfoManagerEventsScreen() {
         setIsSaving(true);
 
         try {
-            // Update the university with the new events array
-            await updateUser({
-                id: university.id,
+            //Update the university with the new events array
+            await updateUser(
+                university.id,
                 //@ts-ignore
-                updates: { events: updatedEvents }
-            });
+                { events: updatedEvents }
+            );
 
             // Update local state
             setUniversity(prev => prev ? { ...prev, events: updatedEvents } : null);
