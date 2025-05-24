@@ -1,6 +1,7 @@
 // src/components/screens/StudentMajorsScreen.tsx
 import { useState, useEffect, useMemo } from 'react';
 import { useFilterMajors } from '@/hooks/major/useFilterMajorsHook';
+import { useGetAllUniversities } from '@/hooks/university/useGetAllUniversitiesHook';
 import { useGetAllMajors } from '@/hooks/major/useGetAllMajorsHook';
 import { MajorFilters } from '@/types/majorType';
 import { SearchFilterBar } from '@/components/molecules/SearchFilterBar';
@@ -18,6 +19,8 @@ export default function StudentMajorsScreen() {
   console.log("Selected Major:", selectedMajor);
   const [notification, setNotification] = useState<NotificationData | null>(null);
   const [filters, setFilters] = useState<MajorFilters>({});
+  const { data: allUniversities } = useGetAllUniversities();
+
 
   // Obtener datos de carreras
   const { data: allMajors, isLoading, isError, error, refetch } = useGetAllMajors();
@@ -92,12 +95,26 @@ export default function StudentMajorsScreen() {
 
   const focusOptions = useMemo(() => {
     if (!allMajors) return [];
-      const uniques = Array.from(new Set(allMajors.map((m) => m.focus).filter(Boolean)));
+    const uniques = Array.from(new Set(allMajors.map((m) => m.focus).filter(Boolean)));
     return uniques.map((f) => ({ value: f, label: f }));
   }, [allMajors]);
 
+  const universityOptions = useMemo(() => {
+    if (!allUniversities) return [];
+    return allUniversities.map((u) => ({ 
+      value: u._id || u.id || '', 
+      label: u.name 
+    }));
+  }, [allUniversities]);
+
   // Campos para el filtro de carreras
   const filterFields: FilterField[] = [
+    {
+      id: 'institutionId', 
+      label: 'Universidad',
+      type: 'select',
+      options: universityOptions,
+    },
     {
       id: 'difficulty',
       label: 'Dificultad',
@@ -186,6 +203,7 @@ export default function StudentMajorsScreen() {
             <div className="text-sm text-orange-700">
               <span className="font-medium">Filtros activos:</span>
               {filters.name && <span className="ml-2">• Búsqueda: "{filters.name}"</span>}
+              {filters.institutionId && <span className="ml-2">• Universidad seleccionada</span>}
               {filters.difficulty && <span className="ml-2">• Dificultad: {filters.difficulty}</span>}
               {filters.priceMin && <span className="ml-2">• Precio min: ${filters.priceMin.toLocaleString()}</span>}
               {filters.priceMax && <span className="ml-2">• Precio max: ${filters.priceMax.toLocaleString()}</span>}
