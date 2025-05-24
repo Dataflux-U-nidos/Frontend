@@ -112,7 +112,7 @@ export default function StudentProfileScreen() {
 
   // Usar recomendaciones reales si están disponibles, sino array vacío
   const topCareers = processedRecommendations.length > 0
-    ? processedRecommendations.slice(0, 3)
+    ? processedRecommendations
     : [];
 
   // Mapear competencias reales del usuario
