@@ -38,16 +38,16 @@ export const sidebarData: SidebarData = {
         { title: "Gestores de información", url: "/university-managers", icon: House, roles: ["UNIVERSITY"] },
 
         // Admin
+        { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
         { title: "Soporte", url: "/admin-support", icon: University, roles: ["ADMIN"] },
         { title: "Finanzas", url: "/admin-finances", icon: BookOpenCheck, roles: ["ADMIN"] },
         { title: "Marketing", url: "/admin-marketing", icon: ChartSpline, roles: ["ADMIN"] },
-        { title: "Dashboard", url: "/admin-dashboard", icon: Presentation, roles: ["ADMIN"] },
         { title: "Salidas laborales", url: "/admin-job-opportunities", icon: FileUser, roles: ["ADMIN"] },
 
         // Financiero
         { title: "Ingresos", url: "/finances-income", icon: HandCoins, roles: ["FINANCES", "ADMIN"] },
         { title: "Costos de las campañas", url: "/finances-campaings", icon: Headset, roles: ["FINANCES", "ADMIN"] },
-        { title: "suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES", "ADMIN"] },
+        { title: "Suscripciones", url: "/finances-subscriptions", icon: BookOpenCheck, roles: ["FINANCES", "ADMIN"] },
         
         // Marketing
         { title: "Campañas Universitarias", url: "/marketing-university", icon: University, roles: ["MARKETING", "ADMIN"] },
