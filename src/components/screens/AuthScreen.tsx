@@ -202,7 +202,7 @@ export default function AuthScreen() {
       userType === "ADMIN" &&
       location.pathname !== "/admin-dashboard"
     ) {
-      navigate("/admin-finances");
+      navigate("/admin-dashboard");
     } else if (
       userType === "TUTOR" &&
       location.pathname !== "/tutor-students"
@@ -210,9 +210,9 @@ export default function AuthScreen() {
       navigate("/tutor-students");
     } else if (
       userType === "UNIVERSITY" &&
-      location.pathname !== "/university-viewers"
+      location.pathname !== "/viewer-dashboard"
     ) {
-      navigate("/university-viewers");
+      navigate("/viewer-dashboard");
     } else if (
       userType === "INFOMANAGER" &&
       location.pathname !== "/infomanager-majors"
