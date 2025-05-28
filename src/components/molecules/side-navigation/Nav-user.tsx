@@ -1,11 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import {
   CircleUserRound,
-  Bell,
   ChevronsUpDown,
-  CreditCard,
   LogOut,
-  Sparkles,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../../atoms/ui/avatar";
 import {
@@ -24,17 +21,20 @@ import {
   useSidebar,
 } from "../../atoms/ui/sidebar";
 import { useAuthContext } from "@/context/AuthContext";
+import { User } from "@/types";
+import { NavItem } from "@/types/sideBar";
+
+
+interface NavUserProps {
+  user: User | null
+  getInitials: () => string
+  settingsItems: NavItem[]
+}
 
 export function NavUser({
   user,
-}: {
-  user: {
-    name: string;
-    email: string;
-    userType: string;
-    avatar: string;
-  };
-}) {
+  getInitials,
+}: NavUserProps) {
   const { isMobile } = useSidebar();
   const { logout, userType } = useAuthContext();
 
@@ -52,6 +52,13 @@ export function NavUser({
         navigate("/account-university");
       } else if (userType === "ADMIN") {
         navigate("/account-admin");
+      } else if (userType === "SUPPORT") {
+        navigate("/account-support");
+      } else if (userType === "MARKETING") {
+        navigate("/account-marketing");
+      }
+      else if (userType === "FINANCES") {
+        navigate("/account-finance");
       }
     } catch (error) {
       console.error("Error during navigation:", error);
@@ -60,18 +67,11 @@ export function NavUser({
 
   const handleLogout = async () => {
     try {
+      localStorage.removeItem("userData");
       await logout();
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  };
-  const getInitials = (name: string) => {
-    return name
-      .split(" ") // dividir por espacios
-      .map((n) => n[0]) // tomar la primera letra de cada palabra
-      .join("")
-      .substring(0, 2) // quedarnos con máximo 2 letras
-      .toUpperCase(); // en mayúsculas
   };
 
   return (
@@ -84,15 +84,15 @@ export function NavUser({
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user?.avatar} alt={user?.name} />
                 <AvatarFallback className="rounded-lg bg-gray-400 text-white">
-                  {getInitials(user.name)}
+                  {getInitials()}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-                <span className="truncate text-[10px]">{user.userType}</span>
+                <span className="truncate font-semibold">{user?.name}</span>
+                <span className="truncate text-xs">{user?.email}</span>
+                <span className="truncate text-[10px]">{user?.userType}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -106,44 +106,30 @@ export function NavUser({
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarImage src={user?.avatar} alt={user?.name} />
                   <AvatarFallback className="rounded-lg bg-gray-400 text-white">
-                    {getInitials(user.name)}
+                    {getInitials()}
                   </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                  <span className="truncate text-[10px]">{user.userType}</span>
+                  <span className="truncate font-semibold">{user?.name}</span>
+                  <span className="truncate text-xs">{user?.email}</span>
+                  <span className="truncate text-[10px]">{user?.userType}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
+
             <DropdownMenuGroup>
               <DropdownMenuItem onClick={handleAccount}>
                 <CircleUserRound />
                 Mi Cuenta
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
+
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
-              Log out
+              Cerrar sesión
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

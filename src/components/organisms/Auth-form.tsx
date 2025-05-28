@@ -12,6 +12,7 @@ import type { FormField } from "@/types/formTypes"
 import { LoginInput, User } from "../../types"
 import { LogoIcon } from "../atoms/icons"
 import { UserTypeSelectorComponent } from "../molecules/UserTypeSelectorComponent"
+import { useNotify } from "@/hooks/useNotify"
 
 interface AuthFormProps {
     loginFields: FormField[]
@@ -24,13 +25,13 @@ interface AuthFormProps {
         selectedType: string;
         onSelectType: (type: string) => void;
         options: Array<{
-          value: string;
-          label: string;
-          icon: string;
-          description: string;
+            value: string;
+            label: string;
+            icon: string;
+            description: string;
         }>;
-      }
-
+    }
+    onRegistryChange?: (values: Record<string, any>) => void
 }
 
 export default function AuthForm({
@@ -40,29 +41,61 @@ export default function AuthForm({
     onRegister,
     onForgotPassword,
     className,
-    userTypeOptions
+    userTypeOptions,
+    onRegistryChange
 }: AuthFormProps) {
     const loginFormRef = useRef<DynamicFormHandles>(null)
     const registryFormRef = useRef<DynamicFormHandles>(null)
+    const { notifySuccess, notifyError } = useNotify();
 
 
     const handleLoginSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (loginFormRef.current) {
-            loginFormRef.current.handleSubmit((data) => {
-                onLogin(data as LoginInput)
-            })()
-        }
-    }
+        e.preventDefault();
+        if (!loginFormRef.current) return;
+
+        loginFormRef.current.handleSubmit(async (data) => {
+            try {
+                await onLogin(data as LoginInput);
+                notifySuccess({
+                    title: "¡Bienvenido!",
+                    description: "Has iniciado sesión correctamente.",
+                    icon: "✅",
+                    closeButton: true,
+                });
+            } catch (err: any) {
+                notifyError({
+                    title: "Error al iniciar sesión",
+                    description: err.response?.data?.message ?? "Revise sus credenciales.",
+                    icon: "🚫",
+                    closeButton: true,
+                });
+            }
+        })();
+    };
 
     const handleRegistrySubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (registryFormRef.current) {
-            registryFormRef.current.handleSubmit((data) => {
-                onRegister(data as User)
-            })()
-        }
-    }
+        e.preventDefault();
+        if (!registryFormRef.current) return;
+
+        registryFormRef.current.handleSubmit(async (data) => {
+            try {
+                await onRegister(data as User);
+                notifySuccess({
+                    title: "Cuenta creada",
+                    description: "Te has registrado exitosamente.",
+                    icon: "✅",
+                    closeButton: true,
+                });
+            } catch (err: any) {
+                notifyError({
+                    title: "Error al registrarse",
+                    description: err.response?.data?.message ?? "No se pudo completar el registro.",
+                    icon: "🚫",
+                    closeButton: true,
+                });
+            }
+        })();
+    };
 
     return (
         <div className={cn("flex flex-col h-full min-h-0", className)}>
@@ -106,16 +139,17 @@ export default function AuthForm({
                         <div className="flex-1 min-h-0 overflow-y-auto space-y-6">
                             {/* Type selector - only shown in registry tab */}
                             {userTypeOptions && (
-                                <UserTypeSelectorComponent 
-                                    selectedType={userTypeOptions.selectedType} 
+                                <UserTypeSelectorComponent
+                                    selectedType={userTypeOptions.selectedType}
                                     onSelectType={userTypeOptions.onSelectType}
                                     options={userTypeOptions.options}
                                 />
                             )}
-                            
+
                             <DynamicForm
                                 ref={registryFormRef}
                                 formDataConfig={registryFields}
+                                onChange={onRegistryChange}
                             />
                         </div>
                         <Button type="submit" className="w-full mb-4">
@@ -123,8 +157,7 @@ export default function AuthForm({
                         </Button>
                     </form>
                 </TabsContent>
-                
-                {/* ... resto del código de la pestaña de registro ... */}
+
             </Tabs>
         </div>
     )

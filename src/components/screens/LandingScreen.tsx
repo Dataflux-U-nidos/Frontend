@@ -4,6 +4,9 @@ import featureProfileImage from "../../assets/feature-profile.svg";
 import featureReviewImage from "../../assets/feature-reviews.svg";
 import featureWageImage from "../../assets/feature-wage.svg";
 import { useNavigate } from "react-router-dom";
+import { Plan, PopularPlanType } from "@/components/organisms/Pricing";
+import { useGetAllSubscriptions } from "@/hooks";
+import { useEffect, useState } from "react";
 
 const features: FeatureProps[] = [
   {
@@ -25,6 +28,8 @@ const features: FeatureProps[] = [
     image: featureReviewImage,
   },
 ];
+
+
 
 const reviews = [
   //comentar el primero en caso de fallas
@@ -79,16 +84,49 @@ const featureList: string[] = [
 export default function LandingScreen() {
   const navigate = useNavigate();
 
+  // 1) Traer planes del backend
+  const { data: apiPlans, isLoading, error } = useGetAllSubscriptions();
+
+  // 2) Transformarlos al shape que espera <Pricing>
+  const [plans, setPlans] = useState<Plan[]>([]);
+  useEffect(() => {
+    if (apiPlans) {
+      setPlans(
+        apiPlans.map((p) => ({
+          id: p.id, 
+          title: p.name,
+          popular: p.type === "STANDARD" ? PopularPlanType.YES : PopularPlanType.NO,
+          price: p.cost,
+          description: p.description ?? "", // add a default value if description is undefined
+          buttonText: `Suscribirme (${p.name})`,
+          benefitList: p.benefits,
+        }))
+      );
+    }
+  }, [apiPlans]);
+
   const handleCreateAccount = () => {
     navigate("/auth");
   };
-  
-  return(
-    <LandingTemplate 
-    features={features} 
-    featureList={featureList} 
-    reviews={reviews} 
-    onCreateAccount={handleCreateAccount}
+
+  const handlePartialTest = () => {
+    navigate("/auth");
+  };
+
+   const handlePlanSelect = (planId: string) => {
+    navigate("/university-registry", { state: { subscriptionPlanId: planId } });
+  };
+
+  const pricingList = isLoading || error ? [] : plans;
+  return (
+    <LandingTemplate
+      features={features}
+      featureList={featureList}
+      reviews={reviews}
+      onCreateAccount={handleCreateAccount}
+      pricingList={pricingList}
+      onPlanSelect={handlePlanSelect}
+      onPartialTest={handlePartialTest}
     />
   );
 };

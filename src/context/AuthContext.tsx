@@ -7,14 +7,18 @@ import {
 } from "@/services/authService";
 import { useCreateUser } from "@/hooks/user/useCreateUserHook";
 import { useRegisterUser } from "@/hooks/user/useRegisterUserHook";
+import { User } from "@/types/userType";
+import { useGetMyUser } from "@/hooks/user/useGetMyUserHook";
 
 interface IAuthContext {
+  user: User | null;
   userType: string | null;
   isAuthLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   createAccount: (userData: unknown) => Promise<void>;
   registryAccount: (userData: unknown) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -24,21 +28,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [userType, setUserType] = useState<string | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
+  const { mutateAsync: fetchUser } = useGetMyUser();
+
+  const checkSession = async () => {
+    setIsAuthLoading(true); // marcamos loading al inicio
+    try {
+      // 1) verificamos sesión
+      const session = await getSession();
+      setUserType(session.userType);
+
+      // 2) esperamos a que llegue el user con testCompleted
+      const me = await fetchUser();
+      setUser(me);
+    } catch {
+      setUserType(null);
+      setUser(null);
+    } finally {
+      setIsAuthLoading(false); // sólo aquí, **tras** fetchUser
+    }
+  };
 
   useEffect(() => {
     checkSession();
   }, []);
-
-  const checkSession = async () => {
-    try {
-      const data = await getSession();
-      setUserType(data.userType);
-    } catch {
-      setUserType(null);
-    } finally {
-      setIsAuthLoading(false);
-    }
-  };
 
   const loginMutation = useMutation({
     mutationFn: ({ email, password }: { email: string; password: string }) =>
@@ -59,6 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const logout = async () => {
     await logoutService();
     setUserType(null);
+    setUser(null);
   };
 
   const createAccount = async (userData: any) => {
@@ -71,13 +85,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await registerMutation.mutateAsync({ ...userData });
   };
 
+  const refreshUser = async () => {
+    try {
+      const u = await fetchUser();
+      setUser(u);
+    } catch (err) {
+      console.error("Error al refrescar user:", err);
+    }
+  };
+
   const value: IAuthContext = {
+    user,
     userType,
     isAuthLoading,
     login,
     logout,
     createAccount,
     registryAccount,
+    refreshUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

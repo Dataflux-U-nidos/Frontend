@@ -10,7 +10,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/atoms/ui/form"
-import { Input } from "@/components/atoms/ui/input"
+import { Input } from "@/components/atoms/ui/input-form"
 import {
     Select,
     SelectTrigger,
@@ -34,17 +34,9 @@ function baseValidationForType(type: FieldType): z.ZodString {
             schema = schema.email("El email no es válido").max(50, "Máximo 50 caracteres")
             break
         case "password":
+        case "create-password":
             schema = schema.min(6, "Mínimo 6 caracteres").max(50, "Máximo 50 caracteres")
             break
-        case "create-password":
-            schema = schema
-                .min(8, "Mínimo 8 caracteres")
-                .max(50, "Máximo 50 caracteres")
-                .regex(
-                    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?_ñ&]{8,}$/,
-                    "Debe contener al menos una letra y un número"
-                );
-            break;
         case "phone":
             schema = schema.regex(/^\d+$/, "Solo dígitos").max(10, "Máximo 10 dígitos")
             break
@@ -52,7 +44,7 @@ function baseValidationForType(type: FieldType): z.ZodString {
             schema = schema.regex(/^\d+$/, "Solo dígitos").max(2, "Máximo 2 dígitos")
             break
         case "document":
-            schema = schema.regex(/^\d+$/, "Solo dígitos").max(10, "Máximo 10 dígitos")
+            schema = schema.max(50, "Máximo 50 caracteres")
             break
         case "user":
             schema = schema.max(40, "Máximo 40 caracteres")
@@ -62,6 +54,9 @@ function baseValidationForType(type: FieldType): z.ZodString {
             break
         case "number":
             schema = schema.regex(/^\d+$/, "Solo dígitos").max(3, "Máximo 3 dígitos")
+            break
+        case "grade":
+            schema = schema.regex(/^(?:[0-4](?:\.\d{1,2})?|5(?:\.0{1,2})?)$/, "El valor debe estar entre 0 y 5")
             break
         default:
             break
@@ -83,7 +78,6 @@ function buildZodSchemaForField(field: FormField): z.ZodType<string, any, string
     return schema
 }
 
-/** Aplana si es un array de arrays */
 function flattenFields(data: FormField[] | FormField[][]): FormField[] {
     if (!Array.isArray(data) || data.length === 0) return []
     if (Array.isArray(data[0])) return (data as FormField[][]).flat()
@@ -109,10 +103,10 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
     initialData = {},
 }, ref) => {
     const flatFields = flattenFields(formDataConfig)
-    const shape: Record<string, z.ZodType<string, any, string>> = {}
+    const shape: Record<string, z.ZodDefault<z.ZodType<string, any, string>>> = {}
 
     flatFields.forEach((field) => {
-        shape[field.key] = buildZodSchemaForField(field)
+        shape[field.key] = buildZodSchemaForField(field).default("")
     })
 
     const finalSchema = z.object(shape)
@@ -148,8 +142,7 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
             name={field.key}
             render={({ field: controllerField }) => (
                 <FormItem
-                    // Múltiples items en una fila:
-                    className={cn(field.width ? "max-w-full" : "flex-1", "flex flex-col")}
+                    className={cn(field.width ? "max-w-full" : "flex-1", "flex flex-col p-0.5")}
                     style={field.width ? { width: `${field.width}%` } : {}}
                 >
                     {field.placeholder && <FormLabel>{field.placeholder}</FormLabel>}
@@ -192,13 +185,17 @@ export const DynamicForm = forwardRef<DynamicFormHandles, DynamicFormProps>(({
                             }
                             return (
                                 <Input
-                                    inputType={field.type}
+                                    inputType={
+                                        field.type === "create-password" || field.type === "password"
+                                            ? "password"
+                                            : field.type
+                                    }
                                     placeholder={field.placeholder}
                                     autoComplete={
                                         field.type === "email"
                                             ? "email"
-                                            : field.type === "password"
-                                                ? "current-password"
+                                            : field.type === "password" || field.type === "create-password"
+                                                ? "new-password"
                                                 : field.type === "user"
                                                     ? "username"
                                                     : "off"

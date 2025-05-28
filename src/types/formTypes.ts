@@ -1,23 +1,29 @@
-// /src/types/formTypes.ts
 import { JSX } from "react"
 
 /**
  * Tipos de campo que maneja tu formulario dinámico.
  * "textarea" se diferencia de los que se usan en el Input personalizado.
  */
-export type FieldType =
+export type InputType =
     | "email"
+    | "document"
+    | "password"
+    | "phone"
+    | "user"
+    | "address"
+    | "extension-phone"
+    | "search"
+    | "number"
+    | "create-password"
+    | "grade"  
+    | undefined;
+
+export type FieldType =
+    InputType
     | "select"
     | "custom"
-    | "password"
-    | "create-password"
-    | "extension-phone"
-    | "phone"
-    | "document"
-    | "address"
-    | "user"
     | "textarea"
-    | "number"
+    | "create-password";
 
 /**
  * Estructura base para cualquier campo.
@@ -54,6 +60,7 @@ export interface SelectFormField extends BaseFormField {
     options: { value: string; label: string }[]
     /** Placeholder que se verá en <SelectValue>. */
     selectPlaceholder?: string
+    onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 /**

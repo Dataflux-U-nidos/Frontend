@@ -4,10 +4,11 @@ import { SearchFilterBar } from "@/components/molecules/SearchFilterBar";
 import { DataTable } from "@/components/organisms/DataTable";
 import { EntityForm, FormField } from "@/components/molecules/EntityForm";
 import { ConfirmationDialog } from "@/components/molecules/ConfirmationDialog";
+import { parseFullName, combineNames } from "@/utils/nameUtils";
 import {
   useCreateUser,
   useGetSupportByAdmin,
-  useUpdateUser,
+  useUpdateMyUser,
   useDeleteUser,
 } from "@/hooks";
 
@@ -32,18 +33,38 @@ const SupportUserFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
   {
     name: "password",
@@ -52,12 +73,11 @@ const SupportUserFormFields: FormField[] = [
     required: true,
     validation: {
       pattern: {
-        value: /^(?=.*[0-9])(?=.{8,})/,
-        message: "La contraseña debe tener al menos 8 caracteres y contener al menos un número"
+        value: /^(?=.*\d)(?=.*[!@#$%^&*_-])(?=.{8,})/, message: "La contraseña debe tener al menos 8 caracteres, un número y un caracter especial"
       }
     },
-    placeholder: "Mínimo 8 caracteres y al menos un número",
-    helpText: "Para mayor seguridad, utiliza al menos 8 caracteres y un número"
+    placeholder: "Mín. 8 caracteres, 1 número y 1 caracter especial",
+    helpText: "Para mayor seguridad, usa una contraseña con 8+ caracteres, un número y un caracter especial"
   },
 ];
 
@@ -68,27 +88,47 @@ const SupportUserEditFormFields: FormField[] = [
     label: "Nombre",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El nombre sólo puede contener letras"
+      }
+    },
+    placeholder: "Nombre"
   },
   {
     name: "lastName",
     label: "Apellido",
     type: "text",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[A-Za-zÀ-ÿ]+(?:\s+[A-Za-zÀ-ÿ]+)*$/,
+        message: "El apellido sólo puede contener letras"
+      }
+    },
+    placeholder: "Apellido"
   },
   {
     name: "email",
     label: "Correo Electrónico",
     type: "email",
     required: true,
+    validation: {
+      pattern: {
+        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        message: "Ingresa un correo con formato válido (ej. usuario@dominio.com)"
+      }
+    }
   },
 ];
 
-export default function UniversitySupportUsersScreen() {
+export default function AdminSupportScreen() {
   // Hooks for CRUD
   const { mutateAsync: createUser } = useCreateUser();
   const { mutateAsync: getSupportUsers } = useGetSupportByAdmin();
   const { mutateAsync: deleteUser } = useDeleteUser();
-  const { mutateAsync: updateUser } = useUpdateUser();
+  const { mutateAsync: updateUser } = useUpdateMyUser();
 
   // state variables
   const [SupportUsersData, setSupportUsersData] = useState<SupportUser[]>([]);
@@ -110,11 +150,9 @@ export default function UniversitySupportUsersScreen() {
       try {
         const SupportUsers = await getSupportUsers();
         const mappedSupportUsers = SupportUsers.map((user) => {
-
-            const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-          const nameParts = fullName.split(' ');
-          const firstName = nameParts[0] || '';
-          const lastName = nameParts.slice(1).join(' ') || '';
+          // Usar las funciones utilitarias para manejar nombres correctamente
+          const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+          const fullName = combineNames(firstName, lastName);
           
           return {
             id: user.id,
@@ -301,8 +339,6 @@ export default function UniversitySupportUsersScreen() {
       password: formData.password,
       userType: "SUPPORT",
     };
-
-    console.log("Enviando:", userData);
     
     try {
       await createUser(userData);
@@ -314,12 +350,11 @@ export default function UniversitySupportUsersScreen() {
         message: `El usuario de soporte ${userData.name} ${userData.last_name} ha sido creado exitosamente.`
       });
       
+      // Actualizar lista con mapeo correcto
       const SupportUsers = await getSupportUsers();
       const mappedSupportUsers = SupportUsers.map((user) => {
-        const fullName = `${user.name || ''} ${user.last_name || ''}`.trim();
-        const nameParts = fullName.split(' ');
-        const firstName = nameParts[0] || '';
-        const lastName = nameParts.slice(1).join(' ') || '';
+        const { firstName, lastName } = parseFullName(user.name || '', user.last_name || '');
+        const fullName = combineNames(firstName, lastName);
         
         return {
           id: user.id,
@@ -432,7 +467,7 @@ export default function UniversitySupportUsersScreen() {
     cancelButtonText: "Cancelar",
   };
   
-  // Fixed defaultValues to use ternary instead of && to avoid type error
+  // Fixed defaultValues to use values already processed
   const editFormConfig = {
     isOpen: showEditModal,
     onClose: handleCancelEdit,
@@ -444,9 +479,9 @@ export default function UniversitySupportUsersScreen() {
     cancelButtonText: "Cancelar",
     isLoading: isEditing,
     defaultValues: SupportUserToEdit ? {
-      firstName: SupportUserToEdit.firstName ?? SupportUserToEdit.name.split(' ')[0] ?? '',
-      lastName: SupportUserToEdit.lastName ?? SupportUserToEdit.name.split(' ').slice(1).join(' ') ?? '',
-      email: SupportUserToEdit.email,
+      firstName: SupportUserToEdit.firstName || '',
+      lastName: SupportUserToEdit.lastName || '',
+      email: SupportUserToEdit.email || '',
     } : undefined
   };
 
