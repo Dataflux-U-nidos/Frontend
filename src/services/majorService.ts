@@ -33,6 +33,10 @@ export const filterMajors = (majors: Major[], filters: MajorFilters): Major[] =>
       return false;
     }
 
+    if (filters.institutionId && major.institutionId !== filters.institutionId) {
+      return false;
+    }
+
     // Filtro por dificultad
     if (filters.difficulty && major.difficulty !== filters.difficulty) {
       return false;

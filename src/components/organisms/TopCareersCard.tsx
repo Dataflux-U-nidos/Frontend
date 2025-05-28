@@ -113,7 +113,7 @@ export function TopCareersCard({ careers }: TopCareersCardProps) {
       <Card className="shadow-lg border-0 rounded-2xl overflow-hidden">
         <CardHeader className="bg-gradient-to-r from-orange-400 to-orange-600 text-white">
           <CardTitle className="text-2xl font-bold text-center">
-            🏆 TOP 3 Carreras Recomendadas
+            🏆 TOP Carreras Recomendadas Para Ti
           </CardTitle>
         </CardHeader>
         
