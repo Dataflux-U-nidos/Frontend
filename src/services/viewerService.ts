@@ -30,6 +30,7 @@ export interface UserData {
   NombreAcudiente: string;
   CelularContacto: string;
   EmailContacto: string;
+  state: string;
 }
 
 // Function to get universidades
